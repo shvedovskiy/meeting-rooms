@@ -56,8 +56,8 @@ function createData() {
     dateEnd: twoHoursLater,
   }, {
     title: '🍨 Пробуем kefir.js',
-    dateStart: threeHoursLater,
-    dateEnd: twoHoursLater,
+    dateStart: twoHoursLater,
+    dateEnd: threeHoursLater,
   }]);
 
   Promise.all([usersPromise, roomsPromise, eventsPromise])
@@ -81,4 +81,8 @@ function createData() {
     });
 }
 
-sequelize.sync().then(createData);
+sequelize.sync()
+  .then(createData)
+  .catch(error => 
+    console.error('Did you enter wrong database credentials?', `(${error})`)
+  );
