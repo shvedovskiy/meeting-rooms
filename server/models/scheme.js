@@ -1,23 +1,7 @@
-const Sequelize = require('sequelize');
-
-module.exports = seq => {
-  const User = seq.define('User', {
-    login: Sequelize.STRING,
-    homeFloor: Sequelize.TINYINT,
-    avatarUrl: Sequelize.STRING,
-  });
-
-  const Room = seq.define('Room', {
-    title: Sequelize.STRING,
-    capacity: Sequelize.SMALLINT,
-    floor: Sequelize.TINYINT
-  });
-
-  const Event = seq.define('Event', {
-    title: Sequelize.STRING,
-    dateStart: Sequelize.DATE,
-    dateEnd: Sequelize.DATE,
-  });
+function scheme(sequelize) {
+  const User = sequelize.import('./User');
+  const Event = sequelize.import('./Event');
+  const Room = sequelize.import('./Room');
 
   Event.belongsToMany(User, { through: 'Events_Users' });
   User.belongsToMany(Event, { through: 'Events_Users' });
@@ -28,4 +12,6 @@ module.exports = seq => {
     Event, 
     User,
   };
-};
+}
+
+module.exports = scheme;
