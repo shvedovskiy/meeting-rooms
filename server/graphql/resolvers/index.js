@@ -4,7 +4,7 @@ const query = require('./query');
 const mutation = require('./mutation');
 
 
-module.exports = () => ({
+module.exports = {
   Query: query,
   Mutation: mutation,
   Event: {
@@ -16,4 +16,4 @@ module.exports = () => ({
     },
   },
   Date: GraphQLDate,
-});
+};
