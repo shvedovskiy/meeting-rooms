@@ -1,7 +1,10 @@
-const { models, sequelize } = require('./models');
+const { 
+  models: { User, Room, Event }, 
+  sequelize, 
+} = require('./models');
 
 function createData() {
-  const usersPromise = models.User.bulkCreate([{
+  const usersPromise = User.bulkCreate([{
     login: 'veged',
     avatarUrl: 'https://avatars3.githubusercontent.com/u/15365?s=460&v=4',
     homeFloor: 0,
@@ -15,7 +18,7 @@ function createData() {
     homeFloor: 2,
   }]);
 
-  const roomsPromise = models.Room.bulkCreate([{
+  const roomsPromise = Room.bulkCreate([{
     title: '404',
     capacity: 5,
     floor: 4,
@@ -43,7 +46,7 @@ function createData() {
   const twoHoursLater = new Date(oneHourLater.getTime() + HOUR);
   const threeHoursLater = new Date(twoHoursLater.getTime() + HOUR);
 
-  const eventsPromise = models.Event.bulkCreate([{
+  const eventsPromise = Event.bulkCreate([{
     title: 'ШРИ 2018 - начало',
     dateStart: now,
     dateEnd: oneHourLater,
@@ -59,9 +62,9 @@ function createData() {
 
   Promise.all([usersPromise, roomsPromise, eventsPromise])
     .then(() => Promise.all([
-      models.User.findAll(),
-      models.Room.findAll(),
-      models.Event.findAll(),
+      User.findAll(),
+      Room.findAll(),
+      Event.findAll(),
     ]))
     .then(([users, rooms, events]) => {
       const promises = [];
