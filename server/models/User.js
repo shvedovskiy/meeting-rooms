@@ -1,8 +1,22 @@
 function User(sequelize, DataTypes) {
   return sequelize.define('User', {
-    login: DataTypes.STRING,
-    homeFloor: DataTypes.TINYINT,
-    avatarUrl: DataTypes.STRING,
+    login: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    homeFloor: {
+      type: DataTypes.TINYINT,
+      defaultValue: 1,
+    },
+    avatarUrl: {
+      type: DataTypes.STRING,
+      validate: {
+        isUrl: true,
+      },
+    },
   });
 }
 
