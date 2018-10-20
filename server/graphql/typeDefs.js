@@ -5,17 +5,13 @@ type User {
     id: ID!
     login: String!
     homeFloor: Int
-    avatarUrl: String!
+    avatarUrl: String
 }
 
 input UserInput {
     login: String!
     homeFloor: Int
-}
-
-type UserRoom {
-    id: ID!
-    title: String!
+    avatarUrl: String
 }
 
 type Room {
