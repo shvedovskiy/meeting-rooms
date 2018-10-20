@@ -3,6 +3,7 @@ function User(sequelize, DataTypes) {
     login: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
         notEmpty: true,
       },
