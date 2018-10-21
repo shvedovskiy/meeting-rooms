@@ -1,4 +1,4 @@
-function User(sequelize, DataTypes) {
+module.exports = function User(sequelize, DataTypes) {
   return sequelize.define('User', {
     login: {
       type: DataTypes.STRING,
@@ -19,7 +19,4 @@ function User(sequelize, DataTypes) {
       },
     },
   });
-}
-
- module.exports = User;
- 
+};

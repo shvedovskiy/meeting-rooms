@@ -1,4 +1,4 @@
-function Room(sequelize, DataTypes) {
+module.exports = function Room(sequelize, DataTypes) {
   return sequelize.define('Room', {
     title: {
       type: DataTypes.STRING,
@@ -17,7 +17,5 @@ function Room(sequelize, DataTypes) {
       allowNull: false,
     },
   });
-}
-
- module.exports = Room;
+};
  

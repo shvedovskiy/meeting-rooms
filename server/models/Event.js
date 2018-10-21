@@ -1,10 +1,10 @@
-function Event(sequelize, DataTypes) {
+module.exports = function Event(sequelize, DataTypes) {
   return sequelize.define('Event', {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      validate: {
+      validate: { 
         notEmpty: true,
       },
     },
@@ -25,6 +25,4 @@ function Event(sequelize, DataTypes) {
       },
     },
   });
-}
-
-module.exports = Event;
+};

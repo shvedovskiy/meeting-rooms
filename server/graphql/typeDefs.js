@@ -45,10 +45,12 @@ input EventInput {
 type Query {
   user(id: ID!): User
   users: [User]
-  event(id: ID!): Event
-  events: [Event]
+
   room(id: ID!): Room
   rooms: [Room]
+  
+  event(id: ID!): Event
+  events: [Event]
 }
 
 type Mutation {
@@ -62,8 +64,8 @@ type Mutation {
 
   createEvent(input: EventInput!, usersIds: [ID], roomId: ID!): Event
   updateEvent(id: ID!, input: EventInput!): Event
-  removeUserFromEvent(id: ID!, userId: ID!): Event
   addUserToEvent(id: ID!, userId: ID!): Event
+  removeUserFromEvent(id: ID!, userId: ID!): Event
   changeEventRoom(id: ID!, roomId: ID!): Event
   removeEvent(id: ID!): Event
 }
