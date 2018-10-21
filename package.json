@@ -7,13 +7,12 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
-    "flow": "flow",
-    "precommit": "npm run flow && npm t",
+    "test": "npm run server:reset-db && node scripts/test.js",
+    "lint": "npx eslint src scripts server config --ext .js,.jsx && flow",
+    "precommit": "npm run lint && npm t",
     "analyze": "source-map-explorer build/static/js/main.*",
     "server:reset-db": "rm -f ./server/db.sqlite3 && node ./server/create-mock-data.js",
-    "server:start": "nodemon ./server/index.js",
-    "server:test": "echo \"Error: no test specified\" && exit 1" 
+    "server:start": "nodemon ./server/index.js"
   },
   "dependencies": {
     "@babel/core": "7.1.0",
@@ -84,6 +83,7 @@
     "enzyme-adapter-react-16": "^1.6.0",
     "enzyme-to-json": "^3.3.4",
     "flow-bin": "^0.83.0",
+    "graphql-tester": "0.0.5",
     "husky": "^1.1.2",
     "invariant": "^2.2.4",
     "jest-enzyme": "^7.0.0",

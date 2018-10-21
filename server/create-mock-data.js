@@ -1,7 +1,8 @@
 const { 
   models: { User, Room, Event }, 
-  sequelize, 
+  sequelize,
 } = require('./models');
+
 
 function createData() {
   const usersPromise = User.bulkCreate([{
@@ -82,7 +83,11 @@ function createData() {
 }
 
 sequelize.sync()
-  .then(createData)
+  .then(() => {
+    if (process.env.NODE_ENV !== 'test') {
+      createData();
+    }
+  })
   .catch(error => 
     console.error('Did you enter wrong database credentials?', `(${error})`)
   );
