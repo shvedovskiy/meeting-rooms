@@ -10,12 +10,16 @@ module.exports = function User(sequelize, DataTypes) {
     },
     homeFloor: {
       type: DataTypes.TINYINT,
+      allowNull: false,
       defaultValue: 1,
     },
     avatarUrl: {
       type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: '',
       validate: {
         isUrl: true,
+        notEmpty: false,
       },
     },
   });

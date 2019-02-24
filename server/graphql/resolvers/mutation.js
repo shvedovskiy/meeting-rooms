@@ -1,8 +1,9 @@
-const { models: { User, Room, Event }} = require('../../models');
-
+const {
+  models: { User, Room, Event },
+} = require('../../models');
 
 module.exports = {
-  // User
+  // User Model
   createUser(_, { input }) {
     return User.create(input);
   },
@@ -17,7 +18,7 @@ module.exports = {
       .catch(() => false);
   },
 
-  // Room
+  // Room Model
   createRoom(_, { input }) {
     return Room.create(input);
   },
@@ -32,37 +33,30 @@ module.exports = {
       .catch(() => false);
   },
 
-  // Event
+  // Event Model
   createEvent(_, { input, usersIds, roomId }) {
-    return Event.create(input)
-      .then(event => {
-        event.setRoom(roomId);
-        return event.setUsers(usersIds)
-          .then(() => event);
-      });
+    return Event.create(input).then(event => {
+      event.setRoom(roomId);
+      return event.setUsers(usersIds).then(() => event);
+    });
   },
   updateEvent(_, { id, input }) {
-    return Event.findById(id)
-      .then(event => event.update(input));
+    return Event.findById(id).then(event => event.update(input));
   },
   addUserToEvent(_, { id, userId }) {
-    return Event.findById(id)
-      .then(event => {
-        return event.addUser(userId).then(() => event);
-      });
+    return Event.findById(id).then(event => {
+      return event.addUser(userId).then(() => event);
+    });
   },
   removeUserFromEvent(_, { id, userId }) {
-    return Event.findById(id)
-      .then(event => {
-        return event.removeUser(userId).then(() => event);
-      });
+    return Event.findById(id).then(event => {
+      return event.removeUser(userId).then(() => event);
+    });
   },
   changeEventRoom(_, { id, roomId }) {
-    return Event.findById(id)
-      .then(event => event.setRoom(roomId));
+    return Event.findById(id).then(event => event.setRoom(roomId));
   },
   removeEvent(_, { id }) {
-    return Event.findById(id)
-      .then(event => event.destroy());
+    return Event.findById(id).then(event => event.destroy());
   },
 };

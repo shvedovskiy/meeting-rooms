@@ -11,6 +11,9 @@ module.exports = function Room(sequelize, DataTypes) {
     capacity: {
       type: DataTypes.SMALLINT,
       allowNull: false,
+      validate: {
+        min: 0,
+      },
     },
     floor: {
       type: DataTypes.TINYINT,
@@ -18,4 +21,3 @@ module.exports = function Room(sequelize, DataTypes) {
     },
   });
 };
- 
