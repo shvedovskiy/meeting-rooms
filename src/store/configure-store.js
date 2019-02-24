@@ -6,7 +6,6 @@ import rootReducer from './root-reducer';
 import type { Store } from './types';
 import { watchCounter } from './sagas';
 
-
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const sagaMiddleware = createSagaMiddleware();

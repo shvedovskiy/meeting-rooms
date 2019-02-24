@@ -10,7 +10,6 @@ import * as serviceWorker from './serviceWorker';
 
 import './index.css';
 
-
 const app = (
   <Provider store={store}>
     <App />

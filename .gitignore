@@ -17,4 +17,4 @@
 .env.production.local
 *.sqlite3
 npm-debug.log*
-/idea
+/.idea

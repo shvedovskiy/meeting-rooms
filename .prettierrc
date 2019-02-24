@@ -16,7 +16,8 @@
     {
       "files": "*.css",
       "options": {
-        "singleQuote": false
+        "singleQuote": false,
+        "printWidth": 200
       }
     }
   ]

@@ -14,26 +14,26 @@ type Props = {
   counter: Counter,
   incrementCounter: () => void,
   decrementCounter: () => void,
-  incrementCounterAsync: (number) => void,
+  incrementCounterAsync: number => void,
 };
 
-export const Main = ({ 
-  counter, 
-  incrementCounter, 
-  decrementCounter, 
+export const Main = ({
+  counter,
+  incrementCounter,
+  decrementCounter,
   incrementCounterAsync,
 }: Props) => (
   <div className={classes.Main}>
     <header className={classes.Main_header}>
-      <img src={logo}
-            className={classes.Main_logo}
-            alt="logo"
-      />
-      <p>Edit <code>src/App.js</code> and save to reload.</p>
-      <a href="https://reactjs.org"
-          className={classes.Main_link}
-          target="_blank"
-          rel="noopener noreferrer"
+      <img src={logo} className={classes.Main_logo} alt="logo" />
+      <p>
+        Edit <code>src/App.js</code> and save to reload.
+      </p>
+      <a
+        href="https://reactjs.org"
+        className={classes.Main_link}
+        target="_blank"
+        rel="noopener noreferrer"
       >
         Learn React
       </a>
@@ -45,7 +45,9 @@ export const Main = ({
       <div className={classes.Main_buttons}>
         <button onClick={() => incrementCounter()}>+1</button>
         <button onClick={() => decrementCounter()}>-1</button>
-        <button onClick={() => incrementCounterAsync(Math.random() * 5)}>+1 Async</button>
+        <button onClick={() => incrementCounterAsync(Math.random() * 5)}>
+          +1 Async
+        </button>
       </div>
     </main>
   </div>
@@ -67,4 +69,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Main);

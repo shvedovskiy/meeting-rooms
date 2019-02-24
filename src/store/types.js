@@ -4,7 +4,6 @@ import type { Store as ReduxStore, Dispatch as ReduxDispatch } from 'redux';
 import type { Action as CounterAction } from './counter/types';
 import type { Reducers } from './root-reducer';
 
-
 type ReduxInitAction = { type: '@@INIT' };
 
 type $ExtractFunctionReturn = <V>(v: (...args: any[]) => V) => V;

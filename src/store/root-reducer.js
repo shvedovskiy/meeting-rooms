@@ -3,8 +3,7 @@ import { combineReducers } from 'redux';
 
 import counterReducer from './counter/reducer';
 
-
-const reducers = { 
+const reducers = {
   counter: counterReducer,
 };
 
