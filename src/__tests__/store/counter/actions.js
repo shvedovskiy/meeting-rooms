@@ -2,9 +2,8 @@ import configureStore from 'redux-mock-store';
 import createSagaMiddleware from 'redux-saga';
 
 import * as types from '../../../store/counter/action-types';
-import * as actions from '../../../store/counter/actions'; 
+import * as actions from '../../../store/counter/actions';
 import { watchCounter } from '../../../store/sagas';
-
 
 const sagaMiddleware = createSagaMiddleware();
 const mockStore = configureStore([sagaMiddleware]);
@@ -41,7 +40,7 @@ describe('actions', () => {
 
     store.subscribe(() => {
       const actions = store.getActions();
-      if (actions.length >= expectedActions.length){
+      if (actions.length >= expectedActions.length) {
         expect(actions).toEqual(expectedActions);
         done();
       }

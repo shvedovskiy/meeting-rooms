@@ -4,7 +4,6 @@ import { put, call } from 'redux-saga/effects';
 import { incrementAsync as incrementAsyncSaga } from '../../../store/counter/sagas';
 import { increment, incrementAsync } from '../../../store/counter/actions';
 
-
 describe('counter sagas', () => {
   const gen = incrementAsyncSaga(incrementAsync(42));
 

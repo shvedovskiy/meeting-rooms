@@ -2,7 +2,6 @@ import React from 'react';
 
 import NotFoundPage from './not-found-page';
 
-
 const setup = (value = 0) => {
   const wrapper = global.shallow(<NotFoundPage />);
 

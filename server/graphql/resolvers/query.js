@@ -1,5 +1,6 @@
-const { models: { User, Room, Event }} = require('../../models');
-
+const {
+  models: { User, Room, Event },
+} = require('../../models');
 
 module.exports = {
   user(_, { id }) {

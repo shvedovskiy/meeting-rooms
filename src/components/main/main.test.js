@@ -2,13 +2,12 @@ import React from 'react';
 
 import { Main } from './main';
 
-
 const setup = (counter = 0) => {
   const actions = {
     incrementCounter: jest.fn(),
     decrementCounter: jest.fn(),
     incrementCounterAsync: jest.fn(),
-  }; 
+  };
   const wrapper = global.shallow(<Main counter={counter} {...actions} />);
 
   return {
