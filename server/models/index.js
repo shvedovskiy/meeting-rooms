@@ -1,12 +1,12 @@
 const Sequelize = require('sequelize');
 
 const scheme = require('./scheme');
-
+const { DATABASE_NAME } = require('../config');
 
 const Op = Sequelize.Op;
 const sequelize = new Sequelize(null, null, null, {
   dialect: 'sqlite',
-  storage: 'db.sqlite3',
+  storage: DATABASE_NAME,
   operatorsAliases: {
     $and: Op.and,
   },

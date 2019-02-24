@@ -1,19 +1,17 @@
-const path = require('path');
 const express = require('express');
-const bodyParser = require('body-parser');
+const { ApolloServer } = require('apollo-server-express');
 
-const pagesRoutes = require('./pages/routes');
-const graphQLRoutes = require('./graphql/routes');
+const typeDefs = require('./graphql/typeDefs');
+const resolvers = require('./graphql/resolvers');
+
 const { PORT } = require('./config');
 
-
 const app = express();
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
+const server = new ApolloServer({ typeDefs, resolvers });
+server.applyMiddleware({ app });
 
-app.use('/', pagesRoutes);
-app.use('/graphql', graphQLRoutes);
-
-app.listen(PORT, () => {
-  console.info(`Express app listening on localhost:${PORT}`);
+app.listen({ port: PORT }, () => {
+  console.info(
+    `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`,
+  );
 });

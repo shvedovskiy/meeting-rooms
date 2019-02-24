@@ -1,77 +1,79 @@
-module.exports = `
-scalar Date
+const { gql } = require('apollo-server-express');
 
-type User {
-  id: ID!
-  login: String!
-  homeFloor: Int
-  avatarUrl: String
-}
+module.exports = gql`
+  scalar Date
 
-input UserInput {
-  login: String!
-  homeFloor: Int
-  avatarUrl: String!
-}
+  type User {
+    id: ID!
+    login: String!
+    homeFloor: Int
+    avatarUrl: String
+  }
 
-type Room {
-  id: ID!
-  title: String!
-  capacity: Int!
-  floor: Int!
-}
+  input UserInput {
+    login: String!
+    homeFloor: Int
+    avatarUrl: String!
+  }
 
-input RoomInput {
-  title: String!
-  capacity: Int!
-  floor: Int!
-}
+  type Room {
+    id: ID!
+    title: String!
+    capacity: Int!
+    floor: Int!
+  }
 
-type Event {
-  id: ID!
-  title: String!
-  dateStart: Date!
-  dateEnd: Date!
-  users: [User]
-  room: Room
-}
+  input RoomInput {
+    title: String!
+    capacity: Int!
+    floor: Int!
+  }
 
-input EventInput {
-  title: String!
-  dateStart: Date!
-  dateEnd: Date!
-}
+  type Event {
+    id: ID!
+    title: String!
+    dateStart: Date!
+    dateEnd: Date!
+    users: [User]
+    room: Room
+  }
 
-type Query {
-  user(id: ID!): User
-  users: [User]
+  input EventInput {
+    title: String!
+    dateStart: Date!
+    dateEnd: Date!
+  }
 
-  room(id: ID!): Room
-  rooms: [Room]
-  
-  event(id: ID!): Event
-  events: [Event]
-}
+  type Query {
+    user(id: ID!): User
+    users: [User]
 
-type Mutation {
-  createUser(input: UserInput!): User
-  updateUser(id: ID!, input: UserInput!): User
-  removeUser(id: ID!): User
+    room(id: ID!): Room
+    rooms: [Room]
 
-  createRoom(input: RoomInput!): Room
-  updateRoom(id: ID!, input: RoomInput!): Room
-  removeRoom(id: ID!): Room
+    event(id: ID!): Event
+    events: [Event]
+  }
 
-  createEvent(input: EventInput!, usersIds: [ID], roomId: ID!): Event
-  updateEvent(id: ID!, input: EventInput!): Event
-  addUserToEvent(id: ID!, userId: ID!): Event
-  removeUserFromEvent(id: ID!, userId: ID!): Event
-  changeEventRoom(id: ID!, roomId: ID!): Event
-  removeEvent(id: ID!): Event
-}
+  type Mutation {
+    createUser(input: UserInput!): User
+    updateUser(id: ID!, input: UserInput!): User
+    removeUser(id: ID!): User
 
-schema {
-  query: Query
-  mutation: Mutation
-}
+    createRoom(input: RoomInput!): Room
+    updateRoom(id: ID!, input: RoomInput!): Room
+    removeRoom(id: ID!): Room
+
+    createEvent(input: EventInput!, usersIds: [ID], roomId: ID!): Event
+    updateEvent(id: ID!, input: EventInput!): Event
+    addUserToEvent(id: ID!, userId: ID!): Event
+    removeUserFromEvent(id: ID!, userId: ID!): Event
+    changeEventRoom(id: ID!, roomId: ID!): Event
+    removeEvent(id: ID!): Event
+  }
+
+  schema {
+    query: Query
+    mutation: Mutation
+  }
 `;
