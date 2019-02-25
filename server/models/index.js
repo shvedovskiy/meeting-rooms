@@ -15,6 +15,7 @@ const sequelize = new Sequelize(null, null, null, {
 
 scheme(sequelize);
 
+// export default sequelize;
 module.exports = {
   sequelize,
   models: sequelize.models,

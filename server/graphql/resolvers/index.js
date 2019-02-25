@@ -8,12 +8,14 @@ module.exports = {
   Mutation: mutation,
   Event: {
     // relative queries
-    users(event) {
+    users(event: Model<*>) {
       return event.getUsers();
     },
-    room(event) {
+    room(event: Model<*>) {
       return event.getRoom();
     },
   },
   Date: GraphQLDate,
 };
+
+// export default resolvers;

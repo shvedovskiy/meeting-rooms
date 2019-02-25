@@ -1,4 +1,9 @@
-module.exports = function User(sequelize, DataTypes) {
+// @flow
+import type Sequelize from 'sequelize';
+import type { DataTypes as SequelizeDataTypes } from 'sequelize';
+
+
+export default function User(sequelize: Sequelize, DataTypes: SequelizeDataTypes) {
   return sequelize.define('User', {
     login: {
       type: DataTypes.STRING,
@@ -9,9 +14,9 @@ module.exports = function User(sequelize, DataTypes) {
       },
     },
     homeFloor: {
-      type: DataTypes.TINYINT,
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 1,
+      defaultValue: 0,
     },
     avatarUrl: {
       type: DataTypes.STRING,
@@ -23,4 +28,4 @@ module.exports = function User(sequelize, DataTypes) {
       },
     },
   });
-};
+}

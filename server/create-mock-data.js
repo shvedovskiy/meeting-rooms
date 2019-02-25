@@ -89,7 +89,8 @@ function createData() {
       promises.push(events[2].setUsers([users[0], users[2]]));
 
       return Promise.all(promises);
-    });
+    })
+    .catch(console.error);
 }
 
 sequelize
