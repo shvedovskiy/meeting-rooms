@@ -1,3 +1,2 @@
 npm i
-npx flow-typed install
 npm start

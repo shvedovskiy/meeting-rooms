@@ -1,17 +1,17 @@
 {
-  "{src,server}/**/*.{js,jsx}": [
-    "npx eslint --fix",
-    "npx prettier --write",
+  "{src,server}/**/*.{js,jsx,ts,tsx}": [
+    "eslint --fix",
+    "prettier --write",
     "git add"
   ],
   "{src,server}/**/*.css": [
-    "npx prettier --write",
-    "npx stylelint",
+    "prettier --write",
+    "stylelint",
     "git add"
   ],
   "public/**/*.html": [
-    "npx prettier --write",
-    "npx stylelint",
+    "prettier --write",
+    "stylelint",
     "git add"
   ]
 }
