@@ -23,7 +23,7 @@
     "lint:stylelint": "stylelint \"src/**/*.css server/**/*.css public/**/*.html\"",
     "lint": "run-s lint:*",
     "analyze": "source-map-explorer build/static/js/main.*",
-    "server:start": "ts-node-dev --respawn --debug server/index.ts",
+    "server:start": "NODE_ENV=development ts-node-dev --respawn --debug --project server/tsconfig.json server/index.ts",
     "server:build": "tsc -p server",
     "server:run": "node dist/index.js",
     "test-server:start": "NODE_ENV=test npm run reset-db && NODE_ENV=test npm run server:start",
