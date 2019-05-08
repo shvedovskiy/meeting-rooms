@@ -1,9 +1,11 @@
 # dependencies
 /node_modules
-/flow-typed
+/.pnp
+.pnp.js
 
 # testing
 /coverage
+/server/__snapshots__
 
 # production
 build/
@@ -15,5 +17,8 @@ dist/
 .env.*
 !.env.example
 *.sqlite3
+
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 /.idea
