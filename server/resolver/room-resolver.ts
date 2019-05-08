@@ -16,9 +16,10 @@ export class RoomResolver {
     return this.roomRepository.find();
   }
 
-  @Query(returns => Room)
-  room(@Args() { id }: QueryArgs): Promise<Room> {
-    return this.roomRepository.findOneOrFail(id);
+  @Query(returns => Room, { nullable: true })
+  async room(@Args() { id }: QueryArgs): Promise<Room | null> {
+    const room = await this.roomRepository.findOne(id);
+    return room || null;
   }
 
   @Mutation(returns => Room)
@@ -26,7 +27,7 @@ export class RoomResolver {
     return this.roomRepository.save(newRoomData);
   }
 
-  @Mutation(returns => Room)
+  @Mutation(returns => Room, { nullable: true })
   async updateRoom(
     @Args() { id }: MutationArgs,
     @Arg('input') roomData: RoomInput
@@ -42,7 +43,7 @@ export class RoomResolver {
     });
   }
 
-  @Mutation(returns => Room)
+  @Mutation(returns => Room, { nullable: true })
   async removeRoom(@Args() { id }: MutationArgs): Promise<Room> {
     const roomToRemove = await this.roomRepository.findOne(id);
     if (!roomToRemove) {

@@ -16,9 +16,10 @@ export class UserResolver {
     return this.userRepository.find();
   }
 
-  @Query(returns => User)
-  user(@Args() { id }: QueryArgs): Promise<User> {
-    return this.userRepository.findOneOrFail(id);
+  @Query(returns => User, { nullable: true })
+  async user(@Args() { id }: QueryArgs): Promise<User | null> {
+    const user = await this.userRepository.findOneOrFail(id);
+    return user || null;
   }
 
   @Mutation(returns => User)
@@ -26,7 +27,7 @@ export class UserResolver {
     return this.userRepository.save(newUserData);
   }
 
-  @Mutation(returns => User)
+  @Mutation(returns => User, { nullable: true })
   async updateUser(
     @Args() { id }: MutationArgs,
     @Arg('input') userData: UserInput
@@ -42,7 +43,7 @@ export class UserResolver {
     });
   }
 
-  @Mutation(returns => User)
+  @Mutation(returns => User, { nullable: true })
   async removeUser(@Args() { id }: MutationArgs): Promise<User> {
     const userToDelete = await this.userRepository.findOne(id);
     if (!userToDelete) {

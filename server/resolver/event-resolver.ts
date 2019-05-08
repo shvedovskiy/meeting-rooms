@@ -11,7 +11,6 @@ import { QueryArgs, MutationArgs, EventRelationArgs } from './arguments';
 export class EventResolver {
   @InjectRepository(Event)
   private readonly eventRepository: Repository<Event>;
-
   @InjectRepository(User)
   private readonly userRepository: Repository<User>;
 
@@ -20,9 +19,10 @@ export class EventResolver {
     return this.eventRepository.find();
   }
 
-  @Query(returns => Event)
-  event(@Args() { id }: QueryArgs): Promise<Event> {
-    return this.eventRepository.findOneOrFail(id);
+  @Query(returns => Event, { nullable: true })
+  async event(@Args() { id }: QueryArgs): Promise<Event | null> {
+    const event = await this.eventRepository.findOne(id);
+    return event || null;
   }
 
   @Mutation(returns => Event)
@@ -45,7 +45,7 @@ export class EventResolver {
     return this.eventRepository.save(event);
   }
 
-  @Mutation(returns => Event)
+  @Mutation(returns => Event, { nullable: true })
   async updateEvent(
     @Args() { id }: MutationArgs,
     @Arg('input') newEventData: EventInput
@@ -62,7 +62,7 @@ export class EventResolver {
     return this.eventRepository.save(updatedEvent);
   }
 
-  @Mutation(returns => Event)
+  @Mutation(returns => Event, { nullable: true })
   async addUserToEvent(
     @Args() { id }: MutationArgs,
     @Arg('userId') userId: string
@@ -81,7 +81,7 @@ export class EventResolver {
     return this.eventRepository.findOne(id) as Promise<Event>;
   }
 
-  @Mutation(returns => Event)
+  @Mutation(returns => Event, { nullable: true })
   async removeUserFromEvent(
     @Args() { id }: MutationArgs,
     @Arg('userId') userId: string
@@ -100,7 +100,7 @@ export class EventResolver {
     return this.eventRepository.findOne(id) as Promise<Event>;
   }
 
-  @Mutation(returns => Event)
+  @Mutation(returns => Event, { nullable: true })
   async changeEventRoom(
     @Args() { id }: MutationArgs,
     @Arg('roomId') roomId: string
@@ -117,7 +117,7 @@ export class EventResolver {
     return event;
   }
 
-  @Mutation(returns => Event)
+  @Mutation(returns => Event, { nullable: true })
   async removeEvent(@Args() { id }: MutationArgs): Promise<Event> {
     const eventToRemove = await this.eventRepository.findOne(id);
     if (!eventToRemove) {
