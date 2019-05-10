@@ -27,7 +27,7 @@ export class EventResolver {
 
   @Mutation(returns => Event)
   async createEvent(
-    @Arg('input') newEventData: EventInput,
+    @Arg('input', type => EventInput) newEventData: EventInput,
     @Args() { usersIds, roomId }: EventRelationArgs
   ): Promise<Event> {
     const event = this.eventRepository.create(newEventData);
@@ -42,13 +42,13 @@ export class EventResolver {
     if (roomId.length > 0) {
       event.roomId = roomId;
     }
-    return this.eventRepository.save(event);
+    return this.eventRepository.create(event).save();
   }
 
   @Mutation(returns => Event, { nullable: true })
   async updateEvent(
     @Args() { id }: MutationArgs,
-    @Arg('input') newEventData: EventInput
+    @Arg('input', type => EventInput) newEventData: EventInput
   ): Promise<Event> {
     const eventToUpdate = await this.eventRepository.findOne(id);
     if (!eventToUpdate) {

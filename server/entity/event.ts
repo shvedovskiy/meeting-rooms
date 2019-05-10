@@ -18,7 +18,7 @@ import { Room } from './room';
 export class Event extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field(type => ID)
-  private readonly id: string;
+  readonly id: string;
 
   @Field()
   @Column('varchar', {

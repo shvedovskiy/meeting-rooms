@@ -6,8 +6,8 @@ import { User } from '../../entity/user';
 @InputType({ description: 'New or update user data' })
 export class UserInput implements Partial<User> {
   @Length(1, 255)
-  @Field()
-  login: string;
+  @Field({ nullable: true })
+  login?: string;
 
   @Field(type => Int, { nullable: true })
   homeFloor?: number = 0;
