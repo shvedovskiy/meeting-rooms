@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "commonjs",
-    "lib": ["dom", "es2018"],
     "outDir": "../dist",
     "moduleResolution": "node",
     "esModuleInterop": true,
@@ -20,5 +19,6 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "exclude": ["../node_modules/*", "./__tests__/*"]
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules", "./__tests__/*"]
 }
