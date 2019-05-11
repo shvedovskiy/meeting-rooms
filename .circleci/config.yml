@@ -14,8 +14,6 @@ jobs:
         command: 'sudo npm update -g npm'
 
       - restore_cache:
-          key: source-{{ .Branch }}-{{ .Revision }}
-      - restore_cache:
         keys:
           - dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
           - dependency-cache-
@@ -26,7 +24,6 @@ jobs:
         key: dependency-cache-{{ checksum "package-json" }}-{{ checksum "package-lock.json" }}
         paths:
           - node_modules
-
       - persist_to_workspace:
         root: .
         paths:
@@ -54,7 +51,7 @@ jobs:
 
 workflows:
   version: 2
-  lint_and_test:
+  lint-and-test:
     jobs:
       - prepare
       - lint:
