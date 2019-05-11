@@ -2,11 +2,11 @@ import { createConnection } from 'typeorm';
 import { useContainer } from 'typeorm';
 import { Container } from 'typedi';
 
-import { User } from './entity/user';
-import { Room } from './entity/room';
-import { Event } from './entity/event';
-import { seedDatabase } from './service/seed-database';
-import { DATABASE_NAME } from './service/config';
+import { User } from '../entity/user';
+import { Room } from '../entity/room';
+import { Event } from '../entity/event';
+import { seedDatabase } from './seed-database';
+import { DATABASE_NAME } from './config';
 
 export async function connectToDatabase(
   production: boolean = false,

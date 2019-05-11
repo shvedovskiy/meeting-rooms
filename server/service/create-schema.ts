@@ -2,9 +2,9 @@ import * as path from 'path';
 import { buildSchema } from 'type-graphql';
 import { Container } from 'typedi';
 
-import { UserResolver } from './resolver/user-resolver';
-import { RoomResolver } from './resolver/room-resolver';
-import { EventResolver } from './resolver/event-resolver';
+import { UserResolver } from '../resolver/user-resolver';
+import { RoomResolver } from '../resolver/room-resolver';
+import { EventResolver } from '../resolver/event-resolver';
 
 export function createSchema() {
   return buildSchema({

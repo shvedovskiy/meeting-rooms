@@ -5,8 +5,8 @@ import { Container } from 'typedi';
 import { ApolloServer } from 'apollo-server';
 
 import { isProdEnv, PORT, NODE_ENV } from './service/config';
-import { createSchema } from './create-schema';
-import { connectToDatabase } from './create-connection';
+import { createSchema } from './service/create-schema';
+import { connectToDatabase } from './service/create-connection';
 
 useContainer(Container);
 

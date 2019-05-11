@@ -26,9 +26,8 @@
     "server:start-dev": "NODE_ENV=development run-s db-setup server:start",
     "server:build": "tsc -p server",
     "server:run": "node dist/index.js",
-    "db-setup": "ts-node --project ./server/tsconfig.json ./server/test-utils/setup.ts",
-    "server:jest": "jest --config=./server/jest.config.js --forceExit --detectOpenHandles",
-    "server:test": "NODE_ENV=test run-s db-setup server:jest"
+    "db-setup": "ts-node --project ./server/tsconfig.json ./server/db-setup.ts",
+    "server:test": "NODE_ENV=test jest --config=./server/jest.config.js --forceExit --detectOpenHandles"
   },
   "dependencies": {
     "apollo-server": "^2.4.8",

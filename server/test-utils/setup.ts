@@ -1,8 +1,10 @@
-import { isProdEnv, REFRESH_DB, isTestEnv } from '../service/config';
-import { connectToDatabase } from '../create-connection';
+import { connectToDatabase } from '../service/create-connection';
 
-connectToDatabase(isProdEnv, isTestEnv || REFRESH_DB, REFRESH_DB)
-  .then(() => {
-    process.exit();
-  })
-  .catch(console.error);
+module.exports = async () => {
+  try {
+    await connectToDatabase(false, true, false);
+  } catch (err) {
+    console.error(err);
+    throw new Error(err);
+  }
+};
