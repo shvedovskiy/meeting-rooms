@@ -10,44 +10,44 @@ jobs:
         - checkout
 
         - run:
-          name: Update NPM
-          command: 'sudo npm update -g npm'
+            name: Update NPM
+            command: 'sudo npm update -g npm'
 
         - restore_cache:
-          keys:
-              - dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
-              - dependency-cache-
+            keys:
+                - dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+                - dependency-cache-
         - run:
-          name: Install NPM packages
-          command: npm i
+            name: Install NPM packages
+            command: npm i
         - save_cache:
-          key: dependency-cache-{{ checksum "package-json" }}-{{ checksum "package-lock.json" }}
-          paths:
-              - node_modules
+            key: dependency-cache-{{ checksum "package-json" }}-{{ checksum "package-lock.json" }}
+            paths:
+                - node_modules
         - persist_to_workspace:
-          root: .
-          paths:
-              - node_modules
+            root: .
+            paths:
+                - node_modules
 
   lint:
     <<: *defaults
     steps:
         - checkout
         - attach_workspace:
-          at: .
+            at: .
         - run:
-          name: Run Prettier, ESLint and Stylelint
-          command: npm run lint
+            name: Run Prettier, ESLint and Stylelint
+            command: npm run lint
 
   test:
     <<: *defaults
     steps:
         - checkout
         - attach_workspace:
-          at: .
+            at: .
         - run:
-          name: Run tests # and collect coverage
-          command: npm run server:test # npm t
+            name: Run tests # and collect coverage
+            command: npm run server:test # npm t
 
 workflows:
   version: 2
