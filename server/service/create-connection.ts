@@ -13,7 +13,6 @@ export async function connectToDatabase(
   drop: boolean = false,
   seed: boolean = false
 ) {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useContainer(Container);
 
   const connection = await createConnection({

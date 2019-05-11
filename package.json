@@ -23,7 +23,7 @@
     "lint:stylelint": "stylelint \"src/**/*.css server/**/*.css public/**/*.html\"",
     "lint": "run-s lint:*",
     "server:start": "ts-node-dev --respawn --debug --project server/tsconfig.json server/index.ts",
-    "server:start-dev": "NODE_ENV=development run-s db-setup server:start",
+    "server:scratch": "NODE_ENV=development run-s db-setup server:start",
     "server:build": "tsc -p server",
     "server:run": "node dist/index.js",
     "db-setup": "ts-node --project ./server/tsconfig.json ./server/db-setup.ts",

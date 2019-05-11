@@ -10,5 +10,19 @@ module.exports = {
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/prefer-interface": 0,
     "@typescript-eslint/no-explicit-any": 0
-  }
+  },
+  overrides: [
+    {
+      files: ['__tests__/**/*.ts', '__tests__/**/*.tsx', '**/*.test.ts', '**/*.test.tsx'],
+      rules: {
+        '@typescript-eslint/no-non-null-assertion': 0,
+      },
+    },
+    {
+      files: ['server/**/*.ts'],
+      rules: {
+        "react-hooks/rules-of-hooks": 0
+      }
+    }
+  ],
 }

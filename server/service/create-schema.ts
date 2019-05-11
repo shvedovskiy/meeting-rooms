@@ -12,7 +12,13 @@ export function createSchema() {
     container: Container,
     dateScalarMode: 'isoDate',
     emitSchemaFile: {
-      path: path.resolve(__dirname, '__snapshots__', 'schema', 'schema.gql'),
+      path: path.resolve(
+        __dirname,
+        '..',
+        '__snapshots__',
+        'schema',
+        'schema.gql'
+      ),
       commentDescriptions: true,
     },
   });

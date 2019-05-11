@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Connection } from 'typeorm';
 import faker from 'faker';
 
