@@ -2,7 +2,7 @@
 import { Connection } from 'typeorm';
 import faker from 'faker';
 
-import { connectToDatabase } from '../create-connection';
+import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
 import { User } from '../entity/user';
 
@@ -20,7 +20,7 @@ afterEach(async () => {
   await connection.synchronize(true);
 });
 
-describe('User Resolver', () => {
+describe('User Mutation', () => {
   describe('createUser()', () => {
     const createUserQuery = `
       mutation CreateUser($input: UserInput!) {
@@ -35,7 +35,7 @@ describe('User Resolver', () => {
     it('creates a user with specified properties', async () => {
       const newUserData = {
         login: faker.internet.userName(),
-        homeFloor: 42,
+        homeFloor: faker.random.number({ max: 255 }),
         avatarUrl: faker.image.avatar(),
       };
 
@@ -92,7 +92,7 @@ describe('User Resolver', () => {
 
     it('does not create a user without login data', async () => {
       const newUserData = {
-        homeFloor: 42,
+        homeFloor: faker.random.number({ max: 255 }),
         avatarUrl: faker.image.avatar(),
       };
 
@@ -112,12 +112,12 @@ describe('User Resolver', () => {
       const commonLogin = faker.internet.userName();
       const firstUserData = {
         login: commonLogin,
-        homeFloor: 1,
+        homeFloor: faker.random.number({ max: 254 }),
         avatarUrl: faker.image.avatar(),
       };
       const secondUserData = {
         login: commonLogin,
-        homeFloor: 2,
+        homeFloor: firstUserData.homeFloor + 1,
         avatarUrl: faker.image.avatar(),
       };
 
@@ -156,7 +156,7 @@ describe('User Resolver', () => {
     beforeEach(async () => {
       dbUser = await User.create({
         login: faker.internet.userName(),
-        homeFloor: 42,
+        homeFloor: faker.random.number({ max: 254 }),
         avatarUrl: faker.image.avatar(),
       }).save();
     });
@@ -164,7 +164,7 @@ describe('User Resolver', () => {
     it('updates user data', async () => {
       const updateData = {
         login: faker.internet.userName(),
-        homeFloor: 15,
+        homeFloor: dbUser.homeFloor + 1,
         avatarUrl: faker.image.avatar(),
       };
 
@@ -190,7 +190,7 @@ describe('User Resolver', () => {
 
     it('updates part of user data', async () => {
       const updateData = {
-        homeFloor: 15,
+        homeFloor: dbUser.homeFloor + 1,
       };
 
       const response = await graphQLCall({
@@ -216,7 +216,7 @@ describe('User Resolver', () => {
     it('does not update the user when passing extra properties', async () => {
       const updateData = {
         login: faker.internet.userName(),
-        homeFloor: 15,
+        homeFloor: dbUser.homeFloor + 1,
         avatarUrl: faker.image.avatar(),
         extra: true,
       };
@@ -237,7 +237,7 @@ describe('User Resolver', () => {
     it('does not update unknown user', async () => {
       const updateData = {
         login: faker.internet.userName(),
-        homeFloor: 15,
+        homeFloor: dbUser.homeFloor + 1,
         avatarUrl: faker.image.avatar(),
       };
 
@@ -271,7 +271,7 @@ describe('User Resolver', () => {
     beforeEach(async () => {
       dbUser = await User.create({
         login: faker.internet.userName(),
-        homeFloor: 42,
+        homeFloor: faker.random.number({ max: 255 }),
         avatarUrl: faker.image.avatar(),
       }).save();
     });
@@ -311,139 +311,6 @@ describe('User Resolver', () => {
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
       expect(dbUserAfterRemove).toBeDefined();
-    });
-  });
-});
-
-describe('User Query', () => {
-  describe('users()', () => {
-    const usersQuery = `
-      query Users {
-        users {
-          id
-          login
-          homeFloor
-          avatarUrl
-        }
-      }
-    `;
-    it('returns list of users', async () => {
-      await User.insert([
-        {
-          login: faker.internet.userName(),
-          homeFloor: 1,
-          avatarUrl: faker.image.avatar(),
-        },
-        {
-          login: faker.internet.userName(),
-          homeFloor: 2,
-          avatarUrl: faker.image.avatar(),
-        },
-        {
-          login: faker.internet.userName(),
-          homeFloor: 3,
-          avatarUrl: faker.image.avatar(),
-        },
-      ]);
-      const users = await User.find();
-
-      const response = await graphQLCall({
-        source: usersQuery,
-      });
-
-      expect(response).toMatchObject({
-        data: {
-          users: [
-            {
-              id: users[0].id,
-              login: users[0].login,
-              homeFloor: users[0].homeFloor,
-              avatarUrl: users[0].avatarUrl,
-            },
-            {
-              id: users[1].id,
-              login: users[1].login,
-              homeFloor: users[1].homeFloor,
-              avatarUrl: users[1].avatarUrl,
-            },
-            {
-              id: users[2].id,
-              login: users[2].login,
-              homeFloor: users[2].homeFloor,
-              avatarUrl: users[2].avatarUrl,
-            },
-          ],
-        },
-      });
-    });
-
-    it('returns empty list if there are no users', async () => {
-      const response = await graphQLCall({
-        source: usersQuery,
-      });
-
-      expect(response).toMatchObject({
-        data: {
-          users: [],
-        },
-      });
-    });
-  });
-
-  describe('user()', () => {
-    const userQuery = `
-      query User($id: ID!) {
-        user(id: $id) {
-          id
-          login
-          homeFloor
-          avatarUrl
-        }
-      }
-    `;
-    let dbUser: User;
-
-    beforeEach(async () => {
-      dbUser = await User.create({
-        login: faker.internet.userName(),
-        homeFloor: 1,
-        avatarUrl: faker.image.avatar(),
-      }).save();
-    });
-
-    it('returns user data corresponding to the passed id', async () => {
-      const response = await graphQLCall({
-        source: userQuery,
-        variableValues: {
-          id: dbUser.id,
-        },
-      });
-
-      expect(response).toMatchObject({
-        data: {
-          user: {
-            id: dbUser.id,
-            login: dbUser.login,
-            homeFloor: dbUser.homeFloor,
-            avatarUrl: dbUser.avatarUrl,
-          },
-        },
-      });
-    });
-
-    it('returns nothing for unknown id', async () => {
-      const response = await graphQLCall({
-        source: userQuery,
-        variableValues: {
-          id: dbUser.id + '__unknown__',
-        },
-      });
-
-      expect(response).toMatchObject({
-        data: {
-          user: null,
-        },
-      });
     });
   });
 });
