@@ -19,11 +19,11 @@ jobs:
         - save_cache:
             key: dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
             paths:
-                - .
+                - 'node_modules'
         - persist_to_workspace:
             root: .
             paths:
-                - node_modules
+                - .
   # lint:
   #   <<: *defaults
   #   steps:
