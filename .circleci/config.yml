@@ -61,7 +61,7 @@ workflows:
         # - lint:
         #     requires:
         #         - prepare
-        -build:
+        - build:
             requires:
                 - prepare
         - test:
