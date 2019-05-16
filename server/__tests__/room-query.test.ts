@@ -4,6 +4,7 @@ import faker from 'faker';
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
 import { Room } from '../entity/room';
+import { createRoom } from '../test-utils/create-db-entity';
 
 let connection: Connection;
 
@@ -108,11 +109,7 @@ describe('Room Query', () => {
     let dbRoom: Room;
 
     beforeEach(async () => {
-      dbRoom = await Room.create({
-        title: faker.random.word(),
-        capacity: faker.random.number({ max: 32000 }),
-        floor: faker.random.number({ max: 255 }),
-      }).save();
+      dbRoom = await createRoom();
     });
 
     it('returns room data corresponding to the passed id', async () => {

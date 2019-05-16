@@ -4,6 +4,7 @@ import faker from 'faker';
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
 import { User } from '../entity/user';
+import { createUser } from '../test-utils/create-db-entity';
 
 let connection: Connection;
 
@@ -108,11 +109,7 @@ describe('User Query', () => {
     let dbUser: User;
 
     beforeEach(async () => {
-      dbUser = await User.create({
-        login: faker.internet.userName(),
-        homeFloor: faker.random.number({ max: 255 }),
-        avatarUrl: faker.image.avatar(),
-      }).save();
+      dbUser = (await createUser()) as User;
     });
 
     it('returns user data corresponding to the passed id', async () => {

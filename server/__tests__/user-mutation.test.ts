@@ -4,6 +4,7 @@ import faker from 'faker';
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
 import { User } from '../entity/user';
+import { createUser } from '../test-utils/create-db-entity';
 
 let connection: Connection;
 
@@ -30,7 +31,7 @@ describe('User Mutation', () => {
           avatarUrl
         }
       }
-      `;
+    `;
     it('creates a user with specified properties', async () => {
       const newUserData = {
         login: faker.internet.userName(),
@@ -101,7 +102,9 @@ describe('User Mutation', () => {
           input: newUserData,
         },
       });
+      const dbUsers = await User.find();
 
+      expect(dbUsers).toHaveLength(0);
       expect(response.data).toEqual(null);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
@@ -132,7 +135,10 @@ describe('User Mutation', () => {
           input: secondUserData,
         },
       });
+      const dbUsers = await User.find();
 
+      expect(dbUsers).toHaveLength(1);
+      expect(dbUsers[0].login).toBe(firstUserData.login);
       expect(response.data).toEqual(null);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
@@ -149,15 +155,11 @@ describe('User Mutation', () => {
           avatarUrl
         }
       }
-      `;
+    `;
     let dbUser: User;
 
     beforeEach(async () => {
-      dbUser = await User.create({
-        login: faker.internet.userName(),
-        homeFloor: faker.random.number({ max: 254 }),
-        avatarUrl: faker.image.avatar(),
-      }).save();
+      dbUser = (await createUser()) as User;
     });
 
     it('updates user data', async () => {
@@ -227,7 +229,9 @@ describe('User Mutation', () => {
           input: updateData,
         },
       });
+      const dbUserAfterQuery = await User.findOne(dbUser.id);
 
+      expect(dbUserAfterQuery!.login).not.toBe(updateData.login);
       expect(response.data).toEqual(undefined);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
@@ -247,7 +251,9 @@ describe('User Mutation', () => {
           input: updateData,
         },
       });
+      const dbUserAfterQuery = await User.findOne(dbUser.id);
 
+      expect(dbUserAfterQuery!.login).not.toBe(updateData.login);
       expect(response.data).toEqual(null);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
@@ -256,23 +262,19 @@ describe('User Mutation', () => {
 
   describe('removeUser()', () => {
     const removeUserQuery = `
-    mutation RemoveUser($id: ID!) {
-      removeUser(id: $id) {
-        id
-        login
-        homeFloor
-        avatarUrl
+      mutation RemoveUser($id: ID!) {
+        removeUser(id: $id) {
+          id
+          login
+          homeFloor
+          avatarUrl
+        }
       }
-    }
     `;
     let dbUser: User;
 
     beforeEach(async () => {
-      dbUser = await User.create({
-        login: faker.internet.userName(),
-        homeFloor: faker.random.number({ max: 255 }),
-        avatarUrl: faker.image.avatar(),
-      }).save();
+      dbUser = (await createUser()) as User;
     });
 
     it('removes user', async () => {
@@ -306,10 +308,10 @@ describe('User Mutation', () => {
       });
       const dbUserAfterRemove = await User.findOne(dbUser.id);
 
+      expect(dbUserAfterRemove).toBeDefined();
       expect(response.data).toEqual(null);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
-      expect(dbUserAfterRemove).toBeDefined();
     });
   });
 });

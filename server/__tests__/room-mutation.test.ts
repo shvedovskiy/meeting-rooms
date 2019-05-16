@@ -4,6 +4,7 @@ import faker from 'faker';
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
 import { Room } from '../entity/room';
+import { createRoom } from '../test-utils/create-db-entity';
 
 let connection: Connection;
 
@@ -30,7 +31,7 @@ describe('Room Mutation', () => {
           floor
         }
       }
-      `;
+    `;
     it('creates a room with specified properties', async () => {
       const newRoomData = {
         title: faker.random.word(),
@@ -101,7 +102,9 @@ describe('Room Mutation', () => {
           input: newRoomData,
         },
       });
+      const dbRooms = await Room.find();
 
+      expect(dbRooms).toHaveLength(0);
       expect(response.data).toEqual(null);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
@@ -132,7 +135,10 @@ describe('Room Mutation', () => {
           input: secondRoomData,
         },
       });
+      const dbRooms = await Room.find();
 
+      expect(dbRooms).toHaveLength(1);
+      expect(dbRooms[0].title).toBe(firstRoomData.title);
       expect(response.data).toEqual(null);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
@@ -153,11 +159,7 @@ describe('Room Mutation', () => {
     let dbRoom: Room;
 
     beforeEach(async () => {
-      dbRoom = await Room.create({
-        title: faker.random.word(),
-        capacity: faker.random.number({ max: 31999 }),
-        floor: faker.random.number({ max: 254 }),
-      }).save();
+      dbRoom = await createRoom();
     });
 
     it('updates room data', async () => {
@@ -227,7 +229,9 @@ describe('Room Mutation', () => {
           input: updateData,
         },
       });
+      const dbRoomAfterQuery = await Room.findOne(dbRoom.id);
 
+      expect(dbRoomAfterQuery!.title).not.toBe(updateData.title);
       expect(response.data).toEqual(undefined);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
@@ -247,7 +251,9 @@ describe('Room Mutation', () => {
           input: updateData,
         },
       });
+      const dbRoomAfterQuery = await Room.findOne(dbRoom.id);
 
+      expect(dbRoomAfterQuery!.title).not.toBe(updateData.title);
       expect(response.data).toEqual(null);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
@@ -256,23 +262,19 @@ describe('Room Mutation', () => {
 
   describe('removeRoom()', () => {
     const removeRoomQuery = `
-    mutation RemoveRoom($id: ID!) {
-      removeRoom(id: $id) {
-        id
-        title
-        capacity
-        floor
+      mutation RemoveRoom($id: ID!) {
+        removeRoom(id: $id) {
+          id
+          title
+          capacity
+          floor
+        }
       }
-    }
     `;
     let dbRoom: Room;
 
     beforeEach(async () => {
-      dbRoom = await Room.create({
-        title: faker.random.word(),
-        capacity: faker.random.number({ max: 32000 }),
-        floor: faker.random.number({ max: 255 }),
-      }).save();
+      dbRoom = await createRoom();
     });
 
     it('removes room', async () => {
@@ -306,10 +308,10 @@ describe('Room Mutation', () => {
       });
       const dbRoomAfterRemove = await Room.findOne(dbRoom.id);
 
+      expect(dbRoomAfterRemove).toBeDefined();
       expect(response.data).toEqual(null);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
-      expect(dbRoomAfterRemove).toBeDefined();
     });
   });
 });
