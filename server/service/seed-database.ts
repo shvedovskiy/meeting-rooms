@@ -67,18 +67,18 @@ export async function seedDatabase() {
   const events = eventRepository.create([
     {
       title: 'ШРИ 2018 - начало',
-      dateStart: now.toISOString(),
-      dateEnd: oneHourLater.toISOString(),
+      dateStart: now,
+      dateEnd: oneHourLater,
     },
     {
       title: '👾 Хакатон 👾',
-      dateStart: oneHourLater.toISOString(),
-      dateEnd: twoHoursLater.toISOString(),
+      dateStart: oneHourLater,
+      dateEnd: twoHoursLater,
     },
     {
       title: '🍨 Пробуем kefir.js',
-      dateStart: twoHoursLater.toISOString(),
-      dateEnd: threeHoursLater.toISOString(),
+      dateStart: twoHoursLater,
+      dateEnd: threeHoursLater,
     },
   ]);
   events[0].room = Promise.resolve(rooms[0]);

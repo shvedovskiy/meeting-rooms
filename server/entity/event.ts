@@ -16,8 +16,8 @@ import { Room } from './room';
 @ObjectType()
 @Entity()
 export class Event extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
   @Field(type => ID)
+  @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
   @Field()
@@ -27,26 +27,26 @@ export class Event extends BaseEntity {
   })
   title: string;
 
-  @Field(type => Date)
+  @Field()
   @Column('datetime')
-  dateStart: string;
+  dateStart: Date;
 
-  @Field(type => Date)
+  @Field()
   @Column('datetime')
-  dateEnd: string;
+  dateEnd: Date;
 
   @Column({ nullable: true })
   roomId?: string;
 
+  @Field(type => Room)
   @ManyToOne(type => Room, room => room.events, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'roomId ' })
-  @Field(type => Room)
+  @JoinColumn({ name: 'roomId' })
   room: Promise<Room>;
 
+  @Field(type => [User])
   @ManyToMany(type => User)
   @JoinTable()
-  @Field(type => [User])
-  users: Promise<User[] | null>;
+  users: Promise<User[]>;
 }

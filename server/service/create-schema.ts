@@ -10,7 +10,6 @@ export function createSchema() {
   return buildSchema({
     resolvers: [UserResolver, RoomResolver, EventResolver],
     container: Container,
-    dateScalarMode: 'isoDate',
     emitSchemaFile: {
       path: path.resolve(
         __dirname,

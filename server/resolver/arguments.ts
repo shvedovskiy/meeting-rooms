@@ -16,10 +16,10 @@ export class MutationArgs extends IdArg {}
 
 @ArgsType()
 export class EventRelationArgs {
-  @Field(type => [String])
-  usersIds: string[];
+  @Field(type => [ID], { nullable: true })
+  usersIds: string[] = [];
 
   @IsNotEmpty()
-  @Field()
+  @Field(type => ID)
   roomId: string;
 }

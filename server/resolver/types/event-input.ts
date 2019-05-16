@@ -1,5 +1,5 @@
 import { InputType, Field } from 'type-graphql';
-import { Length, IsDateString, IsNotEmpty } from 'class-validator';
+import { Length } from 'class-validator';
 
 import { Event } from '../../entity/event';
 import { IsAfter } from '../../service/validators/is-after';
@@ -10,14 +10,10 @@ export class EventInput implements Partial<Event> {
   @Field()
   title: string;
 
-  @IsNotEmpty()
-  @IsDateString()
   @Field()
-  dateStart: string;
+  dateStart: Date;
 
-  @IsNotEmpty()
-  @IsDateString()
   @IsAfter('dateStart')
   @Field()
-  dateEnd: string;
+  dateEnd: Date;
 }

@@ -5,17 +5,18 @@ import {
   registerDecorator,
   ValidationArguments,
 } from 'class-validator';
+import Maybe from 'graphql/tsutils/Maybe';
 
 @ValidatorConstraint({ async: true })
 class IsAfterConstraint implements ValidatorConstraintInterface {
-  public async validate(value: string, args: ValidationArguments) {
+  public async validate(value: Date, args: ValidationArguments) {
     const [relatedPropertyName] = args.constraints;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const relatedValue = (args.object as any)[relatedPropertyName];
+    const relatedValue: Maybe<Date> = (args.object as any)[relatedPropertyName];
     return (
-      typeof value === 'string' &&
-      typeof relatedValue === 'string' &&
-      new Date(value) > new Date(relatedValue)
+      value instanceof Date &&
+      relatedValue instanceof Date &&
+      value > relatedValue
     );
   }
 
