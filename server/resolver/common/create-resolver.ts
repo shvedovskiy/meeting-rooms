@@ -6,8 +6,15 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 
 export function createResolver<
   TEntity extends ClassType,
-  TInput extends ClassType
->(suffix: string, capitalizedSuffix: string, Entity: TEntity, Input: TInput) {
+  TInput extends ClassType,
+  TUpdateInput extends ClassType
+>(
+  suffix: string,
+  capitalizedSuffix: string,
+  Entity: TEntity,
+  Input: TInput,
+  UpdateInput: TUpdateInput
+) {
   @Resolver()
   class ResolverCls {
     @InjectRepository(Entity)
@@ -29,10 +36,13 @@ export function createResolver<
       return this.repository.save(inputData);
     }
 
-    @Mutation(returns => Entity, { name: `update${capitalizedSuffix}` })
+    @Mutation(returns => Entity, {
+      name: `update${capitalizedSuffix}`,
+      nullable: true,
+    })
     async update(
       @Args() { id }: MutationArgs,
-      @Arg('input', type => Input) inputData: any
+      @Arg('input', type => UpdateInput) inputData: any
     ): Promise<TEntity> {
       const entity = await this.repository.findOne(id);
       if (!entity) {
@@ -45,7 +55,10 @@ export function createResolver<
       });
     }
 
-    @Mutation(returns => Entity, { name: `remove${capitalizedSuffix}` })
+    @Mutation(returns => Entity, {
+      name: `remove${capitalizedSuffix}`,
+      nullable: true,
+    })
     async remove(@Args() { id }: MutationArgs): Promise<TEntity> {
       const entity = await this.repository.findOne(id);
       if (!entity) {

@@ -33,23 +33,7 @@ describe('Room Query', () => {
       }
     `;
     it('returns list of rooms', async () => {
-      await Room.insert([
-        {
-          title: faker.random.word(),
-          capacity: faker.random.number({ max: 32000 }),
-          floor: faker.random.number({ max: 255 }),
-        },
-        {
-          title: faker.random.word(),
-          capacity: faker.random.number({ max: 32000 }),
-          floor: faker.random.number({ max: 255 }),
-        },
-        {
-          title: faker.random.word(),
-          capacity: faker.random.number({ max: 32000 }),
-          floor: faker.random.number({ max: 255 }),
-        },
-      ]);
+      await createRoom(3);
       const rooms = await Room.find();
 
       const response = await graphQLCall({
@@ -109,7 +93,7 @@ describe('Room Query', () => {
     let dbRoom: Room;
 
     beforeEach(async () => {
-      dbRoom = await createRoom();
+      dbRoom = (await createRoom()) as Room;
     });
 
     it('returns room data corresponding to the passed id', async () => {

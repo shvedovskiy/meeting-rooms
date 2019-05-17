@@ -33,23 +33,7 @@ describe('User Query', () => {
       }
     `;
     it('returns list of users', async () => {
-      await User.insert([
-        {
-          login: faker.internet.userName(),
-          homeFloor: faker.random.number({ max: 255 }),
-          avatarUrl: faker.image.avatar(),
-        },
-        {
-          login: faker.internet.userName(),
-          homeFloor: faker.random.number({ max: 255 }),
-          avatarUrl: faker.image.avatar(),
-        },
-        {
-          login: faker.internet.userName(),
-          homeFloor: faker.random.number({ max: 255 }),
-          avatarUrl: faker.image.avatar(),
-        },
-      ]);
+      await createUser(3);
       const users = await User.find();
 
       const response = await graphQLCall({

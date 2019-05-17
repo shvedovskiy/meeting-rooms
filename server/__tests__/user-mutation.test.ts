@@ -105,7 +105,7 @@ describe('User Mutation', () => {
       const dbUsers = await User.find();
 
       expect(dbUsers).toHaveLength(0);
-      expect(response.data).toEqual(null);
+      expect(response.data).toEqual(undefined);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
     });
@@ -147,7 +147,7 @@ describe('User Mutation', () => {
 
   describe('updateUser()', () => {
     const updateUserQuery = `
-      mutation UpdateUser($id: ID!, $input: UserInput!) {
+      mutation UpdateUser($id: ID!, $input: UpdateUserInput!) {
         updateUser(id: $id, input: $input) {
           id
           login
@@ -254,7 +254,7 @@ describe('User Mutation', () => {
       const dbUserAfterQuery = await User.findOne(dbUser.id);
 
       expect(dbUserAfterQuery!.login).not.toBe(updateData.login);
-      expect(response.data).toEqual(null);
+      expect(response.data).toEqual({ updateUser: null });
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
     });
@@ -309,7 +309,7 @@ describe('User Mutation', () => {
       const dbUserAfterRemove = await User.findOne(dbUser.id);
 
       expect(dbUserAfterRemove).toBeDefined();
-      expect(response.data).toEqual(null);
+      expect(response.data).toEqual({ removeUser: null });
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
     });

@@ -105,7 +105,7 @@ describe('Room Mutation', () => {
       const dbRooms = await Room.find();
 
       expect(dbRooms).toHaveLength(0);
-      expect(response.data).toEqual(null);
+      expect(response.data).toEqual(undefined);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
     });
@@ -147,7 +147,7 @@ describe('Room Mutation', () => {
 
   describe('updateRoom()', () => {
     const updateRoomQuery = `
-      mutation UpdateRoom($id: ID!, $input: RoomInput!) {
+      mutation UpdateRoom($id: ID!, $input: UpdateRoomInput!) {
         updateRoom(id: $id, input: $input) {
           id
           title
@@ -159,7 +159,7 @@ describe('Room Mutation', () => {
     let dbRoom: Room;
 
     beforeEach(async () => {
-      dbRoom = await createRoom();
+      dbRoom = (await createRoom()) as Room;
     });
 
     it('updates room data', async () => {
@@ -208,7 +208,7 @@ describe('Room Mutation', () => {
             id: dbRoom.id,
             title: dbRoom.title,
             capacity: updateData.capacity,
-            floor: 0, // default value
+            floor: dbRoom.floor,
           },
         },
       });
@@ -254,7 +254,7 @@ describe('Room Mutation', () => {
       const dbRoomAfterQuery = await Room.findOne(dbRoom.id);
 
       expect(dbRoomAfterQuery!.title).not.toBe(updateData.title);
-      expect(response.data).toEqual(null);
+      expect(response.data).toEqual({ updateRoom: null });
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
     });
@@ -274,7 +274,7 @@ describe('Room Mutation', () => {
     let dbRoom: Room;
 
     beforeEach(async () => {
-      dbRoom = await createRoom();
+      dbRoom = (await createRoom()) as Room;
     });
 
     it('removes room', async () => {
@@ -309,7 +309,7 @@ describe('Room Mutation', () => {
       const dbRoomAfterRemove = await Room.findOne(dbRoom.id);
 
       expect(dbRoomAfterRemove).toBeDefined();
-      expect(response.data).toEqual(null);
+      expect(response.data).toEqual({ removeRoom: null });
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
     });
