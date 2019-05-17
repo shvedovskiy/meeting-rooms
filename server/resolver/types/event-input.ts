@@ -2,18 +2,29 @@ import { InputType, Field } from 'type-graphql';
 import { Length } from 'class-validator';
 
 import { Event } from '../../entity/event';
-import { IsAfter } from '../../service/validators/is-after';
 
-@InputType({ description: 'New or update event data' })
+@InputType({ description: 'New event data' })
 export class EventInput implements Partial<Event> {
   @Length(1, 255)
   @Field()
   title: string;
 
-  @Field()
-  dateStart: Date;
+  @Field({ nullable: true })
+  dateStart?: Date;
 
-  @IsAfter('dateStart')
-  @Field()
-  dateEnd: Date;
+  @Field({ nullable: true })
+  dateEnd?: Date;
+}
+
+@InputType({ description: 'Update event data' })
+export class UpdateEventInput implements Partial<Event> {
+  @Length(1, 255)
+  @Field({ nullable: true })
+  title?: string;
+
+  @Field({ nullable: true })
+  dateStart?: Date;
+
+  @Field({ nullable: true })
+  dateEnd?: Date;
 }

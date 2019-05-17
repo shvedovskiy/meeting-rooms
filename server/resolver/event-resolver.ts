@@ -3,8 +3,9 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 
 import { User } from '../entity/user';
+import { Room } from '../entity/room';
 import { Event } from '../entity/event';
-import { EventInput } from './types/event-input';
+import { EventInput, UpdateEventInput } from './types/event-input';
 import { QueryArgs, MutationArgs, EventRelationArgs } from './arguments';
 
 @Resolver()
@@ -13,6 +14,8 @@ export class EventResolver {
   private readonly eventRepository: Repository<Event>;
   @InjectRepository(User)
   private readonly userRepository: Repository<User>;
+  @InjectRepository(Room)
+  private readonly roomRepository: Repository<Room>;
 
   @Query(returns => [Event])
   events(): Promise<Event[]> {
@@ -39,27 +42,28 @@ export class EventResolver {
       }
     }
     event.users = Promise.resolve(users);
-    if (roomId.length > 0) {
-      event.roomId = roomId;
+    const room = await this.roomRepository.findOne(roomId);
+    if (!room) {
+      throw new Error('Unknown room ID');
     }
-    return this.eventRepository.create(event).save();
+    event.room = Promise.resolve(room);
+    return this.eventRepository.save(event);
   }
 
   @Mutation(returns => Event, { nullable: true })
   async updateEvent(
     @Args() { id }: MutationArgs,
-    @Arg('input', type => EventInput) newEventData: EventInput
+    @Arg('input', type => UpdateEventInput) newEventData: UpdateEventInput
   ): Promise<Event> {
     const eventToUpdate = await this.eventRepository.findOne(id);
     if (!eventToUpdate) {
       throw new Error('Invalid event ID');
     }
-
-    const updatedEvent = {
+    const event = Event.create({
       ...eventToUpdate,
       ...newEventData,
-    };
-    return this.eventRepository.save(updatedEvent);
+    });
+    return this.eventRepository.save(event);
   }
 
   @Mutation(returns => Event, { nullable: true })

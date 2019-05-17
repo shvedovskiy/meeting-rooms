@@ -12,6 +12,7 @@ import { ObjectType, Field, ID } from 'type-graphql';
 
 import { User } from './user';
 import { Room } from './room';
+import { IsAfter } from '../service/validators/is-after';
 
 @ObjectType()
 @Entity()
@@ -31,6 +32,7 @@ export class Event extends BaseEntity {
   @Column('datetime')
   dateStart: Date;
 
+  @IsAfter('dateStart')
   @Field()
   @Column('datetime')
   dateEnd: Date;
