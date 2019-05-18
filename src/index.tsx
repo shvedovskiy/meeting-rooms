@@ -1,22 +1,21 @@
-// @flow
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import invariant from 'invariant';
 
 import App from './components/app/app';
 import store from './store/configure-store';
 import * as serviceWorker from './serviceWorker';
+import { isProdEnv } from './service/config';
 
 import './index.css';
 
-const app = (
+render(
   <Provider store={store}>
     <App />
-  </Provider>
+  </Provider>,
+  document.getElementById('root')
 );
-const rootEl = document.getElementById('root');
-invariant(rootEl !== null, 'Could not find the div with ID #root.');
 
-render(app, rootEl);
-serviceWorker.unregister();
+if (!isProdEnv) {
+  serviceWorker.unregister();
+}
