@@ -4,7 +4,7 @@
     "prettier --write",
     "git add"
   ],
-  "{src,server}/**/*.css": [
+  "src/**/*.css": [
     "prettier --write",
     "stylelint",
     "git add"

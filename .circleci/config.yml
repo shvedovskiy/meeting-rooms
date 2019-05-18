@@ -24,14 +24,14 @@ jobs:
             root: .
             paths:
                 - .
-  # lint:
-  #   <<: *defaults
-  #   steps:
-  #       - attach_workspace:
-  #           at: .
-  #       - run:
-  #           name: Run Prettier, ESLint and Stylelint
-  #           command: npm run lint
+  lint:
+    <<: *defaults
+    steps:
+        - attach_workspace:
+            at: .
+        - run:
+            name: Run Prettier, ESLint and Stylelint
+            command: npm run lint
   build:
     <<: *defaults
     steps:
@@ -58,13 +58,12 @@ workflows:
   lint-and-test:
     jobs:
         - prepare
-        # - lint:
-        #     requires:
-        #         - prepare
+        - lint:
+            requires:
+                - prepare
         - build:
             requires:
                 - prepare
         - test:
             requires:
-                # - lint
-                - build
+                - lint

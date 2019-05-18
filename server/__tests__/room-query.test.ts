@@ -4,7 +4,6 @@ import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
 import { Room } from '../entity/room';
 import { createRoom, createEvent } from '../test-utils/create-db-entity';
-import { Event } from '../entity/event';
 
 let connection: Connection;
 

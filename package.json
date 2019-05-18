@@ -21,7 +21,7 @@
     "test": "react-scripts test",
     "lint:eslint": "eslint '{src,server}/**/*.{js,jsx,ts,tsx}' --fix",
     "lint:prettier": "prettier --write \"{src,server}/**/*.{js,jsx,ts,tsx,css,json}\"",
-    "lint:stylelint": "stylelint \"src/**/*.css server/**/*.css public/**/*.html\"",
+    "lint:stylelint": "stylelint \"src/**/*.css\" \"public/**/*.html\"",
     "lint": "run-s lint:*",
     "server:start": "ts-node-dev --respawn --debug --project server/tsconfig.json server/index.ts",
     "server:scratch": "NODE_ENV=development run-s db-setup server:start",
