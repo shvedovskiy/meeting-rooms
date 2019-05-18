@@ -4,7 +4,8 @@ import faker from 'faker';
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
 import { Room } from '../entity/room';
-import { createRoom } from '../test-utils/create-db-entity';
+import { createRoom, createEvent } from '../test-utils/create-db-entity';
+import { Event } from '../entity/event';
 
 let connection: Connection;
 
@@ -87,6 +88,12 @@ describe('Room Query', () => {
           title
           capacity
           floor
+          events {
+            id
+            title
+            dateStart
+            dateEnd
+          }
         }
       }
     `;
@@ -97,12 +104,15 @@ describe('Room Query', () => {
     });
 
     it('returns room data corresponding to the passed id', async () => {
+      const roomEvent = await createEvent(dbRoom.id, []);
+
       const response = await graphQLCall({
         source: roomQuery,
         variableValues: {
           id: dbRoom.id,
         },
       });
+      const dbEvent = await Event.findOne(roomEvent.id);
 
       expect(response).toMatchObject({
         data: {
@@ -114,6 +124,15 @@ describe('Room Query', () => {
           },
         },
       });
+      expect(response!.data!.room.events).toIncludeSameMembers([
+        {
+          id: roomEvent.id,
+          title: roomEvent.title,
+          dateStart: roomEvent.dateStart.toISOString(),
+          dateEnd: roomEvent.dateEnd.toISOString(),
+        },
+      ]);
+      expect(dbEvent!.roomId).toBe(dbRoom.id);
     });
 
     it('returns nothing for unknown id', async () => {

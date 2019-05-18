@@ -32,6 +32,7 @@ describe('User Query', () => {
         }
       }
     `;
+
     it('returns list of users', async () => {
       await createUser(3);
       const users = await User.find();
