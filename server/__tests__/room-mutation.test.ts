@@ -4,7 +4,8 @@ import faker from 'faker';
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
 import { Room } from '../entity/room';
-import { createRoom } from '../test-utils/create-db-entity';
+import { Event } from '../entity/event';
+import { createRoom, createEvent } from '../test-utils/create-db-entity';
 
 let connection: Connection;
 
@@ -278,6 +279,8 @@ describe('Room Mutation', () => {
     });
 
     it('removes room', async () => {
+      const roomEvent = (await createEvent(dbRoom.id, [])) as Event;
+
       const response = await graphQLCall({
         source: removeRoomQuery,
         variableValues: {
@@ -285,6 +288,7 @@ describe('Room Mutation', () => {
         },
       });
       const dbRoomAfterRemove = await Room.findOne(dbRoom.id);
+      const dbEventAfterRemove = await Event.findOne(roomEvent.id);
 
       expect(response).toMatchObject({
         data: {
@@ -297,6 +301,7 @@ describe('Room Mutation', () => {
         },
       });
       expect(dbRoomAfterRemove).toBeUndefined();
+      expect(dbEventAfterRemove).toBeUndefined();
     });
 
     it('does not remove an unknown room', async () => {

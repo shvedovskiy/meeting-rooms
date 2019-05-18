@@ -4,7 +4,13 @@ import faker from 'faker';
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
 import { User } from '../entity/user';
-import { createUser } from '../test-utils/create-db-entity';
+import {
+  createUser,
+  createEvent,
+  createRoom,
+} from '../test-utils/create-db-entity';
+import { Event } from '../entity/event';
+import { Room } from '../entity/room';
 
 let connection: Connection;
 
@@ -278,6 +284,9 @@ describe('User Mutation', () => {
     });
 
     it('removes user', async () => {
+      const room = (await createRoom()) as Room;
+      const userEvent = (await createEvent(room.id, [dbUser])) as Event;
+
       const response = await graphQLCall({
         source: removeUserQuery,
         variableValues: {
@@ -285,6 +294,8 @@ describe('User Mutation', () => {
         },
       });
       const dbUserAfterRemove = await User.findOne(dbUser.id);
+      const userEventAfterRemove = await Event.findOne(userEvent.id);
+      const eventUsers = await userEventAfterRemove!.users;
 
       expect(response).toMatchObject({
         data: {
@@ -297,6 +308,7 @@ describe('User Mutation', () => {
         },
       });
       expect(dbUserAfterRemove).toBeUndefined();
+      expect(eventUsers).toHaveLength(0);
     });
 
     it('does not remove an unknown user', async () => {

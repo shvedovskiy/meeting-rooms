@@ -75,6 +75,15 @@ export class EventResolver {
     if (!event) {
       throw new Error('Invalid event ID');
     }
+    const user = await this.userRepository.findOne(userId);
+    if (!user) {
+      throw new Error('Invalid user ID');
+    }
+    const eventUsers = await event.users;
+    const foundSameUser = eventUsers.find(u => u.id === userId);
+    if (foundSameUser) {
+      throw new Error('Unable to add same user');
+    }
 
     await this.eventRepository
       .createQueryBuilder()
@@ -93,6 +102,11 @@ export class EventResolver {
     const event = await this.eventRepository.findOne(id);
     if (!event) {
       throw new Error('Invalid event ID');
+    }
+    const eventUsers = await event.users;
+    const foundSameUser = eventUsers.find(u => u.id === userId);
+    if (!foundSameUser) {
+      throw new Error('Unable to remove user');
     }
 
     await this.eventRepository
@@ -115,6 +129,9 @@ export class EventResolver {
     }
 
     if (roomId.length > 0) {
+      if (event.roomId === roomId) {
+        throw new Error('Cannot change room to the same');
+      }
       event.roomId = roomId;
     }
     await this.eventRepository.save(event);
