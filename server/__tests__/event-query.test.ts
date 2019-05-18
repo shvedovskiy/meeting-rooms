@@ -1,5 +1,4 @@
 import { Connection } from 'typeorm';
-import faker from 'faker';
 
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';

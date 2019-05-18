@@ -143,6 +143,9 @@ describe('Event Mutation', () => {
             title
             dateStart
             dateEnd
+            room {
+              id
+            }
             users {
               id
             }
@@ -493,7 +496,7 @@ describe('Event Mutation', () => {
 
     beforeEach(async () => {
       dbRoom = (await createRoom()) as Room;
-      dbEvent = await createEvent(dbRoom.id, []);
+      dbEvent = await createEvent(dbRoom.id);
     });
 
     it('changes event room', async () => {

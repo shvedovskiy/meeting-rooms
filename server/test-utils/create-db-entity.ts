@@ -44,7 +44,7 @@ export async function createRoom(quantity: number = 1) {
   }
 }
 
-export async function createEvent(roomId: string, users: User[]) {
+export async function createEvent(roomId: string, users: User[] = []) {
   const event = Event.create({
     title: faker.random.word(),
     dateStart: faker.date.past(),

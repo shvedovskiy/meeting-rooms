@@ -33,6 +33,7 @@ describe('Room Mutation', () => {
         }
       }
     `;
+
     it('creates a room with specified properties', async () => {
       const newRoomData = {
         title: faker.random.word(),
@@ -84,14 +85,14 @@ describe('Room Mutation', () => {
           createRoom: {
             id: dbRoom!.id,
             title: newRoomData.title,
-            capacity: 1,
-            floor: 0,
+            capacity: 1, // default
+            floor: 0, // default
           },
         },
       });
     });
 
-    it('does not create a room without title data', async () => {
+    it('does not create a room without required data', async () => {
       const newRoomData = {
         capacity: faker.random.number({ max: 32000 }),
         floor: faker.random.number({ max: 255 }),
@@ -279,7 +280,7 @@ describe('Room Mutation', () => {
     });
 
     it('removes room', async () => {
-      const roomEvent = (await createEvent(dbRoom.id, [])) as Event;
+      const roomEvent = (await createEvent(dbRoom.id)) as Event;
 
       const response = await graphQLCall({
         source: removeRoomQuery,

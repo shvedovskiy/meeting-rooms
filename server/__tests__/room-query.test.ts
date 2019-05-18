@@ -1,5 +1,4 @@
 import { Connection } from 'typeorm';
-import faker from 'faker';
 
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
@@ -104,7 +103,7 @@ describe('Room Query', () => {
     });
 
     it('returns room data corresponding to the passed id', async () => {
-      const roomEvent = await createEvent(dbRoom.id, []);
+      const roomEvent = await createEvent(dbRoom.id);
 
       const response = await graphQLCall({
         source: roomQuery,
@@ -112,7 +111,6 @@ describe('Room Query', () => {
           id: dbRoom.id,
         },
       });
-      const dbEvent = await Event.findOne(roomEvent.id);
 
       expect(response).toMatchObject({
         data: {
@@ -132,7 +130,6 @@ describe('Room Query', () => {
           dateEnd: roomEvent.dateEnd.toISOString(),
         },
       ]);
-      expect(dbEvent!.roomId).toBe(dbRoom.id);
     });
 
     it('returns nothing for unknown id', async () => {

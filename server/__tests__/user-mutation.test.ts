@@ -38,6 +38,7 @@ describe('User Mutation', () => {
         }
       }
     `;
+
     it('creates a user with specified properties', async () => {
       const newUserData = {
         login: faker.internet.userName(),
@@ -89,14 +90,14 @@ describe('User Mutation', () => {
           createUser: {
             id: dbUser!.id,
             login: newUserData.login,
-            homeFloor: 0,
-            avatarUrl: null,
+            homeFloor: 0, // default
+            avatarUrl: null, // default
           },
         },
       });
     });
 
-    it('does not create a user without login data', async () => {
+    it('does not create a user without required data', async () => {
       const newUserData = {
         homeFloor: faker.random.number({ max: 255 }),
         avatarUrl: faker.image.avatar(),
