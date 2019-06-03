@@ -1,11 +1,155 @@
-body {
+:root {
+  --bg-primary: #fff;
+  --bg-secondary: #f6f7f9;
+  --text-primary: #000;
+  --text-inverted: #fff;
+  --text-secondary: #858e98;
+  --text-inactive: rgba(0, 0, 0, 0.2);
+  --large-text: 20px;
+  --medium-text: 15px;
+  --default-text: 13px;
+  --small-text: 11px;
+  --primary-1: #007dff;
+  --primary-2: #1d54fe;
+  --primary-3: #1d00fe;
+  --secondary-1: #e9ecef;
+  --secondary-2: #dee0e3;
+  --secondary-3: #c8cdd3;
+  --inactive: #e2e5e8;
+  --border: #e9ecef;
+  --border-1: #007dff;
+  --table-cell-primary-1: #fff;
+  --table-cell-primary-2: #1d54fe;
+  --table-cell-primary-3: #1d00fe;
+  --table-cell-secondary-1: #d5dfe9;
+  --table-cell-secondary-2: #99a9b9;
+}
+
+html,
+body,
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+big,
+em,
+img,
+ins,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+aside,
+details,
+figure,
+figcaption,
+footer,
+header,
+section,
+summary {
   margin: 0;
   padding: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+  border: 0;
+}
+
+html {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+:disabled {
+  cursor: not-allowed;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-size: var(--default-text);
+  line-height: 1;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  -webkit-text-size-adjust: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: "source-code-pro", "Menlo", "Monaco", "Consolas", "Courier New", monospace;
+h1 {
+  font-size: var(--large-text);
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  border: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+input {
+  height: 38px;
+  margin: 0;
+  padding: 10px;
+  font-size: var(--medium-text);
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input:focus {
+  border-color: var(--border-1);
+  outline: none;
+}
+
+input::placeholder {
+  font-size: var(--default-text);
+  font-weight: 100;
+  color: var(--text-secondary);
+  letter-spacing: 0.37px;
+}
+
+/* stylelint-disable-next-line selector-max-id */
+#root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
 }

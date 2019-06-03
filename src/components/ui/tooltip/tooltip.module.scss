@@ -1,0 +1,27 @@
+.popupContent {
+  position: absolute;
+  z-index: 2;
+  width: 200px;
+  padding: 5px;
+  background: rgb(255, 255, 255);
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.1))
+    drop-shadow(0 1px 6px rgba(0, 0, 0, 0.3));
+  border-radius: 8px;
+}
+
+.popupArrow {
+  position: absolute;
+  z-index: -1;
+  width: 12px;
+  height: 12px;
+  margin: -5px;
+  background: rgb(255, 255, 255);
+  border-radius: 2px;
+  transform: rotate(45deg);
+}
+
+.popupHelper {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
