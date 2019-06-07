@@ -4,7 +4,9 @@ import { User } from '../entity/user';
 import { Room } from '../entity/room';
 import { Event } from '../entity/event';
 
-export async function createUser(quantity: number = 1) {
+export function createUser(): Promise<User>;
+export function createUser(quantity: number): Promise<User[]>;
+export async function createUser(quantity: number = 1): Promise<User | User[]> {
   if (quantity > 1) {
     const usersData: User[] = [];
     for (let i = 0; i !== quantity; i++) {
@@ -24,7 +26,9 @@ export async function createUser(quantity: number = 1) {
   }
 }
 
-export async function createRoom(quantity: number = 1) {
+export function createRoom(): Promise<Room>;
+export function createRoom(quantity: number): Promise<Room[]>;
+export async function createRoom(quantity: number = 1): Promise<Room | Room[]> {
   if (quantity > 1) {
     const roomsData: Room[] = [];
     for (let i = 0; i !== quantity; i++) {

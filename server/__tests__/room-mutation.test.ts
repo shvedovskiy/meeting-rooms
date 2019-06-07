@@ -161,7 +161,7 @@ describe('Room Mutation', () => {
     let dbRoom: Room;
 
     beforeEach(async () => {
-      dbRoom = (await createRoom()) as Room;
+      dbRoom = await createRoom();
     });
 
     it('updates room data', async () => {
@@ -276,7 +276,7 @@ describe('Room Mutation', () => {
     let dbRoom: Room;
 
     beforeEach(async () => {
-      dbRoom = (await createRoom()) as Room;
+      dbRoom = await createRoom();
     });
 
     it('removes room', async () => {

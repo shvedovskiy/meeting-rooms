@@ -93,7 +93,7 @@ describe('User Query', () => {
     let dbUser: User;
 
     beforeEach(async () => {
-      dbUser = (await createUser()) as User;
+      dbUser = await createUser();
     });
 
     it('returns user data corresponding to the passed id', async () => {

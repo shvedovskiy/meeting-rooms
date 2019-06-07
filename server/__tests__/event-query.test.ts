@@ -51,8 +51,8 @@ describe('Event Query', () => {
     `;
 
     it('returns list of events', async () => {
-      const dbRooms = (await createRoom(2)) as Room[];
-      const dbUsers = (await createUser(6)) as User[];
+      const dbRooms = await createRoom(2);
+      const dbUsers = await createUser(6);
       await createEvent(dbRooms[0].id, [dbUsers[0], dbUsers[1], dbUsers[2]]);
       await createEvent(dbRooms[1].id, [dbUsers[3], dbUsers[4], dbUsers[5]]);
       const events = await Event.find();
@@ -140,8 +140,8 @@ describe('Event Query', () => {
     let dbEvent: Event;
 
     beforeEach(async () => {
-      dbUsers = (await createUser(3)) as User[];
-      dbRoom = (await createRoom()) as Room;
+      dbUsers = await createUser(3);
+      dbRoom = await createRoom();
       dbEvent = await createEvent(dbRoom.id, dbUsers);
     });
 

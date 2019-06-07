@@ -98,7 +98,7 @@ describe('Room Query', () => {
     let dbRoom: Room;
 
     beforeEach(async () => {
-      dbRoom = (await createRoom()) as Room;
+      dbRoom = await createRoom();
     });
 
     it('returns room data corresponding to the passed id', async () => {

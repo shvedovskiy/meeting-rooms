@@ -10,7 +10,6 @@ import {
   createRoom,
 } from '../test-utils/create-db-entity';
 import { Event } from '../entity/event';
-import { Room } from '../entity/room';
 
 let connection: Connection;
 
@@ -166,7 +165,7 @@ describe('User Mutation', () => {
     let dbUser: User;
 
     beforeEach(async () => {
-      dbUser = (await createUser()) as User;
+      dbUser = await createUser();
     });
 
     it('updates user data', async () => {
@@ -281,11 +280,11 @@ describe('User Mutation', () => {
     let dbUser: User;
 
     beforeEach(async () => {
-      dbUser = (await createUser()) as User;
+      dbUser = await createUser();
     });
 
     it('removes user', async () => {
-      const room = (await createRoom()) as Room;
+      const room = await createRoom();
       const userEvent = (await createEvent(room.id, [dbUser])) as Event;
 
       const response = await graphQLCall({

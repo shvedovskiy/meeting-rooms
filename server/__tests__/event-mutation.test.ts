@@ -48,8 +48,8 @@ describe('Event Mutation', () => {
     let dbRoom: Room;
 
     beforeEach(async () => {
-      dbUsers = (await createUser(3)) as User[];
-      dbRoom = (await createRoom()) as Room;
+      dbUsers = await createUser(3);
+      dbRoom = await createRoom();
     });
 
     it('creates an event with specified properties', async () => {
@@ -348,8 +348,8 @@ describe('Event Mutation', () => {
     let dbEvent: Event;
 
     beforeEach(async () => {
-      dbUsers = (await createUser(3)) as User[];
-      dbRoom = (await createRoom()) as Room;
+      dbUsers = await createUser(3);
+      dbRoom = await createRoom();
       dbEvent = await createEvent(dbRoom.id, dbUsers);
     });
 
@@ -495,12 +495,12 @@ describe('Event Mutation', () => {
     let dbEvent: Event;
 
     beforeEach(async () => {
-      dbRoom = (await createRoom()) as Room;
+      dbRoom = await createRoom();
       dbEvent = await createEvent(dbRoom.id);
     });
 
     it('changes event room', async () => {
-      const newDbRoom = (await createRoom()) as Room;
+      const newDbRoom = await createRoom();
 
       const response = await graphQLCall({
         source: changeEventRoomQuery,
@@ -583,13 +583,13 @@ describe('Event Mutation', () => {
     let dbEvent: Event;
 
     beforeEach(async () => {
-      dbUsers = (await createUser(3)) as User[];
-      dbRoom = (await createRoom()) as Room;
+      dbUsers = await createUser(3);
+      dbRoom = await createRoom();
       dbEvent = await createEvent(dbRoom.id, dbUsers);
     });
 
     it('adds new user to event', async () => {
-      const newDbUser = (await createUser()) as User;
+      const newDbUser = await createUser();
 
       const response = await graphQLCall({
         source: addUserToEventQuery,
@@ -675,8 +675,8 @@ describe('Event Mutation', () => {
     let dbEvent: Event;
 
     beforeEach(async () => {
-      dbUsers = (await createUser(3)) as User[];
-      dbRoom = (await createRoom()) as Room;
+      dbUsers = await createUser(3);
+      dbRoom = await createRoom();
       dbEvent = await createEvent(dbRoom.id, dbUsers);
     });
 
@@ -709,7 +709,7 @@ describe('Event Mutation', () => {
     });
 
     it('does not remove a user that does not belong to event', async () => {
-      const user = (await createUser()) as User;
+      const user = await createUser();
       const response = await graphQLCall({
         source: removeUserFromEventQuery,
         variableValues: {
@@ -760,8 +760,8 @@ describe('Event Mutation', () => {
     let dbEvent: Event;
 
     beforeEach(async () => {
-      dbRoom = (await createRoom()) as Room;
-      dbUsers = (await createUser(3)) as User[];
+      dbRoom = await createRoom();
+      dbUsers = await createUser(3);
       dbEvent = await createEvent(dbRoom.id, dbUsers);
     });
 
