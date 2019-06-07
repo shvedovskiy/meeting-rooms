@@ -5,10 +5,12 @@ import React, {
   useCallback,
   ReactElement,
 } from 'react';
+import { CSSTransition } from 'react-transition-group';
 
 import { Ref } from './ref';
 import { calculatePosition } from './utils';
 import classes from './tooltip.module.scss';
+import transitionClasses from './tooltip-transition.module.scss';
 
 const defaultProps = Object.freeze({
   offsetX: 0,
@@ -26,7 +28,6 @@ export const Tooltip: React.FC<Props> = props => {
   const contentRef = useRef<HTMLDivElement>(null);
   const arrowRef = useRef<HTMLDivElement>(null);
   const helperRef = useRef<HTMLDivElement>(null);
-  const timer = useRef<NodeJS.Timeout>(null);
 
   const closePopup = useCallback(() => {
     if (!isOpen) {
@@ -45,9 +46,6 @@ export const Tooltip: React.FC<Props> = props => {
 
     return () => {
       window.removeEventListener('keyup', onEscape);
-      if (timer && timer.current) {
-        clearTimeout(timer.current);
-      }
     };
   }, [closePopup]);
 
@@ -99,11 +97,10 @@ export const Tooltip: React.FC<Props> = props => {
   function togglePopup(e: React.KeyboardEvent | React.PointerEvent) {
     e.persist();
     if (isOpen) {
-      // @ts-ignore
-      timer.current = setTimeout(closePopup);
+      closePopup();
     } else {
       // @ts-ignore
-      timer.current = setTimeout(openPopup);
+      setTimeout(openPopup);
     }
   }
 
@@ -116,11 +113,11 @@ export const Tooltip: React.FC<Props> = props => {
   const renderContent = () => (
     <div
       key="__C"
-      className={classes.popupContent}
+      className={classes.tooltipContent}
       ref={contentRef}
       onClick={(e: any) => e.stopPropagation()}
     >
-      <div ref={arrowRef} className={classes.popupArrow} />
+      <div ref={arrowRef} className={classes.tooltipArrow} />
       {typeof props.children === 'function'
         ? props.children(closePopup)
         : props.children}
@@ -128,7 +125,7 @@ export const Tooltip: React.FC<Props> = props => {
   );
 
   const renderHelper = () => (
-    <div key="__H" className={classes.popupHelper} ref={helperRef} />
+    <div key="__H" className={classes.tooltipHelper} ref={helperRef} />
   );
 
   return (
@@ -137,7 +134,14 @@ export const Tooltip: React.FC<Props> = props => {
         {renderTrigger()}
       </Ref>
       {isOpen && renderHelper()}
-      {isOpen && renderContent()}
+      <CSSTransition
+        classNames={transitionClasses}
+        in={isOpen}
+        timeout={200}
+        unmountOnExit
+      >
+        {renderContent()}
+      </CSSTransition>
     </>
   );
 };

@@ -2,18 +2,20 @@ import React, { useEffect, useRef } from 'react';
 
 import classes from './button.module.scss';
 
-export type ButtonType = 'button' | 'submit' | 'reset';
+export type ButtonKind = 'button' | 'submit' | 'reset';
 export type ButtonUse = 'default' | 'primary';
-export interface ButtonProps {
+
+export interface ButtonType {
   autoFocus?: boolean;
-  children?: React.ReactNode;
   disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  type?: ButtonType;
+  type?: ButtonKind;
   use?: ButtonUse;
 }
 
-export const Button: React.FC<ButtonProps> = props => {
+export const Button: React.FC<
+  ButtonType & { children?: React.ReactNode }
+> = props => {
   const buttonNode = useRef<HTMLButtonElement>(null);
   const {
     autoFocus,

@@ -122,7 +122,6 @@ export function calculatePosition(
     return;
   }
   if (!contentElement || !contentElement.current) {
-    console.log('alo2');
     return;
   }
 
