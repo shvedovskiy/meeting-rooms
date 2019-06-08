@@ -23,6 +23,7 @@
   --table-cell-primary-3: #1d00fe;
   --table-cell-secondary-1: #d5dfe9;
   --table-cell-secondary-2: #99a9b9;
+  --shadow-color: rgba(0, 44, 92, 0.28);
 }
 
 html,
