@@ -1,0 +1,48 @@
+.modal {
+  width: 444px;
+  padding: 32px;
+  vertical-align: middle;
+  background-color: var(--bg-primary);
+  border-radius: 8px;
+  box-shadow: 0 1px 16px var(--shadow-color);
+
+  @media screen and (max-width: 599px) {
+    margin-bottom: 24px;
+    vertical-align: bottom;
+  }
+
+  h1 {
+    font-size: var(--large-text);
+    font-weight: 700;
+  }
+}
+
+.modalIcon {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 40px;
+}
+
+.modalText {
+  margin-top: 8px;
+  margin-bottom: 4px;
+  font-size: var(--medium-text);
+}
+
+.modalButtons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+
+  button {
+    flex-shrink: 0;
+    max-width: 50%;
+    margin-top: 8px;
+
+    & + button {
+      margin-left: 16px;
+    }
+  }
+}
