@@ -1,4 +1,4 @@
-import { RefObject } from 'react';
+import { RefObject, MutableRefObject } from 'react';
 
 type Position =
   | 'top left'
@@ -108,8 +108,8 @@ function getCoordinatesForPosition(
 }
 
 export function calculatePosition(
-  triggerElement: RefObject<HTMLElement> | undefined,
-  contentElement: RefObject<HTMLDivElement> | undefined,
+  triggerElement: RefObject<HTMLElement>,
+  contentElement: MutableRefObject<HTMLDivElement>,
   offsets: OffsetType
 ) {
   const wrapperBox = {
@@ -118,10 +118,7 @@ export function calculatePosition(
     width: window.innerWidth,
     height: window.innerHeight,
   };
-  if (!triggerElement || !triggerElement.current) {
-    return;
-  }
-  if (!contentElement || !contentElement.current) {
+  if (!triggerElement.current) {
     return;
   }
 

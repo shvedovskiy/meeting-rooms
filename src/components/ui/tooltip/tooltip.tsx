@@ -25,9 +25,9 @@ type Props = {
 export const Tooltip: React.FC<Props> = props => {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const arrowRef = useRef<HTMLDivElement>(null);
-  const helperRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null!);
+  const arrowRef = useRef<HTMLDivElement>(null!);
+  const helperRef = useRef<HTMLDivElement>(null!);
 
   const closePopup = useCallback(() => {
     if (!isOpen) {
@@ -50,11 +50,6 @@ export const Tooltip: React.FC<Props> = props => {
   }, [closePopup]);
 
   function setPosition() {
-    let helper: ClientRect | DOMRect | undefined;
-    if (helperRef && helperRef.current) {
-      helper = helperRef.current.getBoundingClientRect();
-    }
-
     const position = calculatePosition(triggerRef, contentRef, {
       offsetX: props.offsetX,
       offsetY: props.offsetY,
@@ -62,17 +57,14 @@ export const Tooltip: React.FC<Props> = props => {
     if (!position) {
       return;
     }
+    const helper = helperRef.current.getBoundingClientRect();
+    contentRef.current.style.top = `${position.top - helper.top}px`;
+    contentRef.current.style.left = `${position.left - helper.left}px`;
+    arrowRef.current.style.transform = position.transform;
+    arrowRef.current.style.top = position.arrowTop;
+    arrowRef.current.style.left = position.arrowLeft;
 
-    if (contentRef && contentRef.current && helper) {
-      contentRef.current.style.top = `${position.top - helper.top}px`;
-      contentRef.current.style.left = `${position.left - helper.left}px`;
-    }
-    if (arrowRef && arrowRef.current) {
-      arrowRef.current.style.transform = position.transform;
-      arrowRef.current.style.top = position.arrowTop;
-      arrowRef.current.style.left = position.arrowLeft;
-    }
-    if (triggerRef && triggerRef.current) {
+    if (triggerRef.current) {
       if (
         window
           .getComputedStyle(triggerRef.current, null)
@@ -99,7 +91,6 @@ export const Tooltip: React.FC<Props> = props => {
     if (isOpen) {
       closePopup();
     } else {
-      // @ts-ignore
       setTimeout(openPopup);
     }
   }
