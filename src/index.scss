@@ -118,33 +118,10 @@ button {
   border: none;
   -webkit-appearance: none;
   appearance: none;
-}
 
-button:not(:disabled) {
-  cursor: pointer;
-}
-
-input {
-  height: 38px;
-  margin: 0;
-  padding: 10px;
-  font-size: var(--medium-text);
-  border: 2px solid var(--border);
-  border-radius: 4px;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-input:focus {
-  border-color: var(--border-1);
-  outline: none;
-}
-
-input::placeholder {
-  font-size: var(--default-text);
-  font-weight: 100;
-  color: var(--text-secondary);
-  letter-spacing: 0.37px;
+  &:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 /* stylelint-disable-next-line selector-max-id */

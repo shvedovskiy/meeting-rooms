@@ -1,12 +1,12 @@
 import React, { Children, ReactNode, MutableRefObject } from 'react';
 import { findDOMNode } from 'react-dom';
 
-interface RefProps {
+type Props = {
   children: ReactNode;
   innerRef: MutableRefObject<ReturnType<typeof findDOMNode>>;
-}
+};
 
-export class Ref extends React.Component<RefProps> {
+export class Ref extends React.Component<Props> {
   prevNode: ReturnType<typeof findDOMNode> = null;
 
   componentDidMount() {

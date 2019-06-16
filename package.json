@@ -36,6 +36,7 @@
     "a11y-react-emoji": "^1.0.1",
     "apollo-server": "^2.6.1",
     "class-validator": "^0.9.1",
+    "classnames": "^2.2.6",
     "dotenv-flow": "^0.4.0",
     "graphql": "^14.3.1",
     "node-sass": "^4.12.0",
@@ -44,6 +45,7 @@
     "react-dom": "^16.8.6",
     "react-responsive": "^6.1.2",
     "react-scripts": "^3.0.1",
+    "react-sizes": "^2.0.0",
     "react-transition-group": "^4.1.0",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^4.0.8",
@@ -55,6 +57,7 @@
     "typescript": "^3.5.1"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.8",
     "@types/dotenv-flow": "^0.2.1",
     "@types/enzyme": "^3.9.3",
     "@types/enzyme-adapter-react-16": "^1.0.5",
@@ -88,6 +91,7 @@
     "stylelint-scss": "^3.8.0",
     "ts-jest": "^24.0.2",
     "ts-node": "^8.2.0",
-    "ts-node-dev": "^1.0.0-pre.35"
+    "ts-node-dev": "^1.0.0-pre.35",
+    "utility-types": "^3.7.0"
   }
 }

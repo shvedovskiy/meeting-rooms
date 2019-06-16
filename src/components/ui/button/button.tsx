@@ -1,35 +1,36 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, ReactChild, MouseEventHandler } from 'react';
+import classNames from 'classnames';
 
 import classes from './button.module.scss';
 
+export type ButtonSize = 'default' | 'large';
 export type ButtonKind = 'button' | 'submit' | 'reset';
 export type ButtonUse = 'default' | 'primary';
-
-export interface ButtonType {
+export type ButtonType = {
   autoFocus?: boolean;
   disabled?: boolean;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  size?: ButtonSize;
   type?: ButtonKind;
   use?: ButtonUse;
-}
+};
 
-export const Button: React.FC<
-  ButtonType & { children?: React.ReactNode }
-> = props => {
-  const buttonNode = useRef<HTMLButtonElement>(null);
+type Props = ButtonType & { children?: ReactChild };
+
+export const Button = (props: Props) => {
+  const buttonNode = useRef<HTMLButtonElement>(null!);
   const {
     autoFocus,
     children,
     disabled,
     onClick,
+    size = 'default',
     type = 'button',
     use = 'default',
   } = props;
 
   function focus() {
-    if (buttonNode && buttonNode.current) {
-      buttonNode.current.focus();
-    }
+    buttonNode.current.focus();
   }
 
   useEffect(() => {
@@ -40,7 +41,9 @@ export const Button: React.FC<
 
   const buttonProps = {
     type,
-    className: `${classes.btn} ${classes[use]}`,
+    className: classNames(classes.btn, classes[use], {
+      [classes.lg]: size === 'large',
+    }),
     disabled,
     onClick,
   };

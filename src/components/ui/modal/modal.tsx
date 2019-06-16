@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import AriaModal from 'react-aria-modal';
 import { CSSTransition } from 'react-transition-group';
 import Emoji from 'a11y-react-emoji';
@@ -6,18 +6,21 @@ import Emoji from 'a11y-react-emoji';
 import classes from './modal.module.scss';
 import transitionClasses from './modal-transition.module.scss';
 import { Button, ButtonType } from '../button/button';
+import SizeContext from 'context/size-context';
 
 export type ModalButtonType = ButtonType & { id: string; text: string };
-export interface ModalProps {
+
+type Props = {
   icon?: string;
   iconLabel?: string;
   title?: string;
   text?: string;
   buttons?: ModalButtonType[];
-}
+};
 
-export const Modal: React.FC<ModalProps> = props => {
+export const Modal = (props: Props) => {
   const [modalActive, setModalActive] = useState(false);
+  const size = useContext(SizeContext);
 
   const modal = (
     <CSSTransition
@@ -48,7 +51,7 @@ export const Modal: React.FC<ModalProps> = props => {
         {props.buttons ? (
           <div className={classes.modalButtons}>
             {props.buttons.map(({ id, text, ...rest }: ModalButtonType) => (
-              <Button key={id} {...rest}>
+              <Button key={id} {...rest} size={size}>
                 {text}
               </Button>
             ))}

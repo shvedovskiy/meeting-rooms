@@ -12,17 +12,17 @@ import { calculatePosition } from './utils';
 import classes from './tooltip.module.scss';
 import transitionClasses from './tooltip-transition.module.scss';
 
+type Props = {
+  trigger: ReactElement;
+  children: ReactElement | ((close: () => void) => ReactElement);
+} & typeof defaultProps; // eslint-disable-line @typescript-eslint/no-use-before-define, no-use-before-define
+
 const defaultProps = Object.freeze({
   offsetX: 0,
   offsetY: 0,
 });
 
-type Props = {
-  trigger: ReactElement;
-  children: ReactElement | ((close: () => void) => ReactElement);
-} & Partial<typeof defaultProps>;
-
-export const Tooltip: React.FC<Props> = props => {
+export const Tooltip = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null!);
