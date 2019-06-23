@@ -1,0 +1,41 @@
+.selectOption {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 5px 16px;
+  cursor: pointer;
+  user-select: none;
+  background-color: var(--bg-primary);
+
+  &.focused {
+    font-weight: 600;
+    background-color: var(--bg-secondary);
+  }
+
+  .iconContainer {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    
+  }
+
+  .icon {
+    border-radius: 50%;
+  }
+
+  .optionText {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .bullet {
+    font-size: var(--xs-text);
+  }
+
+  .homeFloor {
+    color: var(--text-secondary);
+  }
+}
