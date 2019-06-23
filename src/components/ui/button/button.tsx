@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, ReactChild, MouseEventHandler } from 'react';
 import classNames from 'classnames';
 
+import { Size } from 'service/sizes';
 import classes from './button.module.scss';
 
-export type ButtonSize = 'default' | 'large';
 export type ButtonKind = 'button' | 'submit' | 'reset';
 export type ButtonUse = 'default' | 'primary';
 export type ButtonType = {
   autoFocus?: boolean;
   disabled?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
-  size?: ButtonSize;
+  size?: Size;
   type?: ButtonKind;
   use?: ButtonUse;
 };

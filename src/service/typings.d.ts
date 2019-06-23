@@ -1,3 +1,5 @@
+export type Nullable<T> = T | null | undefined;
+
 type ObjectKeyType = string | number | symbol;
 
 type Diff<T extends ObjectKeyType, U extends ObjectKeyType> = ({ [P in T]: P } &

@@ -9,15 +9,15 @@ import React, {
 import classNames from 'classnames';
 import { Override } from 'service/typings';
 
+import { Size } from 'service/sizes';
 import { ReactComponent as Close } from './close.svg';
 import classes from './input.module.scss';
 
-export type InputSize = 'default' | 'large';
 export type Props = Override<
   React.InputHTMLAttributes<HTMLInputElement>,
   {
     value?: string;
-    size?: InputSize;
+    size?: Size;
     sideIcon?: ReactSVGElement;
     sideIconClick?: () => void;
     onChange?: (event: ChangeEvent<HTMLInputElement>, value: string) => void;
