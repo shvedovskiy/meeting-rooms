@@ -30,6 +30,18 @@
     top: 3px;
     right: 12px;
     background: none;
+
+    .iconElement {
+      transition: fill 0.2s ease-out;
+      fill: #afb4b8;
+    }
+
+    &:hover,
+    &:focus {
+      .iconElement {
+        fill: var(--text-primary);
+      }
+    }
   }
 
   &.lg {

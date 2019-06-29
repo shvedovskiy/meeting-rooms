@@ -7,7 +7,7 @@ import { MultiValueLabel } from './multi-value-label/multi-value-label';
 import { MultiValueRemove } from './multi-value-remove/multi-value-remove';
 import { customStyles } from './styles';
 import classes from './selectpicker.module.scss';
-import { Size } from 'service/sizes';
+import { Size } from 'context/size-context';
 
 type Props = {
   ariaLabel?: string;

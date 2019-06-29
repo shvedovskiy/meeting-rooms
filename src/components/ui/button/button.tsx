@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, ReactChild, MouseEventHandler } from 'react';
 import classNames from 'classnames';
 
-import { Size } from 'service/sizes';
+import { Size } from 'context/size-context';
 import classes from './button.module.scss';
 
 export type ButtonKind = 'button' | 'submit' | 'reset';

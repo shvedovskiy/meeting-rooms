@@ -9,9 +9,10 @@ import React, {
 import classNames from 'classnames';
 import { Override } from 'service/typings';
 
-import { Size } from 'service/sizes';
-import { ReactComponent as Close } from './close.svg';
+import { CloseIcon } from '../close-icon/close-icon';
+import { Size } from 'context/size-context';
 import classes from './input.module.scss';
+import { classExpression } from '@babel/types';
 
 export type Props = Override<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -30,7 +31,7 @@ export type Props = Override<
 export const Input = (props: Props) => {
   const {
     value,
-    size = 'small',
+    size = 'default',
     sideIcon,
     sideIconClick,
     onChange,
@@ -89,11 +90,7 @@ export const Input = (props: Props) => {
         </button>
       ) : (
         <button {...closeIconProps}>
-          <Close
-            width={size === 'large' ? 14 : 12}
-            height={size === 'large' ? 14 : 12}
-            viewBox="0 0 10 10"
-          />
+          <CloseIcon className={classes.iconElement} size={size} />
         </button>
       )}
     </span>
