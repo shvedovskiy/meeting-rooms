@@ -1,0 +1,83 @@
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 38px;
+  padding-right: 12px;
+  padding-left: 10px;
+  font-size: var(--default-text);
+  white-space: nowrap;
+  background-color: var(--secondary-1);
+  border-radius: 4px;
+  transition: background-color 0.2s ease-out;
+
+  &:hover,
+  &:focus {
+    background-color: var(--secondary-2);
+  }
+
+  &:active {
+    background-color: var(--secondary-3);
+
+    @media (hover: none) and (pointer: coarse) {
+      background-color: var(--secondary-2);
+    }
+  }
+
+  &.lg {
+    height: 44px;
+    padding-right: 14px;
+    padding-left: 12px;
+    font-size: var(--medium-text);
+  }
+
+  &.selected {
+    padding-right: 34px;
+    color: var(--text-inverted);
+    background-color: var(--primary-1);
+
+    &:hover,
+    &:focus {
+      background-color: var(--primary-2);
+    }
+
+    &:active {
+      background-color: var(--primary-3);
+
+      @media (hover: none) and (pointer: coarse) {
+        background-color: var(--primary-2);
+      }
+    }
+
+    .icon {
+      position: absolute;
+      right: 12px;
+
+      .iconSymbol {
+        fill: var(--text-inverted);
+      }
+    }
+
+    &.lg {
+      padding-right: 38px;
+
+      & .icon {
+        right: 14px;
+      }
+    }
+  }
+}
+
+.time {
+  flex-shrink: 0;
+  margin-right: 16px;
+  font-weight: 700;
+}
+
+.time,
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
