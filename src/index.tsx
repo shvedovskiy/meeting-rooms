@@ -4,4 +4,14 @@ import { render } from 'react-dom';
 import './index.scss';
 import { App } from './components/app/app';
 
-render(<App />, document.getElementById('root') as HTMLElement);
+const hideLoader = () => {
+  const loader = document.getElementById('loader') as HTMLDivElement;
+  loader.classList.add('hidden');
+  setTimeout(() => {
+    loader.remove();
+  }, 400);
+};
+
+render(<App onMount={hideLoader} />, document.getElementById(
+  'root'
+) as HTMLDivElement);

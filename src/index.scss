@@ -38,13 +38,8 @@ h5,
 h6,
 p,
 a,
-big,
 em,
 img,
-ins,
-q,
-s,
-samp,
 small,
 strike,
 strong,
@@ -52,9 +47,6 @@ b,
 u,
 i,
 center,
-dl,
-dt,
-dd,
 ol,
 ul,
 li,
@@ -66,10 +58,7 @@ aside,
 details,
 figure,
 figcaption,
-footer,
-header,
-section,
-summary {
+header {
   margin: 0;
   padding: 0;
   font: inherit;
@@ -78,25 +67,11 @@ summary {
   border: 0;
 }
 
-html {
-  box-sizing: border-box;
-  height: 100%;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
-}
-
 :disabled {
   cursor: not-allowed;
 }
 
 body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   font-size: var(--default-text);
   line-height: 1;
@@ -105,6 +80,7 @@ body {
   -webkit-text-size-adjust: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: gray;
 }
 
 h1 {
