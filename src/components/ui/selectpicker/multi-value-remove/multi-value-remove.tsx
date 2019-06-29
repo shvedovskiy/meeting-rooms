@@ -1,5 +1,5 @@
 import React from 'react';
-import { MultiValueRemoveProps } from 'react-select/lib/components/MultiValue';
+import { MultiValueRemoveProps } from 'react-select/src/components/MultiValue';
 
 import { ItemType } from '../option/option';
 import { ReactComponent as Close } from './close.svg';

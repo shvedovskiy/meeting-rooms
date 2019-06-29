@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { OptionProps } from 'react-select/lib/components/Option';
+import { OptionProps } from 'react-select/src/components/Option';
 
 import classes from './option.module.scss';
 

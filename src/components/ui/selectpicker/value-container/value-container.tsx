@@ -1,7 +1,7 @@
 import React, { Children, ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { components } from 'react-select';
-import { ValueContainerProps } from 'react-select/lib/components/containers';
+import { ValueContainerProps } from 'react-select/src/components/containers';
 
 import { usePortal } from 'components/utils/use-portal';
 import { ItemType } from '../option/option';

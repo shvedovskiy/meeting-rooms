@@ -1,5 +1,5 @@
 import React from 'react';
-import { MultiValueGenericProps } from 'react-select/lib/components/MultiValue';
+import { MultiValueGenericProps } from 'react-select/src/components/MultiValue';
 
 import { ItemType } from '../option/option';
 import classes from './multi-value-label.module.scss';
