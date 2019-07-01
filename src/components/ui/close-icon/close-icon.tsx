@@ -5,16 +5,27 @@ import { Size } from 'context/size-context';
 type Props = {
   mainClassName?: string;
   className?: string;
-  size?: Size;
+  size?: Size | number;
+  viewBox?: string;
 };
 
-export const CloseIcon = memo(
-  ({ mainClassName, className, size = 'default' }: Props) => (
+export const CloseIcon = memo((props: Props) => {
+  const { mainClassName, className, size = 'default', viewBox } = props;
+  let svgSize = 12;
+  if (size === 'default') {
+    svgSize = 12;
+  } else if (size === 'large') {
+    svgSize = 14;
+  } else if (Number.isInteger(size)) {
+    svgSize = size;
+  }
+
+  return (
     <svg
       className={mainClassName}
-      width={size === 'default' ? 12 : 14}
-      height={size === 'default' ? 12 : 14}
-      viewBox="0 0 10 10"
+      width={svgSize}
+      height={svgSize}
+      viewBox={props.hasOwnProperty('viewBox') ? viewBox : '0 0 10 10'}
       xmlns="http://www.w3.org/2000/svg"
     >
       <g fill="none" fillRule="evenodd">
@@ -25,5 +36,5 @@ export const CloseIcon = memo(
         />
       </g>
     </svg>
-  )
-);
+  );
+});
