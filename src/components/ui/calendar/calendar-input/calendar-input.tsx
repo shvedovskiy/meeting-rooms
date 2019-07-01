@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { DayModifiers, ClassNames, InputClassNames } from 'react-day-picker';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
+import dateFnsFormat from 'date-fns/format';
+import dateFnsParse from 'date-fns/parse';
+import isDate from 'date-fns/isDate';
+import ruLocale from 'date-fns/locale/ru';
 
 import { Input } from 'components/ui/input/ref-input';
 import { Size } from 'context/size-context';
@@ -14,6 +18,18 @@ type Props = {
   initialDate?: Date;
   onChange?: (newDate: Date) => void;
 };
+
+function formatDate(date: Date, format: string) {
+  return dateFnsFormat(date, format, { locale: ruLocale });
+}
+
+function parseDate(str: string, format: string) {
+  const parsed = dateFnsParse(str, format, new Date(), { locale: ruLocale });
+  if (isDate(parsed)) {
+    return parsed;
+  }
+  return undefined;
+}
 
 export const CalendarInput = (props: Props) => {
   const now = new Date();
@@ -57,7 +73,9 @@ export const CalendarInput = (props: Props) => {
         size,
         sideIcon: <CalendarIcon size="large" className={inputClasses.icon} />,
       }}
-      format={'DD/MM/YYYY'}
+      format={'d MMMM, y'}
+      formatDate={formatDate}
+      parseDate={parseDate}
       placeholder={''}
       onDayChange={handleDayChange}
       value={initialDate}
