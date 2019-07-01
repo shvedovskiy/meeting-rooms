@@ -44,6 +44,10 @@ export const customStyles = {
     margin: 0,
     boxShadow: '0 1px 10px var(--shadow-color)',
   }),
+  menuList: (provided: CSSProperties) => ({
+    ...provided,
+    borderRadius: '4px',
+  }),
   option: (provided: CSSProperties, state: any) => ({
     ...provided,
     backgroundColor: state.isFocused ? 'var(--bg-secondary)' : '',
