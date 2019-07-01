@@ -1,0 +1,152 @@
+.container {
+  display: inline-block;
+  font-size: var(--medium-text);
+  background-color: var(--bg-primary);
+  border-radius: 8px;
+}
+
+.wrapper {
+  position: relative;
+  max-width: 100%;
+  min-height: 329px;
+  padding: 20px;
+}
+
+.months {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.month {
+  display: table;
+  flex-grow: 1;
+  border-spacing: 0;
+  border-collapse: collapse;
+  user-select: none;
+}
+
+.navBar {
+  display: block;
+}
+
+@mixin navButton {
+  position: absolute;
+  top: 21px;
+  width: 10px;
+  height: 15px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='15' viewBox='1 0 5 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.76L5.24 6 1 10.24' stroke='%23000' stroke-width='2' fill='none' fill-rule='evenodd' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.43;
+  transition: opacity 0.2s ease-out;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.navButtonPrev {
+  @include navButton;
+  transform: rotate(180deg);
+}
+
+.navButtonNext {
+  @include navButton;
+  right: 20px;
+}
+
+.navButtonInteractionDisabled {
+  display: none;
+}
+
+.caption {
+  display: table-caption;
+  margin-bottom: 20px;
+  padding: 0 12px;
+  text-align: center;
+  word-break: break-word;
+
+  & > div {
+    font-size: 1.15em;
+    font-weight: 500;
+  }
+}
+
+.weekdays {
+  display: table-header-group;
+}
+
+.weekdaysRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.weekday {
+  width: 32px;
+  height: 32px;
+  font-size: 0.875em;
+  line-height: 32px;
+  color: rgba(0, 0, 0, 0.3);
+  text-align: center;
+
+  abbr[title] {
+    text-decoration: none;
+    border-bottom: none;
+  }
+
+  &.weekend {
+    color: rgba(250, 44, 36, 0.8);
+  }
+}
+
+.body {
+  display: table-row-group;
+}
+
+.week {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+.day {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease-out;
+
+  &:not(.disabled):not(.outside):hover {
+    background-color: #f0f8ff;
+  }
+}
+
+.today {
+  color: inherit;
+}
+
+.outside,
+.disabled {
+  color: rgba(0, 0, 0, 0.3);
+  cursor: default;
+}
+
+.selected:not(.disabled):not(.outside) {
+  position: relative;
+  color: var(--text-inverted);
+  background-color: var(--primary-1);
+
+  &:hover {
+    background-color: var(--primary-2);
+  }
+}

@@ -1,6 +1,6 @@
 import React, {
   useRef,
-  ReactSVGElement,
+  ReactNode,
   ChangeEvent,
   MouseEvent,
   KeyboardEvent,
@@ -12,16 +12,14 @@ import { Override } from 'service/typings';
 import { CloseIcon } from '../close-icon/close-icon';
 import { Size } from 'context/size-context';
 import classes from './input.module.scss';
-import { classExpression } from '@babel/types';
 
 export type Props = Override<
   React.InputHTMLAttributes<HTMLInputElement>,
   {
     value?: string;
     size?: Size;
-    sideIcon?: ReactSVGElement;
-    sideIconClick?: () => void;
-    onChange?: (event: ChangeEvent<HTMLInputElement>, value: string) => void;
+    sideIcon?: ReactNode | (() => ReactNode);
+    onChange?: (value: string) => void;
     onSideIconClick?: (
       event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
     ) => void;
@@ -33,7 +31,6 @@ export const Input = (props: Props) => {
     value,
     size = 'default',
     sideIcon,
-    sideIconClick,
     onChange,
     onSideIconClick,
     ...rest
@@ -43,7 +40,7 @@ export const Input = (props: Props) => {
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     if (onChange) {
-      onChange(event, event.target.value);
+      onChange(event.target.value);
     }
     if (event.target.value.trim() !== '') {
       setShowClose(true);
@@ -58,12 +55,19 @@ export const Input = (props: Props) => {
     inputNode.current.focus();
   }
 
-  function handleIconClick(
-    event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
-  ) {
-    if (onSideIconClick) {
-      onSideIconClick(event);
+  function renderSideIcon() {
+    if (!sideIcon) {
+      return null;
     }
+    let iconContent = sideIcon instanceof Function ? sideIcon() : sideIcon;
+    if (onSideIconClick) {
+      return (
+        <button className={classes.sideIcon} onClick={onSideIconClick}>
+          {iconContent}
+        </button>
+      );
+    }
+    return <span className={classes.sideIcon}>{iconContent}</span>;
   }
 
   const inputProps = {
@@ -73,10 +77,11 @@ export const Input = (props: Props) => {
       [classes.lg]: size === 'large',
     }),
     ref: inputNode,
+    value,
     onChange: handleChange,
   };
   const closeIconProps = {
-    className: classes.sideIcon,
+    className: classes.closeIcon,
     onClick: handleCloseClick,
     style: { display: showClose ? 'block' : 'none' },
   };
@@ -84,11 +89,7 @@ export const Input = (props: Props) => {
   return (
     <span className={classes.wrapper}>
       <input {...inputProps} />
-      {sideIcon ? (
-        <button className={classes.sideIcon} onClick={handleIconClick}>
-          {sideIcon}
-        </button>
-      ) : (
+      {renderSideIcon() || (
         <button {...closeIconProps}>
           <CloseIcon className={classes.iconElement} size={size} />
         </button>

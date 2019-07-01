@@ -8,20 +8,22 @@ type Props = {
   size?: Size;
 };
 
-export const CloseIcon = memo(
+export const CalendarIcon = memo(
   ({ mainClassName, className, size = 'default' }: Props) => (
     <svg
       className={mainClassName}
       width={size === 'default' ? 12 : 14}
       height={size === 'default' ? 12 : 14}
-      viewBox="0 0 10 10"
+      // viewBox="0 0 10 10"
       xmlns="http://www.w3.org/2000/svg"
+      version="1"
     >
       <g fill="none" fillRule="evenodd">
-        <path d="M-3-3h16v16H-3z" />
+        <path d="M-5-4h24v24H-5z" />
         <path
           className={className}
-          d="M5.02 3.621L2.193.793A1 1 0 1 0 .778 2.207l2.829 2.829L.778 7.864a1 1 0 1 0 1.414 1.414L5.021 6.45l2.828 2.828a1 1 0 0 0 1.414-1.414L6.435 5.036l2.828-2.829A1 1 0 1 0 7.85.793L5.021 3.62z"
+          fillRule="nonzero"
+          d="M1 5v8h12V5H1zm11-3h2v12H0V2h2V0h2v2h6V0h2v2zM2 9v2h2V9H2zm0-3v2h2V6H2zm3 0v2h2V6H5z"
         />
       </g>
     </svg>
