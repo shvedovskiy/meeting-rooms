@@ -44,13 +44,10 @@ export const Button = (props: Props) => {
     className: classNames(classes.btn, classes[use], {
       [classes.lg]: size === 'large',
     }),
+    ref: buttonNode,
     disabled,
     onClick,
   };
 
-  return (
-    <button ref={buttonNode} {...buttonProps}>
-      {children}
-    </button>
-  );
+  return <button {...buttonProps}>{children}</button>;
 };

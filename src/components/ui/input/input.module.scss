@@ -8,7 +8,7 @@
   right: 12px;
   background: none;
   opacity: 0.43;
-  transition: opacity 0.2s ease-out;
+  transition: opacity 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .sideIcon {
@@ -16,11 +16,7 @@
 }
 
 .closeIcon {
-  top: 3px;
-
-  .iconElement {
-    fill: var(--text-primary);
-  }
+  top: 2px;
 }
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
@@ -65,7 +61,11 @@ button.sideIcon,
 
     ~ .sideIcon,
     ~ .closeIcon {
-      top: 0;
+      top: 1px;
+
+      .icon {
+        transform: scale(1.2);
+      }
     }
   }
 }

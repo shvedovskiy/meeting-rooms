@@ -7,9 +7,9 @@ import isDate from 'date-fns/isDate';
 import ruLocale from 'date-fns/locale/ru';
 
 import { Input } from 'components/ui/input/ref-input';
+import { Icon } from 'components/ui/icon/icon';
 import { Size } from 'context/size-context';
 import { MONTHS, LABELS, Weekday } from '../common';
-import { CalendarIcon } from './calendar-icon';
 import classes from '../calendar.module.scss';
 import inputClasses from './calendar-input.module.scss';
 
@@ -71,7 +71,7 @@ export const CalendarInput = (props: Props) => {
       dayPickerProps={dayPickerProps}
       inputProps={{
         size,
-        sideIcon: <CalendarIcon size="large" className={inputClasses.icon} />,
+        sideIcon: <Icon name="calendar" size="large" />,
       }}
       format={'d MMMM, y'}
       formatDate={formatDate}

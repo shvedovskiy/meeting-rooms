@@ -54,10 +54,7 @@
     .icon {
       position: absolute;
       right: 12px;
-
-      .iconSymbol {
-        fill: var(--text-inverted);
-      }
+      filter: invert(1);
     }
 
     &.lg {

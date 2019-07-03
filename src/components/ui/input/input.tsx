@@ -9,7 +9,7 @@ import React, {
 import classNames from 'classnames';
 import { Override } from 'service/typings';
 
-import { CloseIcon } from '../close-icon/close-icon';
+import { Icon } from 'components/ui/icon/icon';
 import { Size } from 'context/size-context';
 import classes from './input.module.scss';
 
@@ -91,7 +91,7 @@ export const Input = (props: Props) => {
       <input {...inputProps} />
       {renderSideIcon() || (
         <button {...closeIconProps}>
-          <CloseIcon className={classes.iconElement} size={size} />
+          <Icon name="close" size={size} className={classes.icon} />
         </button>
       )}
     </span>

@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { CloseIcon } from 'components/ui/close-icon/close-icon';
+import { Icon } from 'components/ui/icon/icon';
 import classes from './option.module.scss';
 import { Size } from 'context/size-context';
 
@@ -43,10 +43,11 @@ export const Option = (props: Props) => {
       </span>
 
       {selected && (
-        <CloseIcon
-          mainClassName={classes.icon}
-          className={classes.iconSymbol}
+        <Icon
+          name="close"
+          className={classes.icon}
           size={size}
+          viewBox="0 0 10 10"
         />
       )}
     </button>

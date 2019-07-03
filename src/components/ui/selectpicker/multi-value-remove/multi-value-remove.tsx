@@ -3,7 +3,7 @@ import { MultiValueRemoveProps } from 'react-select/src/components/MultiValue';
 
 import { ItemType } from '../option/option';
 import classes from './multi-value-remove.module.scss';
-import { CloseIcon } from 'components/ui/close-icon/close-icon';
+import { Icon } from 'components/ui/icon/icon';
 
 export const MultiValueRemove = ({
   innerProps,
@@ -14,7 +14,7 @@ export const MultiValueRemove = ({
   };
   return (
     <button {...props}>
-      <CloseIcon size={10} className={classes.icon} />
+      <Icon name="close" className={classes.icon} />
     </button>
   );
 };

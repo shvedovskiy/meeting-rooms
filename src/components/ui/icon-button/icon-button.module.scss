@@ -1,0 +1,34 @@
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: var(--secondary-1);
+  border: none;
+  border-radius: 50%;
+
+  &:disabled {
+    pointer-events: none;
+    background-color: var(--inactive);
+  }
+
+  .icon {
+    display: inline-block;
+    opacity: 0.43;
+  }
+
+  &:active .icon {
+    opacity: 1;
+  }
+
+  &.lg {
+    width: 32px;
+    height: 32px;
+
+    .icon {
+      transform: scale(1.2);
+    }
+  }
+}
