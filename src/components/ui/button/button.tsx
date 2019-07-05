@@ -5,9 +5,10 @@ import { Size } from 'context/size-context';
 import classes from './button.module.scss';
 
 export type ButtonKind = 'button' | 'submit' | 'reset';
-export type ButtonUse = 'default' | 'primary';
+export type ButtonUse = 'default' | 'primary' | 'borderless';
 export type ButtonType = {
   autoFocus?: boolean;
+  className?: string;
   disabled?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   size?: Size;
@@ -22,6 +23,7 @@ export const Button = (props: Props) => {
   const {
     autoFocus,
     children,
+    className,
     disabled,
     onClick,
     size = 'default',
@@ -41,7 +43,7 @@ export const Button = (props: Props) => {
 
   const buttonProps = {
     type,
-    className: classNames(classes.btn, classes[use], {
+    className: classNames(classes.btn, classes[use], className, {
       [classes.lg]: size === 'large',
     }),
     ref: buttonNode,

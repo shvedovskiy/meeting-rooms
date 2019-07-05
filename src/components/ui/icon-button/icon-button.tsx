@@ -8,6 +8,7 @@ import { Icon, IconType } from '../icon/icon';
 export type Props = {
   ariaLabel?: string;
   autoFocus?: boolean;
+  className?: string;
   disabled?: boolean;
   size?: Size;
   icon: IconType;
@@ -19,6 +20,7 @@ export const IconButton = (props: Props) => {
   const {
     ariaLabel,
     autoFocus,
+    className,
     size = 'default',
     icon,
     disabled,
@@ -37,7 +39,7 @@ export const IconButton = (props: Props) => {
 
   const buttonProps = {
     'aria-label': ariaLabel,
-    className: classNames(classes.btn, {
+    className: classNames(classes.btn, className, {
       [classes.lg]: size === 'large',
     }),
     ref: buttonNode,
