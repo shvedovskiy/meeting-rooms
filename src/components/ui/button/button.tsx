@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, ReactChild, MouseEventHandler } from 'react';
+import React, {
+  memo,
+  useEffect,
+  useRef,
+  ReactChild,
+  MouseEventHandler,
+} from 'react';
 import classNames from 'classnames';
 
 import { Size } from 'context/size-context';
@@ -18,7 +24,7 @@ export type ButtonType = {
 
 type Props = ButtonType & { children?: ReactChild };
 
-export const Button = (props: Props) => {
+export const Button = memo((props: Props) => {
   const buttonNode = useRef<HTMLButtonElement>(null!);
   const {
     autoFocus,
@@ -52,4 +58,4 @@ export const Button = (props: Props) => {
   };
 
   return <button {...buttonProps}>{children}</button>;
-};
+});

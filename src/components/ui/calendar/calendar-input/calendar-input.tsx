@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { DayModifiers, ClassNames, InputClassNames } from 'react-day-picker';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
-import dateFnsFormat from 'date-fns/format';
-import dateFnsParse from 'date-fns/parse';
-import isDate from 'date-fns/isDate';
+import {
+  format as dateFnsFormat,
+  parse as dateFnsParse,
+  isDate,
+} from 'date-fns/esm';
 import ruLocale from 'date-fns/locale/ru';
 
 import { Input } from 'components/ui/input/ref-input';

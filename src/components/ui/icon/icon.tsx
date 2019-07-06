@@ -79,7 +79,7 @@ export const Icon = memo((props: Props) => {
   if (name === 'pen') {
     viewBox = '0 0 12 12';
   } else if (name === 'chevron') {
-    viewBox = '-1 -1 15 16';
+    viewBox = '-1 0 14 14';
   } else if (name === 'calendar') {
     viewBox = '0 0 14 14';
   }

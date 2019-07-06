@@ -1,8 +1,9 @@
 .container {
-  display: inline-block;
+  width: 100%;
   font-size: var(--medium-text);
   background-color: var(--bg-primary);
   border-radius: 8px;
+  box-shadow: 0 1px 16px var(--shadow-color);
 }
 
 .wrapper {

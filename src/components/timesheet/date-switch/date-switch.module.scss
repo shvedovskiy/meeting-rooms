@@ -1,0 +1,39 @@
+.dateSwitch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 46px;
+  padding-right: 24px;
+  padding-left: 24px;
+
+  .dateBtn {
+    margin-right: 5px;
+    margin-left: 5px;
+    overflow: hidden;
+    font-size: var(--medium-text);
+    overflow-wrap: break-word;
+  }
+
+  .switchBtn {
+    flex-shrink: 0;
+
+    &.next {
+      transform: rotate(180deg);
+    }
+  }
+
+  &.lg {
+    .dateBtn {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    ~ .calendarContainer {
+      width: 100vw;
+    }
+  }
+}
+
+.calendarContainer {
+  position: absolute;
+}

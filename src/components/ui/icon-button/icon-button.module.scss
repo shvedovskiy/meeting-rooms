@@ -9,9 +9,9 @@
   border: none;
   border-radius: 50%;
 
-  &:disabled {
+  &.disabled {
     pointer-events: none;
-    background-color: var(--inactive);
+    opacity: 0.3;
   }
 
   .icon {

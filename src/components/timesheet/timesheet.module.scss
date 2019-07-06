@@ -1,0 +1,55 @@
+.timesheet {
+  display: grid;
+  grid: 46px auto / 245px auto; // TODO auto auto / 245px auto
+  flex-grow: 1;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+
+  .dateSwitch,
+  .hours {
+    position: sticky;
+    top: 0;
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dateSwitch {
+    z-index: 3;
+  }
+
+  .hours {
+    left: 245px;
+    z-index: 2;
+    min-width: 555px;
+  }
+
+  .floors {
+    display: block;
+  }
+
+  .timelines {
+    min-width: 555px;
+  }
+
+  &.lg {
+    grid:
+      "date date" 46px
+      "hours hours" 32px
+      "rooms timeline" auto
+      / 180px auto;
+
+    .dateSwitch {
+      grid-area: date;
+      left: 0;
+      max-width: 100vw;
+    }
+
+    .hours {
+      grid-area: hours;
+      top: 46px;
+      left: 0;
+      min-width: 900px;
+      padding-left: 180px;
+    }
+  }
+}

@@ -1,10 +1,11 @@
-import React, { useRef, useEffect, MouseEventHandler } from 'react';
+import React, { memo, useRef, useEffect } from 'react';
 import classNames from 'classnames';
 
 import { Size } from 'context/size-context';
 import classes from './icon-button.module.scss';
 import { Icon, IconType } from '../icon/icon';
 
+type ArgsType = any[];
 export type Props = {
   ariaLabel?: string;
   autoFocus?: boolean;
@@ -12,10 +13,11 @@ export type Props = {
   disabled?: boolean;
   size?: Size;
   icon: IconType;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
+  onClick?: (...args: ArgsType) => any;
+  onClickArgs: ArgsType;
 };
 
-export const IconButton = (props: Props) => {
+export const IconButton = memo((props: Props) => {
   const buttonNode = useRef<HTMLButtonElement>(null!);
   const {
     ariaLabel,
@@ -25,6 +27,7 @@ export const IconButton = (props: Props) => {
     icon,
     disabled,
     onClick,
+    onClickArgs = [],
   } = props;
 
   function focus() {
@@ -41,10 +44,15 @@ export const IconButton = (props: Props) => {
     'aria-label': ariaLabel,
     className: classNames(classes.btn, className, {
       [classes.lg]: size === 'large',
+      [classes.disabled]: disabled,
     }),
     ref: buttonNode,
     disabled,
-    onClick,
+    onClick() {
+      if (onClick) {
+        onClick(...onClickArgs);
+      }
+    },
   };
 
   return (
@@ -52,4 +60,4 @@ export const IconButton = (props: Props) => {
       <Icon name={icon} size={size} className={classes.icon} />
     </button>
   );
-};
+});
