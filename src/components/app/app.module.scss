@@ -1,1 +1,10 @@
-// ...
+.headerBtn {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @media (max-width: 420px) {
+    display: none;
+  }
+}

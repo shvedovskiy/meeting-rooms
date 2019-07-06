@@ -1,4 +1,4 @@
-header {
+.root {
   display: flex;
   flex-basis: 72px;
   flex-shrink: 0;
@@ -8,4 +8,8 @@ header {
   padding-left: 24px;
   background-color: var(--bg-primary);
   border-bottom: 1px solid var(--border);
+
+  &.sm {
+    flex-basis: 48px;
+  }
 }
