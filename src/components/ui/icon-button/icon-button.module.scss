@@ -14,21 +14,21 @@
     opacity: 0.3;
   }
 
-  .icon {
-    display: inline-block;
-    opacity: 0.43;
-  }
-
-  &:active .icon {
-    opacity: 1;
-  }
-
   &.lg {
     width: 32px;
     height: 32px;
+  }
+}
 
-    .icon {
-      transform: scale(1.2);
-    }
+.icon {
+  display: inline-block;
+  opacity: 0.43;
+
+  .btn:active & {
+    opacity: 1;
+  }
+
+  .btn.lg & {
+    transform: scale(1.2);
   }
 }

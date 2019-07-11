@@ -23,40 +23,40 @@
   }
 }
 
-.default {
-  color: var(--text-primary);
-  background-color: var(--secondary-1);
+@mixin buttonColors($textColor, $defaultColor, $focusColor, $activeColor) {
+  color: $textColor;
+  background-color: $defaultColor;
 
   &:hover,
   &:focus {
-    background-color: var(--secondary-2);
+    background-color: $focusColor;
   }
 
   &:active {
-    background-color: var(--secondary-3);
+    background-color: $activeColor;
 
     @media (hover: none) and (pointer: coarse) {
-      background-color: var(--secondary-2);
+      background-color: $focusColor;
     }
   }
 }
 
+.default {
+  @include buttonColors(
+    var(--text-primary),
+    var(--secondary-1),
+    var(--secondary-2),
+    var(--secondary-3)
+  );
+}
+
 .primary {
-  color: var(--text-inverted);
-  background-color: var(--primary-1);
-
-  &:hover,
-  &:focus {
-    background-color: var(--primary-2);
-  }
-
-  &:active {
-    background-color: var(--primary-3);
-
-    @media (hover: none) and (pointer: coarse) {
-      background-color: var(--primary-2);
-    }
-  }
+  @include buttonColors(
+    var(--text-inverted),
+    var(--primary-1),
+    var(--primary-2),
+    var(--primary-3)
+  );
 }
 
 .borderless {

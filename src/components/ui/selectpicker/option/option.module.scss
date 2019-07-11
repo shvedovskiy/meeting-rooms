@@ -1,3 +1,5 @@
+@import '../../../utils/mixins';
+
 .selectOption {
   display: flex;
   align-items: center;
@@ -17,7 +19,7 @@
     width: 24px;
     height: 24px;
     margin-right: 8px;
-    
+
   }
 
   .icon {
@@ -26,9 +28,7 @@
 
   .optionText {
     flex-grow: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    @include oneLineEllipsis;
   }
 
   .bullet {

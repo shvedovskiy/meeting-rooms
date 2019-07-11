@@ -43,7 +43,7 @@ const getIconPath = (name: string, props: Partial<Props>) => {
             {...rest}
             stroke={fill}
             strokeLinecap="round"
-            strokeWidth="2"
+            strokeWidth="2.45"
             d="M7.66 12.31L2 6.66 7.66 1"
           />
         </g>

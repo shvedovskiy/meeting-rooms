@@ -1,9 +1,9 @@
+@import "../../../utils/mixins";
+
 .labelContainer {
   display: flex;
   align-items: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  @include oneLineEllipsis;
 }
 
 .iconContainer {
@@ -19,7 +19,5 @@
 
 .value {
   margin-right: 15px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  @include oneLineEllipsis;
 }

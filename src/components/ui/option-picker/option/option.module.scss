@@ -51,19 +51,19 @@
       }
     }
 
-    .icon {
-      position: absolute;
-      right: 12px;
-      filter: invert(1);
-    }
-
     &.lg {
       padding-right: 38px;
-
-      & .icon {
-        right: 14px;
-      }
     }
+  }
+}
+
+.icon {
+  position: absolute;
+  right: 12px;
+  filter: invert(1);
+
+  .option.lg & {
+    right: 14px;
   }
 }
 

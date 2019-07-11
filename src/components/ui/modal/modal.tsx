@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import AriaModal from 'react-aria-modal';
 import { CSSTransition } from 'react-transition-group';
 import Emoji from 'a11y-react-emoji';
+import classNames from 'classnames';
 
 import classes from './modal.module.scss';
 import transitionClasses from './modal-transition.module.scss';
@@ -33,7 +34,9 @@ export const Modal = (props: Props) => {
       <AriaModal
         alert={true}
         aria-modal={true}
-        dialogClass={classes.modal}
+        dialogClass={classNames(classes.modal, {
+          [classes.lg]: size === 'large',
+        })}
         dialogStyle={{ textAlign: 'center', verticalAlign: undefined }}
         focusDialog={true}
         onExit={() => setModalActive(false)}
@@ -41,14 +44,14 @@ export const Modal = (props: Props) => {
         underlayColor="rgba(0, 16, 33, 0.8)"
         verticallyCenter={true}
       >
-        {props.icon ? (
+        {props.icon && (
           <span className={classes.modalIcon}>
             <Emoji symbol={props.icon} label={props.iconLabel} />
           </span>
-        ) : null}
-        {props.title ? <h1 id="modal-title">{props.title}</h1> : null}
-        {props.text ? <p className={classes.modalText}>{props.text}</p> : null}
-        {props.buttons ? (
+        )}
+        {props.title && <h1 id="modal-title">{props.title}</h1>}
+        {props.text && <p className={classes.modalText}>{props.text}</p>}
+        {props.buttons && (
           <div className={classes.modalButtons}>
             {props.buttons.map(({ id, text, ...rest }: ModalButtonType) => (
               <Button key={id} {...rest} size={size}>
@@ -56,7 +59,7 @@ export const Modal = (props: Props) => {
               </Button>
             ))}
           </div>
-        ) : null}
+        )}
       </AriaModal>
     </CSSTransition>
   );

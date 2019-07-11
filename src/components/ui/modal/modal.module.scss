@@ -6,7 +6,7 @@
   border-radius: 8px;
   box-shadow: 0 1px 16px var(--shadow-color);
 
-  @media screen and (max-width: 599px) {
+  &.lg {
     margin-bottom: 24px;
     vertical-align: bottom;
   }

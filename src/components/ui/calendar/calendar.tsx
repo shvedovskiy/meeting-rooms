@@ -5,13 +5,14 @@ import classes from './calendar.module.scss';
 import { MONTHS, LABELS, Weekday } from './common';
 
 type Props = {
+  className?: string;
   initialDate?: Date;
   onChange?: (newDate: Date) => void;
 };
 
 export const Calendar = (props: Props) => {
   const now = new Date();
-  const { initialDate = now, onChange } = props;
+  const { className, initialDate = now, onChange } = props;
   const [selected, setSelected] = useState(initialDate);
 
   function handleDayClick(date: Date, modifiers: DayModifiers) {
@@ -25,6 +26,7 @@ export const Calendar = (props: Props) => {
 
   return (
     <DayPicker
+      className={className}
       // @ts-ignore
       classNames={classes as ClassNames}
       firstDayOfWeek={1}

@@ -31,7 +31,7 @@
   display: block;
 }
 
-@mixin navButton {
+%navButton {
   position: absolute;
   top: 21px;
   width: 10px;
@@ -49,12 +49,12 @@
 }
 
 .navButtonPrev {
-  @include navButton;
+  @extend %navButton;
   transform: rotate(180deg);
 }
 
 .navButtonNext {
-  @include navButton;
+  @extend %navButton;
   right: 20px;
 }
 

@@ -8,7 +8,7 @@
   border-right: 1px solid $color;
 }
 
-@mixin timeBadge {
+%timeBadge {
   position: absolute;
   font-size: var(--small-text);
   font-weight: 600;
@@ -32,14 +32,14 @@
     --height-correction: 23px;
     @include timeStrip(var(--primary-1));
   }
+}
 
-  .currentTimeBadge {
-    @include timeBadge();
-    padding: 4px 8px;
-    color: var(--text-inverted);
-    background-color: var(--primary-1);
-    border-radius: 10px;
-  }
+.currentTimeBadge {
+  @extend %timeBadge;
+  padding: 4px 8px;
+  color: var(--text-inverted);
+  background-color: var(--primary-1);
+  border-radius: 10px;
 }
 
 .hour {
@@ -56,10 +56,10 @@
   &.overpast {
     color: var(--text-secondary);
   }
+}
 
-  .hourBadge {
-    @include timeBadge();
-    top: 50%;
-    left: 50%;
-  }
+.hourBadge {
+  @extend %timeBadge;
+  top: 50%;
+  left: 50%;
 }

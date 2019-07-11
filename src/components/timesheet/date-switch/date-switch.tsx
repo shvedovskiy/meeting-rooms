@@ -75,7 +75,11 @@ export const DateSwitch = (props: Props) => {
       </div>
       <div className={classes.calendarContainer}>
         {calendarVisible && (
-          <Calendar initialDate={date} onChange={handleCalendarChange} />
+          <Calendar
+            className={classes.calendar}
+            initialDate={date}
+            onChange={handleCalendarChange}
+          />
         )}
       </div>
     </>
