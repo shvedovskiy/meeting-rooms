@@ -4,22 +4,15 @@ import { useMediaLayout } from 'use-media';
 
 import { Header } from 'components/header/header';
 import { Button } from 'components/ui/button/button';
-// import { Modal } from 'components/ui/modal/modal';
-import { Input } from 'components/ui/input/input';
-// import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
+import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
 import { ItemType } from 'components/ui/selectpicker/option/option';
-// import { TimePicker } from 'components/ui/timepicker/timepicker';
 import { Page } from 'components/page/page';
 import pageTransitionClasses from 'components/page/page-transition.module.scss';
 import SizeContext from 'context/size-context';
-
 import { OptionType } from 'components/ui/option-picker/option/option';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
-
-// const throttle = () =>
-//   new Promise(r => {
-//     setTimeout(r, 3000);
-//   });
+import { Timesheet } from 'components/timesheet/timesheet';
+import classes from './app.module.scss';
 
 const AddPage = lazy(() => import('components/add-page'));
 const EditPage = lazy(() => import('components/edit-page'));
@@ -111,17 +104,23 @@ export const App = ({ onMount }: Props) => {
   return (
     <SizeContext.Provider value={size}>
       <Header>
-        <Button use="primary" size={size} onClick={openPage}>
+        <Button
+          use="primary"
+          className={classes.headerBtn}
+          size={size}
+          onClick={openPage}
+        >
           Создать встречу
         </Button>
       </Header>
+      <Timesheet />
       {/* <Modal
         icon="🙅🏻"
         title="Modal Title"
         text="Modal Text"
         buttons={[{ id: '1', text: 'Text 1' }, { id: '2', text: 'Text 1' }]}
       /> */}
-      <CSSTransition
+      {/* <CSSTransition
         appear
         classNames={pageTransitionClasses}
         in={open}
@@ -134,24 +133,17 @@ export const App = ({ onMount }: Props) => {
             <AddPage onMount={callback} onClose={closePage} />
           )}
         </Page>
-      </CSSTransition>
-      {/* <Tooltip trigger={<button className="button"> Right Top </button>}>
-        <div>Test</div>
-      </Tooltip> */}
-      {/* <div style={{ marginLeft: '30px', width: '250px' }}>
-        <Input size={size} placeholder="Например, Тор Одинович" />
+      </CSSTransition> */}
+      {/* <Tooltip trigger={<button className="button"> Right Top </button>}></Tooltip> */}
+      {/* <TimePicker value={new Date()} size={size} /> */}
+      {/* <div style={{ width: '450px' }}>
+        <OptionPicker size={size} items={rooms} />
         <Selectpicker
           items={items}
           size={size}
           placeholder="Например, Тор Одинович"
         />
       </div> */}
-      {/* <TimePicker value={new Date()} size={size} /> */}
-      <div style={{ width: '450px' }}>
-        <OptionPicker size={size} items={rooms} />
-
-        <Input size={size} placeholder="Например, Тор Одинович" />
-      </div>
     </SizeContext.Provider>
   );
 };

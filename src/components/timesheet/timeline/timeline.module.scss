@@ -1,0 +1,32 @@
+@import "../../utils/mixins";
+
+.floors {
+  padding: 22px 0;
+}
+
+.floor:not(:last-of-type) {
+  margin-bottom: 20px;
+}
+
+.floorName {
+  margin-bottom: 4px;
+  padding: 0 25px;
+  font-size: var(--small-text);
+  font-weight: 700;
+  color: var(--text-secondary);
+  @include oneLineEllipsis;
+
+  .floors.lg & {
+    margin-bottom: 8px;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}
+
+.room:not(:last-of-type) {
+  margin-bottom: 8px;
+
+  .floors.lg & {
+    margin-bottom: 2px;
+  }
+}

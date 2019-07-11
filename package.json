@@ -4,7 +4,6 @@
   "description": "Meeting Rooms App",
   "author": "Oleg Shvedov <ol.shvedov@gmail.com> (https://shvedovskiy.github.io/)",
   "license": "SEE LICENSE IN LICENSE",
-  "homepage": "https://github.com/shvedovskiy/meeting-rooms",
   "repository": "github:shvedovskiy/meeting-rooms",
   "bugs": {
     "url": "https://github.com/shvedovskiy/meeting-rooms/issues",
@@ -33,6 +32,8 @@
     "server:test": "NODE_ENV=test jest --config=./server/jest.config.js --forceExit --detectOpenHandles"
   },
   "dependencies": {
+    "@react-hook/throttle": "^1.0.0",
+    "@use-it/event-listener": "^0.1.3",
     "a11y-react-emoji": "^1.0.2",
     "apollo-server": "^2.6.7",
     "class-validator": "^0.9.1",

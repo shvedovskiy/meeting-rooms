@@ -1,55 +1,92 @@
 .timesheet {
+  --aside-desktop-width: 245px;
   display: grid;
-  grid: 46px auto / 245px auto; // TODO auto auto / 245px auto
+  grid:
+    "date hours" min-content
+    "timeline timeline" auto
+    / var(--aside-desktop-width) auto;
   flex-grow: 1;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
 
-  .dateSwitch,
-  .hours {
-    position: sticky;
-    top: 0;
-    background-color: var(--bg-primary);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .dateSwitch {
-    z-index: 3;
-  }
-
-  .hours {
-    left: 245px;
-    z-index: 2;
-    min-width: 555px;
-  }
-
-  .floors {
-    display: block;
-  }
-
-  .timelines {
-    min-width: 555px;
-  }
-
   &.lg {
+    --aside-mobile-width: 180px;
     grid:
       "date date" 46px
       "hours hours" 32px
-      "rooms timeline" auto
-      / 180px auto;
+      "timeline timeline" auto
+      / var(--aside-mobile-width) auto;
+  }
+}
 
-    .dateSwitch {
-      grid-area: date;
-      left: 0;
-      max-width: 100vw;
+%headerBlock {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border);
+}
+
+.dateSwitch {
+  @extend %headerBlock;
+  grid-area: date;
+  z-index: 3;
+
+  .timesheet.lg & {
+    left: 0;
+    max-width: 100vw;
+  }
+}
+
+.hours {
+  @extend %headerBlock;
+  grid-area: hours;
+  left: var(--aside-desktop-width);
+
+  .timesheet.lg & {
+    top: 46px;
+    left: 0;
+    padding-left: var(--aside-mobile-width);
+  }
+}
+
+.timelineContainer {
+  position: relative;
+  grid-area: timeline;
+  min-width: 1000px;
+
+  .timesheet.lg & {
+    min-width: 1260px;
+  }
+
+  %placeholder {
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    height: 100%;
+  }
+
+  .asidePlaceholder {
+    @extend %placeholder;
+    left: 0;
+    width: var(--aside-desktop-width);
+    background-color: var(--bg-primary);
+    border-right: 1px solid var(--border);
+
+    .timesheet.lg & {
+      display: none;
     }
+  }
 
-    .hours {
-      grid-area: hours;
-      top: 46px;
+  .timesheetPlaceholder {
+    @extend %placeholder;
+    left: var(--aside-desktop-width);
+    width: calc(100% - var(--aside-desktop-width));
+    background-color: var(--bg-secondary);
+
+    .timesheet.lg & {
       left: 0;
-      min-width: 900px;
-      padding-left: 180px;
+      width: 100%;
     }
   }
 }

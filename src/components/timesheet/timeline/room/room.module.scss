@@ -1,0 +1,154 @@
+@import "../../../utils/mixins";
+
+.room {
+  display: flex;
+}
+
+.roomInfo {
+  flex: 0 0 245px;
+  order: -1;
+  padding: 4px 25px;
+  overflow: hidden;
+
+  &.unavailable {
+    color: var(--text-secondary);
+  }
+
+  .room.lg & {
+    flex-basis: 180px;
+    padding: 12px 16px 10px;
+    background-color: var(--bg-primary);
+  }
+
+  .room.scrolled & {
+    position: sticky;
+    left: 0;
+    padding: 0 8px 27px 14px;
+    visibility: hidden;
+  }
+}
+
+.name {
+  margin-bottom: 2px;
+  font-size: var(--medium-text);
+  font-weight: 700;
+  visibility: visible;
+  transition: color 0.2s ease-out;
+  @include oneLineEllipsis;
+
+  .room.scrolled & {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 0;
+    padding: 6px 8px;
+    font-size: var(--small-text);
+    visibility: visible;
+    background-color: var(--bg-primary);
+    border-radius: 4px;
+    box-shadow: 0 1px 8px rgba(0, 44, 92, 0.28);
+  }
+}
+
+.capacity {
+  @include oneLineEllipsis;
+
+  .room.scrolled & {
+    display: none;
+  }
+}
+
+.timeline {
+  display: flex;
+  flex: 1 1 auto;
+  padding: 4px 0;
+
+  &::before,
+  &::after {
+    display: block;
+    width: calc(100% / 32);
+    content: "";
+    background-color: var(--table-cell-secondary-1);
+  }
+
+  &:hover + .roomInfo:not(.unavailable) .name {
+    color: var(--primary-1);
+  }
+
+  .room.lg & {
+    padding: 0;
+  }
+}
+
+$states: "&:hover::before, &:focus::before, &:active::before" !default;
+
+.slot {
+  position: relative;
+  cursor: pointer;
+  background-color: var(--table-cell-primary-1);
+
+  &:focus,
+  &:active {
+    outline: none;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: var(--table-cell-primary-2);
+    border-radius: 2px;
+  }
+
+  &:active {
+    background-color: var(--table-cell-primary-3);
+    border-radius: 2px;
+
+    @media (hover: none) and (pointer: coarse) {
+      background-color: var(--table-cell-primary-2);
+    }
+  }
+
+  #{$states} {
+    position: absolute;
+    top: 43%;
+    left: 50%;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-inverted);
+    content: "+";
+    transform: translate(-50%, -50%);
+  }
+
+  &.busy {
+    background-color: var(--table-cell-secondary-1);
+
+    #{$states} {
+      display: none;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: var(--table-cell-secondary-2);
+    }
+
+    &:active {
+      background-color: var(--table-cell-secondary-3);
+
+      @media (hover: none) and (pointer: coarse) {
+        background-color: var(--table-cell-secondary-2);
+      }
+    }
+  }
+
+  .room.lg & {
+    #{$states} {
+      display: none;
+    }
+  }
+}
+
+@for $h from 0 through 15 {
+  @for $m from 0 through 3 {
+    .slot--#{$h * 4 + $m} {
+      width: (100% / 16 * $h) + (100% / 64 * $m);
+    }
+  }
+}
