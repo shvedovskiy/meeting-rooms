@@ -1,9 +1,8 @@
 import React, { FC, useEffect } from 'react';
 
-type Props = {
-  onMount?: () => void;
-  onClose?: () => void;
-};
+import { PageProps } from 'components/page/types';
+
+type Props = PageProps;
 
 export const AddPage: FC<Props> = ({ onMount, onClose }) => {
   useEffect(() => {

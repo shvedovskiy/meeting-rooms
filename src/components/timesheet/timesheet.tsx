@@ -73,7 +73,7 @@ export const Timesheet = () => {
   useEventListener('scroll', handleScroll, containerEl as HTMLElement);
 
   return (
-    <main
+    <div
       className={classNames(classes.timesheet, {
         [classes.lg]: size === 'large',
       })}
@@ -92,6 +92,6 @@ export const Timesheet = () => {
         <div className={classes.asidePlaceholder}></div>
         <div className={classes.timesheetPlaceholder}></div>
       </div>
-    </main>
+    </div>
   );
 };

@@ -4,13 +4,11 @@ import { useMediaLayout } from 'use-media';
 
 import { Header } from 'components/header/header';
 import { Button } from 'components/ui/button/button';
-import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
 import { ItemType } from 'components/ui/selectpicker/option/option';
 import { Page } from 'components/page/page';
 import pageTransitionClasses from 'components/page/page-transition.module.scss';
 import SizeContext from 'context/size-context';
 import { OptionType } from 'components/ui/option-picker/option/option';
-import { OptionPicker } from 'components/ui/option-picker/option-picker';
 import { Timesheet } from 'components/timesheet/timesheet';
 import classes from './app.module.scss';
 
@@ -88,12 +86,15 @@ const rooms: OptionType[] = [
 ];
 
 export const App = ({ onMount }: Props) => {
-  const [open, setOpen] = useState(false);
-  const openPage = useCallback(() => {
-    setOpen(true);
-  }, [setOpen]);
+  const [open, setOpen] = useState<'add' | 'edit' | null>(null);
+  const openPage = useCallback(
+    (name: 'add' | 'edit') => {
+      setOpen(name);
+    },
+    [setOpen]
+  );
   const closePage = useCallback(() => {
-    setOpen(false);
+    setOpen(null);
   }, [setOpen]);
   const size = useMediaLayout({ maxWidth: 554 }) ? 'large' : 'default';
 
@@ -108,32 +109,43 @@ export const App = ({ onMount }: Props) => {
           use="primary"
           className={classes.headerBtn}
           size={size}
-          onClick={openPage}
+          onClick={() => openPage('add')}
         >
           Создать встречу
         </Button>
       </Header>
-      <Timesheet />
+      <main className={classes.content}>
+        <Timesheet />
+        <CSSTransition
+          appear
+          classNames={pageTransitionClasses}
+          in={open !== null}
+          mountOnEnter
+          unmountOnExit
+          timeout={350}
+        >
+          <Page>
+            {(callback: () => void) => {
+              const props = {
+                onMount: callback,
+                onClose: closePage,
+              };
+              if (open === 'add') {
+                return <AddPage {...props} />;
+              } else {
+                return <EditPage {...props} />;
+              }
+            }}
+          </Page>
+        </CSSTransition>
+      </main>
+
       {/* <Modal
         icon="🙅🏻"
         title="Modal Title"
         text="Modal Text"
         buttons={[{ id: '1', text: 'Text 1' }, { id: '2', text: 'Text 1' }]}
       /> */}
-      {/* <CSSTransition
-        appear
-        classNames={pageTransitionClasses}
-        in={open}
-        mountOnEnter
-        unmountOnExit
-        timeout={350}
-      >
-        <Page>
-          {(callback: () => void) => (
-            <AddPage onMount={callback} onClose={closePage} />
-          )}
-        </Page>
-      </CSSTransition> */}
       {/* <Tooltip trigger={<button className="button"> Right Top </button>}></Tooltip> */}
       {/* <TimePicker value={new Date()} size={size} /> */}
       {/* <div style={{ width: '450px' }}>

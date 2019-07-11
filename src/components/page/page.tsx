@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useCallback } from 'react';
+import React, { Suspense, useState, useCallback, ReactElement } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 import { Spinner } from 'components/ui/spinner/spinner';
@@ -6,7 +6,7 @@ import classes from './page.module.scss';
 import spinnerTransitionClasses from 'components/ui/spinner/spinner-transition.module.scss';
 
 type Props = {
-  children: (callback: () => void) => JSX.Element;
+  children: (callback: () => void) => ReactElement;
 };
 
 export const Page = (props: Props) => {
