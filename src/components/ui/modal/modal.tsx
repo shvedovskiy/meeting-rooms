@@ -21,7 +21,7 @@ type Props = {
 
 export const Modal = (props: Props) => {
   const [modalActive, setModalActive] = useState(false);
-  const size = useContext(SizeContext);
+  const size = useContext(SizeContext) || 'default';
 
   const modal = (
     <CSSTransition

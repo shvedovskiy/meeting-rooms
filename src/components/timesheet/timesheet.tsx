@@ -9,23 +9,59 @@ import scrollContext from 'context/scroll-context';
 import classes from './timesheet.module.scss';
 import { DateSwitch } from './date-switch/date-switch';
 import { Timeline } from './timeline/timeline';
+import { FloorDefinition, UserData } from './types';
 
-const floors = [
+const users: UserData[] = [
+  {
+    id: '3434',
+    login: 'Первый участник',
+    homeFloor: 42,
+    avatarUrl: 'https://via.placeholder.com/24',
+  },
+  {
+    id: '343цук4',
+    login: 'Второй участник',
+    homeFloor: 42,
+    avatarUrl: 'https://via.placeholder.com/24',
+  },
+];
+
+const floors: FloorDefinition[] = [
   {
     number: 1,
     rooms: [
       {
         name: 'Room 1',
+        floor: 1,
         capacity: new Map([['min', 3], ['max', 6]]),
         available: false,
+        events: [
+          {
+            id: '1342134123',
+            title: 'Event Name',
+            roomTitle: 'Room 1',
+            dateStart: new Date(2019, 7, 12, 10),
+            dateEnd: new Date(2019, 7, 12, 14),
+            participants: [users[0], users[1]],
+          },
+          {
+            id: 'sdd',
+            title: 'Event Name',
+            roomTitle: 'Room 1',
+            dateStart: new Date(2019, 7, 12, 14, 45),
+            dateEnd: new Date(2019, 7, 12, 15, 45),
+          },
+        ],
       },
       {
         name: 'Room 2',
+        floor: 1,
         capacity: new Map([['min', 3], ['max', 6]]),
         available: true,
       },
       {
         name: 'Room 3',
+        floor: 1,
         capacity: new Map([['min', 3], ['max', 6]]),
         available: true,
       },
@@ -36,16 +72,19 @@ const floors = [
     rooms: [
       {
         name: 'Room 1',
+        floor: 2,
         capacity: new Map([['min', 3], ['max', 6]]),
         available: false,
       },
       {
         name: 'Room 2',
+        floor: 2,
         capacity: new Map([['min', 3], ['max', 6]]),
         available: true,
       },
       {
         name: 'Room 3',
+        floor: 2,
         capacity: new Map([['min', 3], ['max', 6]]),
         available: true,
       },

@@ -14,7 +14,7 @@ export type Props = {
   size?: Size;
   icon: IconType;
   onClick?: (...args: ArgsType) => any;
-  onClickArgs: ArgsType;
+  onClickArgs?: ArgsType;
 };
 
 export const IconButton = memo((props: Props) => {

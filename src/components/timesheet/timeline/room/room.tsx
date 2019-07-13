@@ -1,21 +1,61 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo, useCallback } from 'react';
 import classNames from 'classnames';
 
-import { RoomData, prepareRanges, formatCapacity } from './common';
+import { prepareRanges, formatCapacity } from './common';
 import classes from './room.module.scss';
 import { Size } from 'context/size-context';
 import scrollContext from 'context/scroll-context';
+import pageContext from 'context/page-context';
+import { Tooltip } from 'components/ui/tooltip/tooltip';
+import { Card } from '../card/card';
+import { RoomData } from '../../types';
+import { HOURS } from '../../common';
 
 type Props = {
   data: RoomData;
-  startHour?: number;
   size?: Size;
 };
 
-export const Room = ({ data, startHour = 8, size = 'default' }: Props) => {
+export const Room = ({ data, size = 'default' }: Props) => {
   const { events = [] } = data;
   const scrolled = useContext(scrollContext);
-  const ranges = prepareRanges(events, startHour);
+  const openPage = useContext(pageContext);
+  const ranges = useMemo(() => prepareRanges(events, HOURS[0]), [events]);
+
+  const createEvent = useCallback(() => {
+    openPage('add');
+  }, [openPage]);
+  const editEvent = useCallback(() => {
+    openPage('edit');
+  }, [openPage]);
+
+  function renderSlot(range: any, index: number) {
+    const { width, ...eventInfo } = range;
+
+    if (range.id) {
+      const slot = (
+        <button
+          className={classNames(
+            classes.slot,
+            classes[`slot--${width}`],
+            classes.busy
+          )}
+        />
+      );
+      return (
+        <Tooltip key={range.id} trigger={slot} position="bottom center">
+          <Card data={eventInfo} onAction={editEvent} />
+        </Tooltip>
+      );
+    }
+    return (
+      <button
+        key={index}
+        className={classNames(classes.slot, classes[`slot--${width}`])}
+        onClick={createEvent}
+      />
+    );
+  }
 
   return (
     <div
@@ -24,20 +64,7 @@ export const Room = ({ data, startHour = 8, size = 'default' }: Props) => {
         [classes.scrolled]: scrolled,
       })}
     >
-      <div className={classes.timeline}>
-        {ranges.map((r, index) => {
-          return (
-            <button
-              key={index}
-              className={classNames(
-                classes.slot,
-                classes.busy,
-                classes[`slot--${r}`]
-              )}
-            />
-          );
-        })}
-      </div>
+      <div className={classes.timeline}>{ranges.map(renderSlot)}</div>
       <div
         className={classNames(classes.roomInfo, {
           [classes.unavailable]: !data.available,

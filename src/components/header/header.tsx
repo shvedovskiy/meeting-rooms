@@ -10,7 +10,7 @@ export interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = props => {
-  const size = useContext(sizeContext);
+  const size = useContext(sizeContext) || 'default';
 
   return (
     <header

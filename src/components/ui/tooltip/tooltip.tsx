@@ -8,18 +8,20 @@ import React, {
 import { CSSTransition } from 'react-transition-group';
 
 import { Ref } from './ref';
-import { calculatePosition } from './utils';
+import { calculatePosition, Position } from './utils';
 import classes from './tooltip.module.scss';
 import transitionClasses from './tooltip-transition.module.scss';
 
 type Props = {
   trigger: ReactElement;
   children: ReactElement | ((close: () => void) => ReactElement);
+  position: Position;
 } & typeof defaultProps; // eslint-disable-line @typescript-eslint/no-use-before-define, no-use-before-define
 
 const defaultProps = Object.freeze({
   offsetX: 0,
   offsetY: 0,
+  position: 'bottom center',
 });
 
 export const Tooltip = (props: Props) => {
@@ -50,10 +52,15 @@ export const Tooltip = (props: Props) => {
   }, [closePopup]);
 
   function setPosition() {
-    const position = calculatePosition(triggerRef, contentRef, {
-      offsetX: props.offsetX,
-      offsetY: props.offsetY,
-    });
+    const position = calculatePosition(
+      triggerRef,
+      contentRef,
+      {
+        offsetX: props.offsetX,
+        offsetY: props.offsetY,
+      },
+      props.position
+    );
     if (!position) {
       return;
     }

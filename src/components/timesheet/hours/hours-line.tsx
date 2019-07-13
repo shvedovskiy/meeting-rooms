@@ -5,12 +5,12 @@ import { isSameDay, isBefore, getHours, getMinutes } from 'date-fns/esm';
 import { getTimeString } from 'service/dates';
 import classes from './hours-line.module.scss';
 import { useCurrentTime } from './use-current-time';
+import { HOURS } from '../common';
 
 type Props = {
   displayedDate: Date;
 };
 
-const HOURS = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 const TIME_PERCENTAGE_COEF = 100 / (30 + 15 * 60 + 30); // timesheet length in minutes
 
 export const HoursLine = memo(({ displayedDate }: Props) => {

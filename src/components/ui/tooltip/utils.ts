@@ -1,6 +1,6 @@
 import { RefObject, MutableRefObject } from 'react';
 
-type Position =
+export type Position =
   | 'top left'
   | 'top center'
   | 'top right'
@@ -110,7 +110,8 @@ function getCoordinatesForPosition(
 export function calculatePosition(
   triggerElement: RefObject<HTMLElement>,
   contentElement: MutableRefObject<HTMLDivElement>,
-  offsets: OffsetType
+  offsets: OffsetType,
+  position: Position
 ) {
   const wrapperBox = {
     top: 0,
@@ -125,13 +126,14 @@ export function calculatePosition(
   const triggerBounding = triggerElement.current.getBoundingClientRect();
   const contentBounding = contentElement.current.getBoundingClientRect();
 
+  const positions = [position, ...POSITION_TYPES];
   let bestCoords;
   let i = 0;
-  while (i < POSITION_TYPES.length) {
+  while (i < positions.length) {
     bestCoords = getCoordinatesForPosition(
       triggerBounding,
       contentBounding,
-      POSITION_TYPES[i],
+      positions[i],
       offsets
     );
     const contentBox = {
