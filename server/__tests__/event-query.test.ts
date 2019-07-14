@@ -32,8 +32,9 @@ describe('Event Query', () => {
         events {
           id
           title
-          dateStart
-          dateEnd
+          date
+          startTime
+          endTime
           room {
             id
             title
@@ -67,8 +68,9 @@ describe('Event Query', () => {
             {
               id: events[0].id,
               title: events[0].title,
-              dateStart: events[0].dateStart.toISOString(),
-              dateEnd: events[0].dateEnd.toISOString(),
+              date: events[0].date.toISOString(),
+              startTime: events[0].startTime,
+              endTime: events[0].endTime,
               room: {
                 id: dbRooms[0].id,
                 title: dbRooms[0].title,
@@ -79,8 +81,9 @@ describe('Event Query', () => {
             {
               id: events[1].id,
               title: events[1].title,
-              dateStart: events[1].dateStart.toISOString(),
-              dateEnd: events[1].dateEnd.toISOString(),
+              date: events[1].date.toISOString(),
+              startTime: events[1].startTime,
+              endTime: events[1].endTime,
               room: {
                 id: dbRooms[1].id,
                 title: dbRooms[1].title,
@@ -118,8 +121,9 @@ describe('Event Query', () => {
         event(id: $id) {
           id
           title
-          dateStart
-          dateEnd
+          date
+          startTime
+          endTime
           room {
             id
             title
@@ -158,8 +162,9 @@ describe('Event Query', () => {
           event: {
             id: dbEvent.id,
             title: dbEvent.title,
-            dateStart: dbEvent.dateStart.toISOString(),
-            dateEnd: dbEvent.dateEnd.toISOString(),
+            date: dbEvent.date.toISOString(),
+            startTime: dbEvent.startTime,
+            endTime: dbEvent.endTime,
           },
         },
       });

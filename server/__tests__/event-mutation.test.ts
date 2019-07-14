@@ -1,5 +1,7 @@
 import { Connection } from 'typeorm';
 import faker from 'faker';
+import startOfDay from 'date-fns/startOfDay';
+import addDays from 'date-fns/addDays';
 
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
@@ -33,8 +35,9 @@ describe('Event Mutation', () => {
         createEvent(input: $input, roomId: $roomId, usersIds: $usersIds) {
           id
           title
-          dateStart
-          dateEnd
+          date
+          startTime
+          endTime
           room {
             id
           }
@@ -55,8 +58,9 @@ describe('Event Mutation', () => {
     it('creates an event with specified properties', async () => {
       const newEventData = {
         title: faker.random.word(),
-        dateStart: faker.date.past(),
-        dateEnd: faker.date.future(),
+        date: startOfDay(faker.date.future()),
+        startTime: '17:30',
+        endTime: '18:15',
       };
 
       const response = await graphQLCall({
@@ -77,8 +81,9 @@ describe('Event Mutation', () => {
           createEvent: {
             id: dbEvent!.id,
             title: newEventData.title,
-            dateStart: newEventData.dateStart.toISOString(),
-            dateEnd: newEventData.dateEnd.toISOString(),
+            date: newEventData.date.toISOString(),
+            startTime: newEventData.startTime,
+            endTime: newEventData.endTime,
             room: {
               id: dbRoom.id,
             },
@@ -94,8 +99,9 @@ describe('Event Mutation', () => {
 
     it('does not create an event without specified title', async () => {
       const newEventData = {
-        dateStart: faker.date.past(),
-        dateEnd: faker.date.future(),
+        date: startOfDay(faker.date.future()),
+        startTime: '10:30',
+        endTime: '12:00',
       };
 
       const response = await graphQLCall({
@@ -141,8 +147,9 @@ describe('Event Mutation', () => {
           createEvent(input: $input, userIds: $userIds) {
             id
             title
-            dateStart
-            dateEnd
+            date
+            startTime
+            endTime
             room {
               id
             }
@@ -154,8 +161,9 @@ describe('Event Mutation', () => {
       `;
       const newEventData = {
         title: faker.random.word(),
-        dateStart: faker.date.past(),
-        dateEnd: faker.date.future(),
+        date: startOfDay(faker.date.future()),
+        startTime: '08:00',
+        endTime: '09:15',
       };
 
       const response = await graphQLCall({
@@ -176,8 +184,9 @@ describe('Event Mutation', () => {
     it('does not create an event with unknown room', async () => {
       const newEventData = {
         title: faker.random.word(),
-        dateStart: faker.date.past(),
-        dateEnd: faker.date.future(),
+        date: startOfDay(faker.date.future()),
+        startTime: '08:00',
+        endTime: '09:15',
       };
 
       const response = await graphQLCall({
@@ -202,8 +211,9 @@ describe('Event Mutation', () => {
           createEvent(input: $input, roomId: $roomId) {
             id
             title
-            dateStart
-            dateEnd
+            date
+            startTime
+            endTime
             room {
               id
             }
@@ -215,8 +225,9 @@ describe('Event Mutation', () => {
       `;
       const newEventData = {
         title: faker.random.word(),
-        dateStart: faker.date.past(),
-        dateEnd: faker.date.future(),
+        date: startOfDay(faker.date.future()),
+        startTime: '08:00',
+        endTime: '09:15',
       };
 
       const response = await graphQLCall({
@@ -236,8 +247,9 @@ describe('Event Mutation', () => {
           createEvent: {
             id: dbEvent!.id,
             title: newEventData.title,
-            dateStart: newEventData.dateStart.toISOString(),
-            dateEnd: newEventData.dateEnd.toISOString(),
+            date: newEventData.date.toISOString(),
+            startTime: newEventData.startTime,
+            endTime: newEventData.endTime,
             room: {
               id: dbRoom.id,
             },
@@ -250,8 +262,9 @@ describe('Event Mutation', () => {
     it('creates an event without unknown users', async () => {
       const newEventData = {
         title: faker.random.word(),
-        dateStart: faker.date.past(),
-        dateEnd: faker.date.future(),
+        date: startOfDay(faker.date.future()),
+        startTime: '08:00',
+        endTime: '09:15',
       };
 
       const response = await graphQLCall({
@@ -276,8 +289,9 @@ describe('Event Mutation', () => {
           createEvent: {
             id: dbEvent!.id,
             title: newEventData.title,
-            dateStart: newEventData.dateStart.toISOString(),
-            dateEnd: newEventData.dateEnd.toISOString(),
+            date: newEventData.date.toISOString(),
+            startTime: newEventData.startTime,
+            endTime: newEventData.endTime,
             room: {
               id: dbRoom.id,
             },
@@ -291,13 +305,15 @@ describe('Event Mutation', () => {
       const commonTitle = faker.random.word();
       const firstEventData = {
         title: commonTitle,
-        dateStart: faker.date.past(),
-        dateEnd: faker.date.future(),
+        date: startOfDay(faker.date.future()),
+        startTime: '08:00',
+        endTime: '09:15',
       };
       const secondEventData = {
         title: commonTitle,
-        dateStart: faker.date.past(),
-        dateEnd: faker.date.future(),
+        date: startOfDay(faker.date.future()),
+        startTime: '16:50',
+        endTime: '19:00',
       };
 
       await graphQLCall({
@@ -332,8 +348,9 @@ describe('Event Mutation', () => {
         updateEvent(id: $id, input: $input) {
           id
           title
-          dateStart
-          dateEnd
+          date
+          startTime
+          endTime
           room {
             id
           }
@@ -356,11 +373,10 @@ describe('Event Mutation', () => {
     it('updates event data', async () => {
       const updateData = {
         title: faker.random.word(),
-        dateStart: dbEvent.dateStart,
-        dateEnd: dbEvent.dateEnd,
+        date: addDays(dbEvent.date, 1),
+        startTime: '15:00',
+        endTime: '17:15',
       };
-      updateData.dateStart.setHours(updateData.dateStart.getHours() + 1);
-      updateData.dateEnd.setHours(updateData.dateEnd.getHours() + 1);
 
       const response = await graphQLCall({
         source: updateEventQuery,
@@ -380,8 +396,9 @@ describe('Event Mutation', () => {
           updateEvent: {
             id: dbEvent.id,
             title: updateData.title,
-            dateStart: updateData.dateStart.toISOString(),
-            dateEnd: updateData.dateEnd.toISOString(),
+            date: updateData.date.toISOString(),
+            startTime: updateData.startTime,
+            endTime: updateData.endTime,
             room: {
               id: dbRoom.id,
             },
@@ -393,9 +410,8 @@ describe('Event Mutation', () => {
 
     it('updates part of event data', async () => {
       const updateData = {
-        dateEnd: dbEvent.dateEnd,
+        date: addDays(dbEvent.date, 1),
       };
-      updateData.dateEnd.setHours(updateData.dateEnd.getHours() + 1);
 
       const response = await graphQLCall({
         source: updateEventQuery,
@@ -415,8 +431,9 @@ describe('Event Mutation', () => {
           updateEvent: {
             id: dbEvent.id,
             title: dbEvent.title,
-            dateStart: dbEvent.dateStart.toISOString(),
-            dateEnd: updateData.dateEnd.toISOString(),
+            date: updateData.date.toISOString(),
+            startTime: dbEvent.startTime,
+            endTime: dbEvent.endTime,
             room: {
               id: dbRoom.id,
             },
@@ -429,12 +446,11 @@ describe('Event Mutation', () => {
     it('does not update the event when passing extra properties', async () => {
       const updateData = {
         title: faker.random.word(),
-        dateStart: dbEvent.dateStart,
-        dateEnd: dbEvent.dateEnd,
+        date: addDays(dbEvent.date, 1),
+        startTime: '15:00',
+        endTime: '17:15',
         extra: true,
       };
-      updateData.dateStart.setHours(updateData.dateStart.getHours() + 1);
-      updateData.dateEnd.setHours(updateData.dateEnd.getHours() + 1);
 
       const response = await graphQLCall({
         source: updateEventQuery,
@@ -454,11 +470,10 @@ describe('Event Mutation', () => {
     it('does not update unknown event', async () => {
       const updateData = {
         title: faker.random.word(),
-        dateStart: dbEvent.dateStart,
-        dateEnd: dbEvent.dateEnd,
+        date: addDays(dbEvent.date, 1),
+        startTime: '15:00',
+        endTime: '17:15',
       };
-      updateData.dateStart.setHours(updateData.dateStart.getHours() + 1);
-      updateData.dateEnd.setHours(updateData.dateEnd.getHours() + 1);
 
       const response = await graphQLCall({
         source: updateEventQuery,
@@ -482,8 +497,9 @@ describe('Event Mutation', () => {
         changeEventRoom(id: $id, roomId: $roomId) {
           id
           title
-          dateStart
-          dateEnd
+          date
+          startTime
+          endTime
           room {
             id
             title
@@ -516,8 +532,9 @@ describe('Event Mutation', () => {
           changeEventRoom: {
             id: dbEvent.id,
             title: dbEvent.title,
-            dateStart: dbEvent.dateStart.toISOString(),
-            dateEnd: dbEvent.dateEnd.toISOString(),
+            date: dbEvent.date.toISOString(),
+            startTime: dbEvent.startTime,
+            endTime: dbEvent.endTime,
             room: {
               id: newDbRoom.id,
               title: newDbRoom.title,
@@ -567,8 +584,9 @@ describe('Event Mutation', () => {
         addUserToEvent(id: $id, userId: $userId) {
           id
           title
-          dateStart
-          dateEnd
+          date
+          startTime
+          endTime
           users {
             id
             login
@@ -606,8 +624,9 @@ describe('Event Mutation', () => {
           addUserToEvent: {
             id: dbEvent.id,
             title: dbEvent.title,
-            dateStart: dbEvent.dateStart.toISOString(),
-            dateEnd: dbEvent.dateEnd.toISOString(),
+            date: dbEvent.date.toISOString(),
+            startTime: dbEvent.startTime,
+            endTime: dbEvent.endTime,
           },
         },
       });
@@ -659,8 +678,9 @@ describe('Event Mutation', () => {
         removeUserFromEvent(id: $id, userId: $userId) {
           id
           title
-          dateStart
-          dateEnd
+          date
+          startTime
+          endTime
           users {
             id
             login
@@ -697,8 +717,9 @@ describe('Event Mutation', () => {
           removeUserFromEvent: {
             id: dbEvent.id,
             title: dbEvent.title,
-            dateStart: dbEvent.dateStart.toISOString(),
-            dateEnd: dbEvent.dateEnd.toISOString(),
+            date: dbEvent.date.toISOString(),
+            startTime: dbEvent.startTime,
+            endTime: dbEvent.endTime,
           },
         },
       });
@@ -750,8 +771,9 @@ describe('Event Mutation', () => {
         removeEvent(id: $id) {
           id
           title
-          dateStart
-          dateEnd
+          date
+          startTime
+          endTime
         }
       }
     `;
@@ -781,8 +803,9 @@ describe('Event Mutation', () => {
           removeEvent: {
             id: dbEvent.id,
             title: dbEvent.title,
-            dateStart: dbEvent.dateStart.toISOString(),
-            dateEnd: dbEvent.dateEnd.toISOString(),
+            date: dbEvent.date.toISOString(),
+            startTime: dbEvent.startTime,
+            endTime: dbEvent.endTime,
           },
         },
       });

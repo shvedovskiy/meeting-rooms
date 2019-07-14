@@ -89,8 +89,9 @@ describe('Room Query', () => {
           events {
             id
             title
-            dateStart
-            dateEnd
+            date
+            startTime
+            endTime
           }
         }
       }
@@ -125,8 +126,9 @@ describe('Room Query', () => {
         {
           id: roomEvent.id,
           title: roomEvent.title,
-          dateStart: roomEvent.dateStart.toISOString(),
-          dateEnd: roomEvent.dateEnd.toISOString(),
+          date: roomEvent.date.toISOString(),
+          startTime: roomEvent.startTime,
+          endTime: roomEvent.endTime,
         },
       ]);
     });

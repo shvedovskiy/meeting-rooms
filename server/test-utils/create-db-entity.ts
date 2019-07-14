@@ -1,4 +1,5 @@
 import faker from 'faker';
+import startOfDay from 'date-fns/startOfDay';
 
 import { User } from '../entity/user';
 import { Room } from '../entity/room';
@@ -51,8 +52,9 @@ export async function createRoom(quantity: number = 1): Promise<Room | Room[]> {
 export async function createEvent(roomId: string, users: User[] = []) {
   const event = Event.create({
     title: faker.random.word(),
-    dateStart: faker.date.past(),
-    dateEnd: faker.date.future(),
+    date: startOfDay(faker.date.future()),
+    startTime: '14:00',
+    endTime: '16:15',
   });
 
   event.roomId = roomId;

@@ -6,17 +6,21 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import Maybe from 'graphql/tsutils/Maybe';
+import parse from 'date-fns/parse';
+import ruLocale from 'date-fns/locale/ru';
 
 @ValidatorConstraint({ async: true })
 class IsAfterConstraint implements ValidatorConstraintInterface {
-  public async validate(value: Date, args: ValidationArguments) {
+  public async validate(value: string, args: ValidationArguments) {
     const [relatedPropertyName] = args.constraints;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const relatedValue: Maybe<Date> = (args.object as any)[relatedPropertyName];
+    const relatedValue: Maybe<string> = (args.object as any)[
+      relatedPropertyName
+    ];
     return (
-      value instanceof Date &&
-      relatedValue instanceof Date &&
-      value > relatedValue
+      typeof relatedValue === 'string' &&
+      parse(value, 'HH:mm', Date.now(), { locale: ruLocale }) >
+        parse(relatedValue, 'HH:mm', Date.now(), { locale: ruLocale })
     );
   }
 

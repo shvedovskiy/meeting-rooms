@@ -10,10 +10,13 @@ export class EventInput implements Partial<Event> {
   title: string;
 
   @Field({ nullable: true })
-  dateStart?: Date;
+  date?: Date;
 
   @Field({ nullable: true })
-  dateEnd?: Date;
+  startTime?: string;
+
+  @Field({ nullable: true })
+  endTime?: string;
 }
 
 @InputType({ description: 'Update event data' })
@@ -23,8 +26,11 @@ export class UpdateEventInput implements Partial<Event> {
   title?: string;
 
   @Field({ nullable: true })
-  dateStart?: Date;
+  date?: Date;
 
   @Field({ nullable: true })
-  dateEnd?: Date;
+  startTime?: string;
+
+  @Field({ nullable: true })
+  endTime?: string;
 }

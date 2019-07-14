@@ -1,15 +1,22 @@
 import { getRepository } from 'typeorm';
+import startOfDay from 'date-fns/startOfDay';
+import format from 'date-fns/format';
+import addHours from 'date-fns/addHours';
+import ruLocale from 'date-fns/locale/ru';
 
 import { User } from '../entity/user';
 import { Room } from '../entity/room';
 import { Event } from '../entity/event';
 
 export async function seedDatabase() {
-  const HOUR = 60 * 60 * 1000;
   const now = new Date();
-  const oneHourLater = new Date(now.getTime() + HOUR);
-  const twoHoursLater = new Date(oneHourLater.getTime() + HOUR);
-  const threeHoursLater = new Date(twoHoursLater.getTime() + HOUR);
+  const today = startOfDay(now);
+  const rightNow = format(now, 'HH:mm', { locale: ruLocale });
+  const oneHourLater = format(addHours(now, 1), 'HH:mm', { locale: ruLocale });
+  const twoHoursLater = format(addHours(now, 2), 'HH:mm', { locale: ruLocale });
+  const threeHoursLater = format(addHours(now, 3), 'HH:mm', {
+    locale: ruLocale,
+  });
 
   const userRepository = getRepository(User);
   const roomRepository = getRepository(Room);
@@ -67,18 +74,21 @@ export async function seedDatabase() {
   const events = eventRepository.create([
     {
       title: 'ШРИ 2018 - начало',
-      dateStart: now,
-      dateEnd: oneHourLater,
+      date: today,
+      startTime: rightNow,
+      endTime: oneHourLater,
     },
     {
       title: '👾 Хакатон 👾',
-      dateStart: oneHourLater,
-      dateEnd: twoHoursLater,
+      date: today,
+      startTime: oneHourLater,
+      endTime: twoHoursLater,
     },
     {
       title: '🍨 Пробуем kefir.js',
-      dateStart: twoHoursLater,
-      dateEnd: threeHoursLater,
+      date: today,
+      startTime: twoHoursLater,
+      endTime: threeHoursLater,
     },
   ]);
   events[0].room = Promise.resolve(rooms[0]);

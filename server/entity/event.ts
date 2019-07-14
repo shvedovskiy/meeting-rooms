@@ -30,12 +30,16 @@ export class Event extends BaseEntity {
 
   @Field()
   @Column('datetime')
-  dateStart: Date;
+  date: Date;
 
-  @IsAfter('dateStart')
   @Field()
-  @Column('datetime')
-  dateEnd: Date;
+  @Column('varchar')
+  startTime: string;
+
+  @Field()
+  @IsAfter('dateStart')
+  @Column('varchar')
+  endTime: string;
 
   @Column({ nullable: true })
   roomId?: string;
