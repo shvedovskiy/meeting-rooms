@@ -7,14 +7,24 @@ import pluralize from 'pluralize-ru';
 import classes from './card.module.scss';
 import { Event } from '../../types';
 import { IconButton } from 'components/ui/icon-button/icon-button';
-import sizeContext from 'context/size-context';
+import sizeContext, { Size } from 'context/size-context';
 
 type Props = {
   data: Event;
+  room: string;
   onAction?: (event: Event) => void;
 };
 
-export const Card = ({ data, onAction }: Props) => {
+function avatarSizes(url: string = '', size: Size) {
+  const base = size === 'default' ? 24 : 32;
+  return {
+    single: `${url}${base}`,
+    double: `${url}${base * 2}`,
+    triple: `${url}${base * 3}`,
+  };
+}
+
+export const Card = ({ data, room, onAction }: Props) => {
   const size = useContext(sizeContext) || 'default';
 
   function handleClick() {
@@ -24,11 +34,11 @@ export const Card = ({ data, onAction }: Props) => {
   }
 
   function renderInfo() {
-    const date = format(data.dateStart, 'd MMMM', { locale: ruLocale });
-    const startTime = format(data.dateStart, 'p', { locale: ruLocale });
-    const endTime = format(data.dateEnd, 'p', { locale: ruLocale });
-    const info = `${date}, ${startTime}–${endTime}\u00A0·\u00A0${data.roomTitle}`;
-    return <p className={classes.info}>{info}</p>;
+    const { date, startTime, endTime } = data;
+    const info = `${format(date, 'd MMMM', {
+      locale: ruLocale,
+    })}, ${startTime}–${endTime}\u00A0·\u00A0${room}`;
+    return <p>{info}</p>;
   }
 
   function renderParticipants() {
@@ -43,15 +53,24 @@ export const Card = ({ data, onAction }: Props) => {
       'человека',
       'человек'
     )}`;
+
+    const avatar = avatarSizes(items[0].avatarUrl, size);
     return (
       <div className={classes.participants}>
         <div className={classes.iconContainer}>
-          <img
-            className={classes.icon}
-            src={items[0].avatarUrl}
-            alt=""
-            aria-hidden="true"
-          />
+          <picture>
+            <source
+              srcSet={`${avatar.triple}.webp 3x, ${avatar.double}.webp 2x, ${avatar.single}.webp`}
+              type="image/webp"
+            />
+            <img
+              className={classes.icon}
+              srcSet={`${avatar.triple}.png 3x, ${avatar.double}.png 2x, ${avatar.single}.png`}
+              src={`${avatar.single}.png`}
+              alt=""
+              aria-hidden="true"
+            />
+          </picture>
         </div>
         <p className={classes.name}>
           {items[0].login} {items.length > 1 && <span>{others}</span>}

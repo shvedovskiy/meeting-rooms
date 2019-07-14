@@ -8,3 +8,11 @@ export function roundDate(date: number) {
 export function getTimeString(date: Date) {
   return lightFormat(date, 'H:mm');
 }
+
+export function splitTimeString(time: string) {
+  return time
+    .split(':')
+    .map(part =>
+      Number.parseInt(part.startsWith('0') ? part.substring(1) : part)
+    );
+}

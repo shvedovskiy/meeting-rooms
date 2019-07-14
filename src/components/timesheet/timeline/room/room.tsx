@@ -8,16 +8,16 @@ import scrollContext from 'context/scroll-context';
 import pageContext from 'context/page-context';
 import { Tooltip } from 'components/ui/tooltip/tooltip';
 import { Card } from '../card/card';
-import { RoomData } from '../../types';
+import { RoomData, Event } from '../../types';
 import { HOURS } from '../../common';
 
 type Props = {
-  data: RoomData;
+  room: RoomData;
+  events?: Event[];
   size?: Size;
 };
 
-export const Room = ({ data, size = 'default' }: Props) => {
-  const { events = [] } = data;
+export const Room = ({ room, events = [], size = 'default' }: Props) => {
   const scrolled = useContext(scrollContext);
   const openPage = useContext(pageContext);
   const ranges = useMemo(() => prepareRanges(events, HOURS[0]), [events]);
@@ -31,7 +31,6 @@ export const Room = ({ data, size = 'default' }: Props) => {
 
   function renderSlot(range: any, index: number) {
     const { width, ...eventInfo } = range;
-
     if (range.id) {
       const slot = (
         <button
@@ -44,7 +43,7 @@ export const Room = ({ data, size = 'default' }: Props) => {
       );
       return (
         <Tooltip key={range.id} trigger={slot} position="bottom center">
-          <Card data={eventInfo} onAction={editEvent} />
+          <Card room={room.name} data={eventInfo} onAction={editEvent} />
         </Tooltip>
       );
     }
@@ -67,11 +66,11 @@ export const Room = ({ data, size = 'default' }: Props) => {
       <div className={classes.timeline}>{ranges.map(renderSlot)}</div>
       <div
         className={classNames(classes.roomInfo, {
-          [classes.unavailable]: !data.available,
+          [classes.unavailable]: !room.available,
         })}
       >
-        <div className={classes.name}>{data.name}</div>
-        <p className={classes.capacity}>{formatCapacity(data.capacity)}</p>
+        <div className={classes.name}>{room.name}</div>
+        <p className={classes.capacity}>{formatCapacity(room.capacity)}</p>
       </div>
     </div>
   );

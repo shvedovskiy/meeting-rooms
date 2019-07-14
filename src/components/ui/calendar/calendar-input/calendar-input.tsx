@@ -26,7 +26,7 @@ function formatDate(date: Date, format: string) {
 }
 
 function parseDate(str: string, format: string) {
-  const parsed = dateFnsParse(str, format, new Date(), { locale: ruLocale });
+  const parsed = dateFnsParse(str, format, Date.now(), { locale: ruLocale });
   if (isDate(parsed)) {
     return parsed;
   }

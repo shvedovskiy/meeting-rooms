@@ -8,23 +8,29 @@ export interface UserData {
 export interface Event {
   id: string;
   title: string;
-  dateStart: Date;
-  dateEnd: Date;
-  roomTitle: string;
+  date: Date;
+  startTime: string;
+  endTime: string;
   participants?: UserData[];
 }
 
 export type RoomCapacity = Map<string, number>;
 
 export interface RoomData {
+  id: string;
   name: string;
   floor: number;
   capacity: RoomCapacity;
   available: boolean;
-  events?: Event[];
+}
+
+export interface RoomEvents {
+  [room: string]: Event[];
 }
 
 export interface FloorDefinition {
-  number: number;
+  floor: number;
   rooms?: RoomData[];
 }
+
+export type Table = Map<number, RoomEvents>;

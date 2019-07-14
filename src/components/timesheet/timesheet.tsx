@@ -9,91 +9,82 @@ import scrollContext from 'context/scroll-context';
 import classes from './timesheet.module.scss';
 import { DateSwitch } from './date-switch/date-switch';
 import { Timeline } from './timeline/timeline';
-import { FloorDefinition, UserData } from './types';
+import { Table, UserData, RoomData, FloorDefinition } from './types';
+import { useDay } from 'components/utils/use-day';
+
+import { startOfDay, addDays } from 'date-fns/esm';
 
 const users: UserData[] = [
   {
     id: '3434',
     login: 'Первый участник',
     homeFloor: 42,
-    avatarUrl: 'https://via.placeholder.com/24',
+    avatarUrl: 'http://localhost:5000/a',
   },
   {
     id: '343цук4',
     login: 'Второй участник',
     homeFloor: 42,
-    avatarUrl: 'https://via.placeholder.com/24',
+    avatarUrl: 'http://localhost:5000/a',
   },
 ];
-
+const rooms: RoomData[] = [
+  {
+    id: 'Room 1',
+    name: 'Room 1',
+    floor: 1,
+    capacity: new Map([['min', 3], ['max', 6]]),
+    available: false,
+  },
+  {
+    id: 'Room 2',
+    name: 'Room 2',
+    floor: 1,
+    capacity: new Map([['min', 3], ['max', 6]]),
+    available: true,
+  },
+  {
+    id: 'Room 3',
+    name: 'Room 3',
+    floor: 1,
+    capacity: new Map([['min', 3], ['max', 6]]),
+    available: true,
+  },
+];
 const floors: FloorDefinition[] = [
   {
-    number: 1,
-    rooms: [
-      {
-        name: 'Room 1',
-        floor: 1,
-        capacity: new Map([['min', 3], ['max', 6]]),
-        available: false,
-        events: [
-          {
-            id: '1342134123',
-            title: 'Event Name',
-            roomTitle: 'Room 1',
-            dateStart: new Date(2019, 7, 12, 10),
-            dateEnd: new Date(2019, 7, 12, 14),
-            participants: [users[0], users[1]],
-          },
-          {
-            id: 'sdd',
-            title: 'Event Name',
-            roomTitle: 'Room 1',
-            dateStart: new Date(2019, 7, 12, 14, 45),
-            dateEnd: new Date(2019, 7, 12, 15, 45),
-          },
-        ],
-      },
-      {
-        name: 'Room 2',
-        floor: 1,
-        capacity: new Map([['min', 3], ['max', 6]]),
-        available: true,
-      },
-      {
-        name: 'Room 3',
-        floor: 1,
-        capacity: new Map([['min', 3], ['max', 6]]),
-        available: true,
-      },
-    ],
-  },
-  {
-    number: 2,
-    rooms: [
-      {
-        name: 'Room 1',
-        floor: 2,
-        capacity: new Map([['min', 3], ['max', 6]]),
-        available: false,
-      },
-      {
-        name: 'Room 2',
-        floor: 2,
-        capacity: new Map([['min', 3], ['max', 6]]),
-        available: true,
-      },
-      {
-        name: 'Room 3',
-        floor: 2,
-        capacity: new Map([['min', 3], ['max', 6]]),
-        available: true,
-      },
-    ],
+    floor: 1,
+    rooms: [...rooms],
   },
 ];
+const now = addDays(startOfDay(new Date()), 1);
+const table: Table = new Map([
+  [
+    now.getTime(),
+    {
+      'Room 2': [
+        {
+          id: '1342134123',
+          title: 'Event Name',
+          date: now,
+          startTime: '10:00',
+          endTime: '14:00',
+          participants: [users[0], users[1]],
+        },
+        {
+          id: 'sdd',
+          title: 'Event Name',
+          date: now,
+          startTime: '14:45',
+          endTime: '15:45',
+        },
+      ],
+    },
+  ],
+]);
 
 export const Timesheet = () => {
-  const [dateShown, setDateShown] = useState(new Date());
+  const [dateShown, setDateShown] = useDay();
   const [scrolled, setScrolled] = useState(false);
   const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);
   const size = useContext(sizeContext) || 'default';
@@ -126,7 +117,10 @@ export const Timesheet = () => {
       </div>
       <div className={classes.timelineContainer}>
         <scrollContext.Provider value={scrolled}>
-          <Timeline floors={floors} />
+          <Timeline
+            floors={floors}
+            tableData={table.get(dateShown.getTime())}
+          />
         </scrollContext.Provider>
         <div className={classes.asidePlaceholder}></div>
         <div className={classes.timesheetPlaceholder}></div>

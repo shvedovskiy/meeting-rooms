@@ -1,22 +1,20 @@
-import { getMinutes, getHours } from 'date-fns/esm';
-
 import { Event, RoomCapacity } from '../../types';
+import { splitTimeString } from 'service/dates';
 
 const rangesLength = 60;
 
-export function prepareRanges(events: Event[], startHour: number) {
+export function prepareRanges(events: Event[], firstHour: number) {
   const eventsData = new Map();
   const eventRanges = new Array<string>(rangesLength);
 
   let startTimeOffset, endTimeOffset;
   events.forEach(event => {
     eventsData.set(event.id, event);
-    startTimeOffset =
-      (getHours(event.dateStart) - startHour) * 4 +
-      getMinutes(event.dateStart) / 15;
-    endTimeOffset =
-      (getHours(event.dateEnd) - startHour) * 4 +
-      getMinutes(event.dateEnd) / 15;
+    const [startHour, startMinutes] = splitTimeString(event.startTime);
+    const [endHour, endMinutes] = splitTimeString(event.endTime);
+
+    startTimeOffset = (startHour - firstHour) * 4 + startMinutes / 15;
+    endTimeOffset = (endHour - firstHour) * 4 + endMinutes / 15;
     for (let i = startTimeOffset; i < endTimeOffset; i++) {
       eventRanges[i] = event.id;
     }

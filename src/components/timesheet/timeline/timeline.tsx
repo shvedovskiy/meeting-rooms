@@ -2,15 +2,16 @@ import React, { useContext } from 'react';
 import classNames from 'classnames';
 
 import { Room } from './room/room';
-import { FloorDefinition } from '../types';
+import { FloorDefinition, RoomEvents } from '../types';
 import classes from './timeline.module.scss';
 import sizeContext from 'context/size-context';
 
 type Props = {
   floors?: FloorDefinition[];
+  tableData?: RoomEvents;
 };
 
-export const Timeline = ({ floors = [] }: Props) => {
+export const Timeline = ({ floors = [], tableData = {} }: Props) => {
   const size = useContext(sizeContext) || 'default';
   return (
     <ul
@@ -19,14 +20,14 @@ export const Timeline = ({ floors = [] }: Props) => {
       })}
     >
       {floors.map(floor => {
-        const { number, rooms = [] } = floor;
+        const { floor: floorNumber, rooms = [] } = floor;
         return (
-          <li key={number} className={classes.floor}>
-            <h1 className={classes.floorName}>{number} ЭТАЖ</h1>
+          <li key={floorNumber} className={classes.floor}>
+            <h1 className={classes.floorName}>{floorNumber} ЭТАЖ</h1>
             <ul>
               {rooms.map(room => (
                 <li key={room.name} className={classes.room}>
-                  <Room data={room} size={size} />
+                  <Room room={room} events={tableData[room.id]} size={size} />
                 </li>
               ))}
             </ul>
