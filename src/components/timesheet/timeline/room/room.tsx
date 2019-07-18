@@ -22,12 +22,15 @@ export const Room = ({ room, events = [], size = 'default' }: Props) => {
   const openPage = useContext(pageContext);
   const ranges = useMemo(() => prepareRanges(events, HOURS[0]), [events]);
 
-  const createEvent = useCallback(() => {
+  const openCreateEventPage = useCallback(() => {
     openPage('add');
   }, [openPage]);
-  const editEvent = useCallback(() => {
-    openPage('edit');
-  }, [openPage]);
+  const openEditEventPage = useCallback(
+    (eventData: Event) => {
+      openPage('edit', eventData);
+    },
+    [openPage]
+  );
 
   function renderSlot(range: any, index: number) {
     const { width, ...eventInfo } = range;
@@ -43,7 +46,11 @@ export const Room = ({ room, events = [], size = 'default' }: Props) => {
       );
       return (
         <Tooltip key={range.id} trigger={slot} position="bottom center">
-          <Card room={room.name} data={eventInfo} onAction={editEvent} />
+          <Card
+            room={room.name}
+            data={eventInfo}
+            onAction={openEditEventPage}
+          />
         </Tooltip>
       );
     }
@@ -51,7 +58,7 @@ export const Room = ({ room, events = [], size = 'default' }: Props) => {
       <button
         key={index}
         className={classNames(classes.slot, classes[`slot--${width}`])}
-        onClick={createEvent}
+        onClick={openCreateEventPage}
       />
     );
   }

@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
 
-import { Option, OptionType as RoomType } from './option/option';
+import { Option } from './option/option';
 import { Size } from 'context/size-context';
 import classes from './option-picker.module.scss';
+import { RoomCard } from 'components/timesheet/types';
 
 type Props = {
-  items: RoomType[];
+  id?: string;
   size?: Size;
-  onSelect?: (item: RoomType | null) => void;
+  items?: RoomCard[];
+  value?: RoomCard | null;
+  onChange?: (item: RoomCard | null) => void;
 };
 
 export const OptionPicker = (props: Props) => {
-  const { items, size = 'default', onSelect } = props;
-  const [selected, setSelected] = useState<RoomType | null>(null);
+  const { id, items = [], size = 'default', value = null, onChange } = props;
+  const [selected, setSelected] = useState<RoomCard | null>(value);
 
-  function handleSelect(item: RoomType | null) {
+  function handleSelect(item: RoomCard | null) {
     setSelected(item);
-    if (onSelect) {
-      onSelect(item);
+    if (onChange) {
+      onChange(item);
     }
   }
 
@@ -33,10 +36,10 @@ export const OptionPicker = (props: Props) => {
   );
   const renderOptions = () =>
     items.map(i => (
-      <li key={i.title} className={classes.item}>
+      <li key={i.id} className={classes.item}>
         <Option item={i} size={size} onSelect={() => handleSelect(i)} />
       </li>
     ));
 
-  return <ul>{selected ? renderSelectedOption() : renderOptions()}</ul>;
+  return <ul id={id}>{selected ? renderSelectedOption() : renderOptions()}</ul>;
 };

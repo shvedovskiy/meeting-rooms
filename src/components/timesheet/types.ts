@@ -12,6 +12,7 @@ export interface Event {
   startTime: string;
   endTime: string;
   participants?: UserData[];
+  room: RoomData;
 }
 
 export type RoomCapacity = Map<string, number>;
@@ -23,6 +24,11 @@ export interface RoomData {
   capacity: RoomCapacity;
   available: boolean;
 }
+
+export type RoomCard = RoomData & {
+  startTime: string;
+  endTime: string;
+};
 
 export interface RoomEvents {
   [room: string]: Event[];

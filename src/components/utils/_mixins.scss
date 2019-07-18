@@ -3,3 +3,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+@mixin clearfix {
+  display: block;
+  clear: both;
+  content: "";
+}

@@ -42,6 +42,7 @@ export const IconButton = memo((props: Props) => {
 
   const buttonProps = {
     'aria-label': ariaLabel,
+    title: ariaLabel,
     className: classNames(classes.btn, className, {
       [classes.lg]: size === 'large',
       [classes.disabled]: disabled,

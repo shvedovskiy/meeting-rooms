@@ -15,6 +15,7 @@ type Props = {
   value?: string;
   size?: Size;
   sideIcon?: ReactNode | (() => ReactNode);
+  error?: boolean;
   onSideIconClick?: (
     event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
   ) => void;
@@ -29,6 +30,7 @@ export const Input = forwardRef<HTMLInputElement, Props>((props, ref) => {
   const {
     size = 'default',
     sideIcon,
+    error,
     onSideIconClick,
     onClick,
     onChange,
@@ -44,6 +46,7 @@ export const Input = forwardRef<HTMLInputElement, Props>((props, ref) => {
     ref,
     className: classNames(classes.input, {
       [classes.lg]: size === 'large',
+      [classes.error]: error,
     }),
     onClick(event: MouseEvent<HTMLInputElement>) {
       if (onClick) {

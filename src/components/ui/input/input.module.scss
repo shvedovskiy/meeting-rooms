@@ -33,6 +33,10 @@
       font-size: var(--medium-text);
     }
   }
+
+  &.error:not(:focus) {
+    border-color: var(--text-invalid);
+  }
 }
 
 .sideIcon,

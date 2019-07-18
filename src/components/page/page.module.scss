@@ -1,9 +1,44 @@
+@import "../utils/mixins";
+
 .page {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 100;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
+  padding-top: 30px;
+  overflow: scroll;
   background-color: var(--bg-primary);
+
+  &.lg {
+    padding-top: 24px;
+  }
+
+  > :last-child {
+    flex-grow: 1;
+  }
+}
+
+.header {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  padding: 0 16px;
+
+  &::after {
+    @include clearfix;
+  }
+}
+
+.title {
+  word-break: break-all;
+}
+
+.closePage {
+  float: right;
+  margin-left: 16px;
 }

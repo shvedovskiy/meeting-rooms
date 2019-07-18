@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useThrottleCallback } from '@react-hook/throttle';
 import useEventListener from '@use-it/event-listener';
 import classNames from 'classnames';
+import { startOfDay } from 'date-fns/esm';
 
 import { HoursLine } from './hours/hours-line';
 import sizeContext from 'context/size-context';
@@ -9,55 +10,17 @@ import scrollContext from 'context/scroll-context';
 import classes from './timesheet.module.scss';
 import { DateSwitch } from './date-switch/date-switch';
 import { Timeline } from './timeline/timeline';
-import { Table, UserData, RoomData, FloorDefinition } from './types';
+import { Table, FloorDefinition } from './types';
 import { useDay } from 'components/utils/use-day';
+import { users, rooms } from './common';
 
-import { startOfDay, addDays } from 'date-fns/esm';
-
-const users: UserData[] = [
-  {
-    id: '3434',
-    login: 'Первый участник',
-    homeFloor: 42,
-    avatarUrl: 'http://localhost:5000/a',
-  },
-  {
-    id: '343цук4',
-    login: 'Второй участник',
-    homeFloor: 42,
-    avatarUrl: 'http://localhost:5000/a',
-  },
-];
-const rooms: RoomData[] = [
-  {
-    id: 'Room 1',
-    name: 'Room 1',
-    floor: 1,
-    capacity: new Map([['min', 3], ['max', 6]]),
-    available: false,
-  },
-  {
-    id: 'Room 2',
-    name: 'Room 2',
-    floor: 1,
-    capacity: new Map([['min', 3], ['max', 6]]),
-    available: true,
-  },
-  {
-    id: 'Room 3',
-    name: 'Room 3',
-    floor: 1,
-    capacity: new Map([['min', 3], ['max', 6]]),
-    available: true,
-  },
-];
 const floors: FloorDefinition[] = [
   {
     floor: 1,
     rooms: [...rooms],
   },
 ];
-const now = addDays(startOfDay(new Date()), 1);
+const now = startOfDay(new Date());
 const table: Table = new Map([
   [
     now.getTime(),
@@ -70,6 +33,7 @@ const table: Table = new Map([
           startTime: '10:00',
           endTime: '14:00',
           participants: [users[0], users[1]],
+          room: rooms[0],
         },
         {
           id: 'sdd',
@@ -77,6 +41,7 @@ const table: Table = new Map([
           date: now,
           startTime: '14:45',
           endTime: '15:45',
+          room: rooms[1],
         },
       ],
     },

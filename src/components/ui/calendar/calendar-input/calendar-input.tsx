@@ -17,8 +17,11 @@ import inputClasses from './calendar-input.module.scss';
 
 type Props = {
   size?: Size;
-  initialDate?: Date;
-  onChange?: (newDate: Date) => void;
+  id?: string;
+  value?: Date;
+  error?: boolean;
+  onChange?: (newDate?: Date) => void;
+  onBlur?: () => void;
 };
 
 function formatDate(date: Date, format: string) {
@@ -30,17 +33,18 @@ function parseDate(str: string, format: string) {
   if (isDate(parsed)) {
     return parsed;
   }
-  return undefined;
 }
 
 export const CalendarInput = (props: Props) => {
   const now = new Date();
-  const { size = 'default', initialDate, onChange } = props;
+  const { size = 'default', id, value, error, onChange, onBlur } = props;
   const [selected, setSelected] = useState(now);
 
-  function handleDayChange(date: Date, modifiers: DayModifiers) {
+  function handleDayChange(date: Date | undefined, modifiers: DayModifiers) {
     if (!modifiers.disabled && !modifiers.selected) {
-      setSelected(date);
+      if (date) {
+        setSelected(date);
+      }
       if (onChange) {
         onChange(date);
       }
@@ -73,14 +77,21 @@ export const CalendarInput = (props: Props) => {
       dayPickerProps={dayPickerProps}
       inputProps={{
         size,
+        id,
+        error,
         sideIcon: <Icon name="calendar" size="large" />,
+        onBlur() {
+          if (onBlur) {
+            onBlur();
+          }
+        },
       }}
       format={'d MMMM, y'}
       formatDate={formatDate}
       parseDate={parseDate}
       placeholder={''}
       onDayChange={handleDayChange}
-      value={initialDate}
+      value={value}
     />
   );
 };

@@ -1,13 +1,13 @@
 import React from 'react';
 import { MultiValueGenericProps } from 'react-select/src/components/MultiValue';
 
-import { ItemType } from '../option/option';
 import classes from './multi-value-label.module.scss';
+import { UserData } from 'components/timesheet/types';
 
 export const MultiValueLabel = ({
   innerProps,
   data,
-}: MultiValueGenericProps<ItemType>) => {
+}: MultiValueGenericProps<UserData>) => {
   const props = {
     ...innerProps,
     className: `${innerProps.className} ${classes.labelContainer}`,
@@ -22,7 +22,7 @@ export const MultiValueLabel = ({
           aria-hidden="true"
         />
       </div>
-      <span className={classes.value}>{data.value}</span>
+      <span className={classes.value}>{data.login}</span>
     </div>
   );
 };

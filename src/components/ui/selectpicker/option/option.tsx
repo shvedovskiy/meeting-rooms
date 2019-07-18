@@ -2,17 +2,10 @@ import React from 'react';
 import classNames from 'classnames';
 import { OptionProps } from 'react-select/src/components/Option';
 
+import { UserData } from 'components/timesheet/types';
 import classes from './option.module.scss';
 
-export type ItemType = {
-  id: string;
-  value: string;
-  homeFloor: number;
-  avatarUrl: string;
-  [key: string]: any;
-};
-
-export const Option = (props: OptionProps<ItemType>) => {
+export const Option = (props: OptionProps<UserData>) => {
   const {
     data,
     className,
@@ -41,7 +34,7 @@ export const Option = (props: OptionProps<ItemType>) => {
         />
       </div>
       <div className={classes.optionText}>
-        {data.value}&nbsp;·&nbsp;
+        {data.login}&nbsp;·&nbsp;
         <span className={classes.homeFloor}>{data.homeFloor}&nbsp;этаж</span>
       </div>
     </div>

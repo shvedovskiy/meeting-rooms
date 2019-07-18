@@ -86,7 +86,11 @@ export const Card = ({ data, room, onAction }: Props) => {
       })}
     >
       <div className={classes.header}>
-        <IconButton icon="pen" onClick={handleClick} />
+        <IconButton
+          icon="pen"
+          ariaLabel="Редактировать встречу"
+          onClick={handleClick}
+        />
         <h1 className={classes.title}>{data.title}</h1>
       </div>
       {renderInfo()}

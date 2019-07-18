@@ -1,8 +1,4 @@
-@mixin clearfix {
-  display: block;
-  clear: both;
-  content: "";
-}
+@import "../../../utils/mixins";
 
 .cardContainer {
   min-width: 320px;
@@ -38,7 +34,6 @@
 
 .header .title {
   font-size: var(--medium-text);
-  font-weight: 700;
   word-break: break-all;
 
   .cardContainer.lg & {

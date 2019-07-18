@@ -4,14 +4,14 @@ import { components } from 'react-select';
 import { ValueContainerProps } from 'react-select/src/components/containers';
 
 import { usePortal } from 'components/utils/use-portal';
-import { ItemType } from '../option/option';
 import classes from './value-container.module.scss';
 import selectpickerClasses from '../selectpicker.module.scss';
+import { UserData } from 'components/timesheet/types';
 
 export const ValueContainer = ({
   children,
   selectProps,
-}: ValueContainerProps<ItemType>) => {
+}: ValueContainerProps<UserData>) => {
   const target = usePortal(
     selectProps.containerId as string,
     selectpickerClasses.selectedContainer

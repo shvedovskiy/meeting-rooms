@@ -4,16 +4,10 @@ import classNames from 'classnames';
 import { Icon } from 'components/ui/icon/icon';
 import classes from './option.module.scss';
 import { Size } from 'context/size-context';
-
-export type OptionType = {
-  startTime: string;
-  endTime: string;
-  title: string;
-  floor: number;
-};
+import { RoomCard } from 'components/timesheet/types';
 
 type Props = {
-  item: OptionType;
+  item: RoomCard;
   size?: Size;
   selected?: boolean;
   onSelect?: () => void;
@@ -36,10 +30,10 @@ export const Option = (props: Props) => {
   return (
     <button className={className} onClick={selected ? onDeselect : onSelect}>
       <span className={classes.time}>
-        {item.startTime}&mdash;{item.endTime}
+        {item.startTime}–{item.endTime}
       </span>
       <span className={classes.title}>
-        {item.title}&nbsp;·&nbsp;{item.floor} этаж
+        {item.name}&nbsp;·&nbsp;{item.floor} этаж
       </span>
 
       {selected && (

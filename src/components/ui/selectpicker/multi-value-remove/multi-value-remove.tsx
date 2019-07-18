@@ -1,13 +1,13 @@
 import React from 'react';
 import { MultiValueRemoveProps } from 'react-select/src/components/MultiValue';
 
-import { ItemType } from '../option/option';
 import classes from './multi-value-remove.module.scss';
 import { Icon } from 'components/ui/icon/icon';
+import { UserData } from 'components/timesheet/types';
 
 export const MultiValueRemove = ({
   innerProps,
-}: MultiValueRemoveProps<ItemType>) => {
+}: MultiValueRemoveProps<UserData>) => {
   const props = {
     ...innerProps,
     className: `${innerProps.className} ${classes.removeButton}`,

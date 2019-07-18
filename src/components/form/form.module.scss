@@ -1,0 +1,109 @@
+.formArea {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.form {
+  display: grid;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: 30px;
+
+  grid-template-rows: auto auto;
+  grid-template-columns: repeat(2, 1fr);
+  grid-row-gap: 4px;
+
+  .formArea.lg & {
+    display: block;
+    padding-bottom: 24px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    overflow: hidden;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  & > div {
+    padding-right: 16px;
+    padding-left: 16px;
+
+    .formArea.lg & {
+      margin-bottom: 16px;
+    }
+  }
+}
+
+.inputError {
+  margin-top: 4px;
+  font-weight: 600;
+  color: var(--text-invalid);
+}
+
+.dateTime {
+  display: flex;
+  align-items: center;
+
+  .formArea.lg & {
+    flex-wrap: wrap;
+  }
+
+  .date {
+    flex-grow: 1;
+    margin-right: 16px;
+
+    .formArea.lg & {
+      flex-basis: 100%;
+      margin-right: 0;
+      margin-bottom: 8px;
+    }
+  }
+
+  & > span {
+    position: relative;
+    top: 8px;
+    margin-right: 4px;
+    margin-left: 4px;
+
+    .formArea.lg & {
+      top: 0;
+    }
+  }
+
+  .time {
+    flex-basis: 72px;
+
+    .formArea.lg & {
+      flex-grow: 1;
+    }
+  }
+}
+
+.participants,
+.room {
+  padding-top: 20px;
+
+  .formArea.lg & {
+    border-top: 8px solid var(--border);
+  }
+}
+
+.actions {
+  z-index: 1;
+  display: flex;
+  flex-basis: 76px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border);
+}
+
+.action:not(:last-of-type) {
+  margin-right: 16px;
+}

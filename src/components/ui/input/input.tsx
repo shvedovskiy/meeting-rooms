@@ -17,9 +17,11 @@ export type Props = Override<
   React.InputHTMLAttributes<HTMLInputElement>,
   {
     value?: string;
+    error?: boolean;
     size?: Size;
     sideIcon?: ReactNode | (() => ReactNode);
     onChange?: (value: string) => void;
+    onBlur?: () => void;
     onSideIconClick?: (
       event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
     ) => void;
@@ -29,9 +31,11 @@ export type Props = Override<
 export const Input = (props: Props) => {
   const {
     value,
+    error,
     size = 'default',
     sideIcon,
     onChange,
+    onBlur,
     onSideIconClick,
     ...rest
   } = props;
@@ -49,10 +53,16 @@ export const Input = (props: Props) => {
     }
   }
 
-  function handleCloseClick() {
-    setShowClose(false);
+  function handleCloseClick(
+    event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
+  ) {
+    event.preventDefault();
     inputNode.current.value = '';
     inputNode.current.focus();
+    if (onChange) {
+      onChange('');
+    }
+    setShowClose(false);
   }
 
   function renderSideIcon() {
@@ -75,10 +85,16 @@ export const Input = (props: Props) => {
     type: 'text',
     className: classNames(classes.input, {
       [classes.lg]: size === 'large',
+      [classes.error]: error,
     }),
     ref: inputNode,
     value,
     onChange: handleChange,
+    onBlur: () => {
+      if (onBlur) {
+        onBlur();
+      }
+    },
   };
   const closeIconProps = {
     className: classes.closeIcon,

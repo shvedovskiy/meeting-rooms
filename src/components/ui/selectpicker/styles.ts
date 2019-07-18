@@ -9,12 +9,24 @@ export const customStyles = {
       state.selectProps.size === 'default'
         ? 'var(--default-text)'
         : 'var(--medium-text)',
-    border: `2px solid var(${state.isFocused ? '--border-1' : '--border'})`,
+    border: `2px solid var(${
+      state.isFocused
+        ? '--border-1'
+        : state.selectProps.error
+        ? '--text-invalid'
+        : '--border'
+    })`,
     boxShadow: 'none',
     transition: 'none',
     cursor: 'text',
     '&:hover': {
-      border: `2px solid var(${state.isFocused ? '--border-1' : '--border'})`,
+      border: `2px solid var(${
+        state.isFocused
+          ? '--border-1'
+          : state.selectProps.error
+          ? '--text-invalid'
+          : '--border'
+      })`,
     },
   }),
   input: () => ({
@@ -34,9 +46,11 @@ export const customStyles = {
     transform: state.selectProps.menuIsOpen && 'rotate(180deg)',
     padding: '8px 0',
     cursor: 'pointer',
-    color: state.isFocused ? 'var(--text-primary)' : '#afb4b8',
+    color: 'var(--text-primary)',
+    opacity: state.isFocused ? 1 : 0.43,
     ':hover': {
-      color: state.isFocused ? 'var(--text-primary)' : '#afb4b8',
+      color: 'var(--text-primary)',
+      opacity: state.isFocused ? 1 : 0.43,
     },
   }),
   menu: (provided: CSSProperties) => ({
@@ -60,8 +74,7 @@ export const customStyles = {
     flexShrink: 0,
     alignItems: 'center',
     maxWidth: '100%',
-    marginRight: '8px',
-    marginBottom: '8px',
+    margin: '12px 8px 8px 0',
     paddingRight: '8px',
     backgroundColor: 'var(--secondary-1)',
     borderRadius: '12px',
