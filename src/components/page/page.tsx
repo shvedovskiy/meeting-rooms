@@ -7,7 +7,7 @@ import classes from './page.module.scss';
 import spinnerTransitionClasses from 'components/ui/spinner/spinner-transition.module.scss';
 import pageContext, { PageType } from 'context/page-context';
 import { users, rooms } from 'components/timesheet/common';
-import { Event } from 'components/timesheet/types';
+import { Event, NewEvent } from 'components/timesheet/types';
 import sizeContext from 'context/size-context';
 import { IconButton } from 'components/ui/icon-button/icon-button';
 
@@ -15,13 +15,17 @@ const Form = lazy(() => import('components/form'));
 
 type Props = {
   type: PageType;
-  pageData: Event;
+  pageData: Event | NewEvent;
 };
 
 export const Page = ({ type, pageData }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
   const setPage = useContext(pageContext);
   const size = useContext(sizeContext);
+
+  function closePage() {
+    setPage(null);
+  }
 
   function renderPage() {
     const props = {
@@ -31,6 +35,7 @@ export const Page = ({ type, pageData }: Props) => {
       onMount() {
         setIsLoading(false);
       },
+      onClose: closePage,
     };
     return <Form {...props} eventData={pageData} />;
   }
@@ -56,7 +61,7 @@ export const Page = ({ type, pageData }: Props) => {
             ariaLabel="Отмена"
             icon="close"
             className={classes.closePage}
-            onClick={() => setPage(null)}
+            onClick={closePage}
           />
         )}
         <h1 className={classes.title}>

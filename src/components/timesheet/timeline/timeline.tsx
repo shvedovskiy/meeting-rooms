@@ -9,9 +9,10 @@ import sizeContext from 'context/size-context';
 type Props = {
   floors?: FloorDefinition[];
   tableData?: RoomEvents;
+  date: Date;
 };
 
-export const Timeline = ({ floors = [], tableData = {} }: Props) => {
+export const Timeline = ({ floors = [], tableData = {}, date }: Props) => {
   const size = useContext(sizeContext) || 'default';
   return (
     <ul
@@ -27,7 +28,12 @@ export const Timeline = ({ floors = [], tableData = {} }: Props) => {
             <ul>
               {rooms.map(room => (
                 <li key={room.name} className={classes.room}>
-                  <Room room={room} events={tableData[room.id]} size={size} />
+                  <Room
+                    room={room}
+                    events={tableData[room.id]}
+                    date={date}
+                    size={size}
+                  />
                 </li>
               ))}
             </ul>

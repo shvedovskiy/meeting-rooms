@@ -15,6 +15,13 @@ export interface Event {
   room: RoomData;
 }
 
+export interface NewEvent {
+  date: Date;
+  startTime: string;
+  endTime: string;
+  room: RoomData;
+}
+
 export type RoomCapacity = Map<string, number>;
 
 export interface RoomData {

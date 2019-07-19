@@ -1,6 +1,9 @@
 import { Event, RoomCapacity } from '../../types';
 import { splitTimeString } from 'service/dates';
 
+export type CommonSlot = { width: number; offset: number };
+export type Slot = Event & { width: number };
+
 const rangesLength = 60;
 
 export function prepareRanges(events: Event[], firstHour: number) {
@@ -20,9 +23,10 @@ export function prepareRanges(events: Event[], firstHour: number) {
     }
   });
 
-  const slotRanges: (Partial<Event> & { width: number })[] = [];
+  const slotRanges: (Slot | CommonSlot)[] = [];
   let prevEvent: boolean = null!,
-    currentRange = 0;
+    currentRange = 0,
+    offset = 0;
 
   for (let m = 0; m <= rangesLength; m++) {
     const currEvent = eventRanges[m] !== undefined;
@@ -30,14 +34,15 @@ export function prepareRanges(events: Event[], firstHour: number) {
       currentRange = 1;
     } else if (currEvent !== prevEvent || (!prevEvent && m % 4 === 0)) {
       if (prevEvent) {
-        const event = Object.assign(eventsData.get(eventRanges[m - 1]), {
+        const event: Slot = Object.assign(eventsData.get(eventRanges[m - 1]), {
           width: currentRange,
         });
         slotRanges.push(event);
       } else {
-        slotRanges.push({ width: currentRange });
+        slotRanges.push({ width: currentRange, offset });
       }
       currentRange = 1;
+      offset = m;
     } else {
       currentRange++;
     }
@@ -57,4 +62,22 @@ export function formatCapacity(capacity: RoomCapacity) {
     return `до ${capacity.get('max')} человек`;
   }
   return '';
+}
+
+function minutesToHours(value: number) {
+  const hours = Math.floor(value / 60);
+  const minutes = Math.round(value % 60);
+  return `${hours.toString().padStart(2, '0')}:${minutes
+    .toString()
+    .padStart(2, '0')}`;
+}
+
+export function offsetToTime(
+  firstHour: number,
+  offset: number,
+  length: number
+) {
+  const startMinutes = (firstHour * 4 + offset) * 15;
+  const endMinutes = startMinutes + length * 15;
+  return [minutesToHours(startMinutes), minutesToHours(endMinutes)];
 }

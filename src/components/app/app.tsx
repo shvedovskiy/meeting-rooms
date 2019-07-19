@@ -10,7 +10,7 @@ import SizeContext from 'context/size-context';
 import PageContext, { PageType, PageFn } from 'context/page-context';
 import { Timesheet } from 'components/timesheet/timesheet';
 import classes from './app.module.scss';
-import { Event } from 'components/timesheet/types';
+import { Event, NewEvent } from 'components/timesheet/types';
 
 type Props = {
   onMount: () => void;
@@ -18,7 +18,7 @@ type Props = {
 
 export const App = ({ onMount }: Props) => {
   const [page, setPage] = useState<PageType | null>(null);
-  const [contextData, setContextData] = useState<Event>(null!);
+  const [contextData, setContextData] = useState<Event | NewEvent>(null!);
   const size = useMediaLayout({ maxWidth: 554 }) ? 'large' : 'default';
 
   const openPage = useCallback<PageFn>(
@@ -38,14 +38,16 @@ export const App = ({ onMount }: Props) => {
     <PageContext.Provider value={openPage}>
       <SizeContext.Provider value={size}>
         <Header>
-          <Button
-            use="primary"
-            className={classes.headerBtn}
-            size={size}
-            onClick={() => setPage('add')}
-          >
-            Создать встречу
-          </Button>
+          {!page && (
+            <Button
+              use="primary"
+              className={classes.headerBtn}
+              size={size}
+              onClick={() => setPage('add')}
+            >
+              Создать встречу
+            </Button>
+          )}
         </Header>
         <main className={classes.content}>
           <Timesheet />

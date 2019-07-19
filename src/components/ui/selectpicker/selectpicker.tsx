@@ -15,7 +15,7 @@ type Props = {
   ariaLabel?: string;
   id?: string;
   items?: UserData[];
-  value?: UserData[];
+  value?: UserData[] | null;
   placeholder?: string;
   size?: Size;
   error?: boolean;

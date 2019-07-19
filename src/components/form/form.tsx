@@ -12,6 +12,7 @@ import {
   UserData,
   RoomData,
   RoomCard,
+  NewEvent,
 } from 'components/timesheet/types';
 import { CalendarInput } from 'components/ui/calendar/calendar-input/calendar-input';
 import { TimePicker } from 'components/ui/timepicker/timepicker';
@@ -22,14 +23,15 @@ import { PageType } from 'context/page-context';
 
 type Props = {
   type: PageType;
-  eventData: Event;
+  eventData: Event | NewEvent;
   users?: UserData[];
   rooms: RoomData[];
   onMount?: () => void;
+  onClose?: () => void;
 };
 
 function getRecommendation(
-  eventData: Event,
+  eventData: Event | NewEvent,
   rooms: RoomData[]
 ): [RoomCard, RoomCard[]] {
   let eventRoom: RoomCard;
@@ -51,16 +53,25 @@ function getRecommendation(
   return [eventRoom!, recommendedRooms];
 }
 
-export const Form: FC<Props> = ({ type, eventData, users, rooms, onMount }) => {
+export const Form: FC<Props> = ({
+  type,
+  eventData,
+  users,
+  rooms,
+  onMount,
+  onClose,
+}) => {
   const [eventRoom, recommendedRooms] = useMemo(
     () => getRecommendation(eventData, rooms),
     [eventData, rooms]
   );
   const [formState, field] = useFormState<EditFormFields>({
-    topic: eventData.title,
+    // @ts-ignore
+    topic: eventData.title || '',
     date: eventData.date,
     startTime: eventData.startTime,
     endTime: eventData.endTime,
+    // @ts-ignore
     participants: eventData.participants || [],
     room: eventRoom,
   });
@@ -71,6 +82,12 @@ export const Form: FC<Props> = ({ type, eventData, users, rooms, onMount }) => {
       onMount();
     }
   }, [onMount]);
+
+  function handleCancel() {
+    if (onClose) {
+      onClose();
+    }
+  }
 
   function renderForm() {
     return [
@@ -193,7 +210,9 @@ export const Form: FC<Props> = ({ type, eventData, users, rooms, onMount }) => {
     >
       <form className={classes.form}>{renderForm()}</form>
       <div className={classes.actions}>
-        <Button className={classes.action}>Отмена</Button>
+        <Button className={classes.action} onClick={handleCancel}>
+          Отмена
+        </Button>
         <Button use="primary" className={classes.action}>
           {type === 'add' ? 'Создать встречу' : 'Сохранить'}
         </Button>

@@ -10,10 +10,10 @@ import { UserData, RoomCard } from 'components/timesheet/types';
 
 export interface EditFormFields {
   topic: string;
-  date?: Date;
+  date: Date | null;
   startTime: string;
   endTime: string;
-  participants?: UserData[];
+  participants: UserData[] | null | undefined;
   room: RoomCard | null;
 }
 
@@ -43,7 +43,7 @@ export const validation = {
       return 'Необходимо ввести название встречи';
     }
   },
-  date(value?: Date) {
+  date(value: Date | null) {
     if (!value) {
       return 'Необходимо указать дату встречи';
     }
@@ -117,9 +117,18 @@ export const validation = {
       }
     }
   },
-  participants(value?: UserData[]) {
+  participants(
+    value: UserData[] | null | undefined,
+    values: StateValues<EditFormFields>
+  ) {
     if (!value) {
       return 'Необходимо добавить участников';
+    }
+    if (values.room) {
+      const maxCapacity = values.room.capacity.get('max');
+      if (maxCapacity && value.length > maxCapacity) {
+        return 'Слишком много участников для выбранной переговорки';
+      }
     }
   },
   room(value: RoomCard | null) {

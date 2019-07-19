@@ -1,30 +1,43 @@
 import React, { useContext, useMemo, useCallback } from 'react';
 import classNames from 'classnames';
 
-import { prepareRanges, formatCapacity } from './common';
+import {
+  prepareRanges,
+  formatCapacity,
+  Slot,
+  CommonSlot,
+  offsetToTime,
+} from './common';
 import classes from './room.module.scss';
 import { Size } from 'context/size-context';
 import scrollContext from 'context/scroll-context';
 import pageContext from 'context/page-context';
 import { Tooltip } from 'components/ui/tooltip/tooltip';
 import { Card } from '../card/card';
-import { RoomData, Event } from '../../types';
+import { RoomData, Event, NewEvent } from '../../types';
 import { HOURS } from '../../common';
 
 type Props = {
   room: RoomData;
   events?: Event[];
   size?: Size;
+  date: Date;
 };
 
-export const Room = ({ room, events = [], size = 'default' }: Props) => {
+export const Room = ({ room, events = [], size = 'default', date }: Props) => {
   const scrolled = useContext(scrollContext);
   const openPage = useContext(pageContext);
   const ranges = useMemo(() => prepareRanges(events, HOURS[0]), [events]);
 
-  const openCreateEventPage = useCallback(() => {
-    openPage('add');
-  }, [openPage]);
+  function openAddPage([startTime, endTime]: string[]) {
+    const newEventData: NewEvent = {
+      date,
+      startTime,
+      endTime,
+      room,
+    };
+    openPage('add', newEventData);
+  }
   const openEditEventPage = useCallback(
     (eventData: Event) => {
       openPage('edit', eventData);
@@ -32,6 +45,10 @@ export const Room = ({ room, events = [], size = 'default' }: Props) => {
     [openPage]
   );
 
+  function renderSlot(
+    range: Slot | CommonSlot,
+    index: number
+  ): React.ReactElement | React.ReactHTMLElement<HTMLButtonElement>;
   function renderSlot(range: any, index: number) {
     const { width, ...eventInfo } = range;
     if (range.id) {
@@ -58,7 +75,9 @@ export const Room = ({ room, events = [], size = 'default' }: Props) => {
       <button
         key={index}
         className={classNames(classes.slot, classes[`slot--${width}`])}
-        onClick={openCreateEventPage}
+        onClick={() =>
+          openAddPage(offsetToTime(HOURS[0], range.offset, range.width))
+        }
       />
     );
   }

@@ -85,6 +85,7 @@ export const Timesheet = () => {
           <Timeline
             floors={floors}
             tableData={table.get(dateShown.getTime())}
+            date={dateShown}
           />
         </scrollContext.Provider>
         <div className={classes.asidePlaceholder}></div>

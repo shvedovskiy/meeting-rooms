@@ -18,9 +18,9 @@ import inputClasses from './calendar-input.module.scss';
 type Props = {
   size?: Size;
   id?: string;
-  value?: Date;
+  value?: Date | null;
   error?: boolean;
-  onChange?: (newDate?: Date) => void;
+  onChange?: (newDate: Date | null) => void;
   onBlur?: () => void;
 };
 
@@ -40,7 +40,7 @@ export const CalendarInput = (props: Props) => {
   const { size = 'default', id, value, error, onChange, onBlur } = props;
   const [selected, setSelected] = useState(now);
 
-  function handleDayChange(date: Date | undefined, modifiers: DayModifiers) {
+  function handleDayChange(date: Date | null, modifiers: DayModifiers) {
     if (!modifiers.disabled && !modifiers.selected) {
       if (date) {
         setSelected(date);
@@ -91,7 +91,7 @@ export const CalendarInput = (props: Props) => {
       parseDate={parseDate}
       placeholder={''}
       onDayChange={handleDayChange}
-      value={value}
+      value={value || undefined}
     />
   );
 };
