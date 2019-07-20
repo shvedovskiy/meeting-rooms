@@ -21,15 +21,10 @@ export const App = ({ onMount }: Props) => {
   const [contextData, setContextData] = useState<Event | NewEvent>(null!);
   const size = useMediaLayout({ maxWidth: 554 }) ? 'large' : 'default';
 
-  const openPage = useCallback<PageFn>(
-    (type, data) => {
-      setPage(type);
-      if (data) {
-        setContextData(data);
-      }
-    },
-    [setPage]
-  );
+  const openPage = useCallback<PageFn>((type, data = {}) => {
+    setPage(type);
+    setContextData(data);
+  }, []);
   useEffect(() => {
     onMount();
   }, [onMount]);
@@ -43,7 +38,7 @@ export const App = ({ onMount }: Props) => {
               use="primary"
               className={classes.headerBtn}
               size={size}
-              onClick={() => setPage('add')}
+              onClick={() => openPage('add')}
             >
               Создать встречу
             </Button>

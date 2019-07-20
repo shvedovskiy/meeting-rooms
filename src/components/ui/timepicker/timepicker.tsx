@@ -21,7 +21,7 @@ const TimePickerComponent = (props: Props) => {
   const { required = true, size = 'default', value, error } = props;
 
   let minDate = null;
-  if (!value) {
+  if (!value || value === '') {
     const rounded = roundDate(Date.now());
     minDate = format(rounded, 'H:mm', { locale: ruLocale });
   }

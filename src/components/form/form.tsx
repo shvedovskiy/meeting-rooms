@@ -36,11 +36,11 @@ function getRecommendation(
 ): [RoomCard, RoomCard[]] {
   let eventRoom: RoomCard;
   const recommendedRooms = rooms.map(r => {
-    if (r.id === eventData.room.id) {
+    if (eventData.room && r.id === eventData.room.id) {
       eventRoom = {
         ...r,
-        startTime: eventData.startTime,
-        endTime: eventData.endTime,
+        startTime: eventData.startTime!,
+        endTime: eventData.endTime!,
       };
       return eventRoom;
     }
@@ -66,13 +66,11 @@ export const Form: FC<Props> = ({
     [eventData, rooms]
   );
   const [formState, field] = useFormState<EditFormFields>({
-    // @ts-ignore
-    topic: eventData.title || '',
+    topic: (eventData as Event).title || '',
     date: eventData.date,
     startTime: eventData.startTime,
     endTime: eventData.endTime,
-    // @ts-ignore
-    participants: eventData.participants || [],
+    participants: (eventData as Event).participants || [],
     room: eventRoom,
   });
   const size = useContext(sizeContext);
