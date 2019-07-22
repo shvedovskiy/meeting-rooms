@@ -4,23 +4,28 @@ import React, {
   useRef,
   ReactChild,
   MouseEventHandler,
+  ButtonHTMLAttributes,
 } from 'react';
 import classNames from 'classnames';
 
 import { Size } from 'context/size-context';
 import classes from './button.module.scss';
+import { Override } from 'service/typings';
 
 export type ButtonKind = 'button' | 'submit' | 'reset';
 export type ButtonUse = 'default' | 'primary' | 'borderless';
-export type ButtonType = {
-  autoFocus?: boolean;
-  className?: string;
-  disabled?: boolean;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-  size?: Size;
-  type?: ButtonKind;
-  use?: ButtonUse;
-};
+export type ButtonType = Override<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  {
+    autoFocus?: boolean;
+    className?: string;
+    disabled?: boolean;
+    onClick?: MouseEventHandler<HTMLButtonElement>;
+    size?: Size;
+    type?: ButtonKind;
+    use?: ButtonUse;
+  }
+>;
 
 type Props = ButtonType & { children?: ReactChild };
 
@@ -35,6 +40,7 @@ export const Button = memo((props: Props) => {
     size = 'default',
     type = 'button',
     use = 'default',
+    ...rest
   } = props;
 
   function focus() {
@@ -55,6 +61,7 @@ export const Button = memo((props: Props) => {
     ref: buttonNode,
     disabled,
     onClick,
+    ...rest,
   };
 
   return <button {...buttonProps}>{children}</button>;

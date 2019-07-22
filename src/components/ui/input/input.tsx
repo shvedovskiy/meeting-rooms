@@ -1,10 +1,11 @@
 import React, {
+  useState,
   useRef,
   ReactNode,
   ChangeEvent,
   MouseEvent,
   KeyboardEvent,
-  useState,
+  InputHTMLAttributes,
 } from 'react';
 import classNames from 'classnames';
 import { Override } from 'service/typings';
@@ -14,7 +15,7 @@ import { Size } from 'context/size-context';
 import classes from './input.module.scss';
 
 export type Props = Override<
-  React.InputHTMLAttributes<HTMLInputElement>,
+  InputHTMLAttributes<HTMLInputElement>,
   {
     value?: string;
     error?: boolean;
@@ -97,6 +98,8 @@ export const Input = (props: Props) => {
     },
   };
   const closeIconProps = {
+    'aria-label': 'Очистить поле',
+    title: 'Очистить поле',
     className: classes.closeIcon,
     onClick: handleCloseClick,
     style: { display: showClose ? 'block' : 'none' },
