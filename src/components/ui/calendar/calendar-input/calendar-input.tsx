@@ -4,7 +4,7 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 import {
   format as dateFnsFormat,
   parse as dateFnsParse,
-  isDate,
+  isValid,
 } from 'date-fns/esm';
 import ruLocale from 'date-fns/locale/ru';
 
@@ -30,7 +30,7 @@ function formatDate(date: Date, format: string) {
 
 function parseDate(str: string, format: string) {
   const parsed = dateFnsParse(str, format, Date.now(), { locale: ruLocale });
-  if (isDate(parsed)) {
+  if (isValid(parsed)) {
     return parsed;
   }
 }
