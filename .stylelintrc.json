@@ -4,7 +4,7 @@
     "stylelint-config-recommended-scss",
     "stylelint-config-prettier"
   ],
-  "plugins": ["stylelint-order"],
+  "plugins": ["stylelint-order", "stylelint-no-unsupported-browser-features"],
   "rules": {
     "at-rule-empty-line-before": null,
     "at-rule-name-space-after": "always",
@@ -256,6 +256,7 @@
       "fill",
       "stroke"
     ],
+    "plugin/no-unsupported-browser-features": true,
     "rule-empty-line-before": null,
     "scss/at-function-named-arguments": "never",
     "scss/at-function-parentheses-space-before": "never",
