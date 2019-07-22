@@ -3,7 +3,7 @@ import { CSSProperties } from 'react';
 export const customStyles = {
   control: (provided: CSSProperties, state: any) => ({
     ...provided,
-    height: state.selectProps.size === 'default' ? '38px' : '44px',
+    height: state.selectProps.size === 'default' ? 38 : 44,
     padding: '0 6px 0 8px',
     fontSize:
       state.selectProps.size === 'default'
@@ -60,7 +60,7 @@ export const customStyles = {
   }),
   menuList: (provided: CSSProperties) => ({
     ...provided,
-    borderRadius: '4px',
+    borderRadius: 4,
   }),
   option: (provided: CSSProperties, state: any) => ({
     ...provided,
@@ -74,10 +74,16 @@ export const customStyles = {
     flexShrink: 0,
     alignItems: 'center',
     maxWidth: '100%',
-    margin: '12px 8px 8px 0',
-    paddingRight: '8px',
+    margin: '4px 8px 0 0',
+    paddingRight: 8,
     backgroundColor: 'var(--secondary-1)',
-    borderRadius: '12px',
+    borderRadius: 12,
+    ':first-of-type': {
+      marginTop: 12,
+    },
+    ':last-of-type': {
+      marginRight: 0,
+    },
   }),
   multiValueLabel: () => ({}),
   multiValueRemove: () => ({}),

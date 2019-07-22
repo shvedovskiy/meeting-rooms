@@ -3,6 +3,7 @@ import { MultiValueGenericProps } from 'react-select/src/components/MultiValue';
 
 import classes from './multi-value-label.module.scss';
 import { UserData } from 'components/timesheet/types';
+import { Avatar } from 'components/ui/avatar/avatar';
 
 export const MultiValueLabel = ({
   innerProps,
@@ -15,11 +16,10 @@ export const MultiValueLabel = ({
   return (
     <div {...props}>
       <div className={classes.iconContainer}>
-        <img
+        <Avatar
+          avatarPath={data.avatarUrl}
           className={classes.icon}
-          src={data.avatarUrl}
-          alt=""
-          aria-hidden="true"
+          size="default"
         />
       </div>
       <span className={classes.value}>{data.login}</span>

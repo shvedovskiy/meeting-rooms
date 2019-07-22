@@ -7,22 +7,14 @@ import pluralize from 'pluralize-ru';
 import classes from './card.module.scss';
 import { Event } from '../../types';
 import { IconButton } from 'components/ui/icon-button/icon-button';
-import sizeContext, { Size } from 'context/size-context';
+import sizeContext from 'context/size-context';
+import { Avatar } from 'components/ui/avatar/avatar';
 
 type Props = {
   data: Event;
   room: string;
   onAction?: (event: Event) => void;
 };
-
-function avatarSizes(url: string = '', size: Size) {
-  const base = size === 'default' ? 24 : 32;
-  return {
-    single: `${url}${base}`,
-    double: `${url}${base * 2}`,
-    triple: `${url}${base * 3}`,
-  };
-}
 
 export const Card = ({ data, room, onAction }: Props) => {
   const size = useContext(sizeContext) || 'default';
@@ -54,23 +46,14 @@ export const Card = ({ data, room, onAction }: Props) => {
       'человек'
     )}`;
 
-    const avatar = avatarSizes(items[0].avatarUrl, size);
     return (
       <div className={classes.participants}>
         <div className={classes.iconContainer}>
-          <picture>
-            <source
-              srcSet={`${avatar.triple}.webp 3x, ${avatar.double}.webp 2x, ${avatar.single}.webp`}
-              type="image/webp"
-            />
-            <img
-              className={classes.icon}
-              srcSet={`${avatar.triple}.png 3x, ${avatar.double}.png 2x, ${avatar.single}.png`}
-              src={`${avatar.single}.png`}
-              alt=""
-              aria-hidden="true"
-            />
-          </picture>
+          <Avatar
+            avatarPath={items[0].avatarUrl}
+            size={size}
+            className={classes.icon}
+          />
         </div>
         <p className={classes.name}>
           {items[0].login} {items.length > 1 && <span>{others}</span>}
