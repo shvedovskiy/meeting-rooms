@@ -1,9 +1,12 @@
 .timepicker {
   position: static;
   display: block;
-
   border: 2px solid var(--border);
   border-radius: 4px;
+
+  &:focus-within {
+    border-color: var(--border-1);
+  }
 
   [class$="__wrapper"] {
     display: block;
@@ -18,6 +21,9 @@
   }
 
   input {
+    &:focus {
+      outline: none;
+    }
     &:invalid {
       background-color: transparent;
     }
@@ -34,6 +40,6 @@
   }
 
   &.error {
-    border: 2px solid var(--text-invalid);
+    border-color: var(--text-invalid);
   }
 }

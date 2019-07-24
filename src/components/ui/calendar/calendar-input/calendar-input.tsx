@@ -21,7 +21,6 @@ type Props = {
   value?: Date | null;
   error?: boolean;
   onChange?: (newDate: Date | null) => void;
-  onBlur?: () => void;
 };
 
 function formatDate(date: Date, format: string) {
@@ -37,7 +36,7 @@ function parseDate(str: string, format: string) {
 
 export const CalendarInput = (props: Props) => {
   const now = new Date();
-  const { size = 'default', id, value, error, onChange, onBlur } = props;
+  const { size = 'default', id, value, error, onChange } = props;
   const [selected, setSelected] = useState(now);
 
   function handleDayChange(date: Date | null, modifiers: DayModifiers) {
@@ -80,11 +79,6 @@ export const CalendarInput = (props: Props) => {
         id,
         error,
         sideIcon: <Icon name="calendar" size="large" />,
-        onBlur() {
-          if (onBlur) {
-            onBlur();
-          }
-        },
       }}
       format={'d MMMM, y'}
       formatDate={formatDate}

@@ -12,6 +12,7 @@
   padding-bottom: 30px;
 
   grid-template-rows: auto auto;
+  // stylelint-disable-next-line plugin/no-unsupported-browser-features
   grid-template-columns: repeat(2, 1fr);
   grid-row-gap: 4px;
 
@@ -46,14 +47,18 @@
 }
 
 .dateTime {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid:
+    "date time" auto
+    "date timeErrors" auto
+    / auto auto;
 
   .formArea.lg & {
-    flex-wrap: wrap;
+    display: block;
   }
 
   .date {
+    grid-area: "date";
     flex-grow: 1;
     margin-right: 16px;
 
@@ -64,23 +69,35 @@
     }
   }
 
-  & > span {
-    position: relative;
-    top: 8px;
-    margin-right: 4px;
-    margin-left: 4px;
+  .timeContainer {
+    display: flex;
+    align-items: flex-start;
 
     .formArea.lg & {
-      top: 0;
+      flex-wrap: wrap;
+    }
+
+    & > span {
+      position: relative;
+      top: 30px;
+      margin-right: 4px;
+      margin-left: 4px;
+      font-weight: 700;
+
+      .formArea.lg & {
+        top: 16px;
+      }
     }
   }
 
   .time {
     flex-basis: 72px;
+    flex-grow: 1;
+  }
 
-    .formArea.lg & {
-      flex-grow: 1;
-    }
+  .timeErrors {
+    grid-area: "timeErrors";
+    margin-top: 4px;
   }
 }
 

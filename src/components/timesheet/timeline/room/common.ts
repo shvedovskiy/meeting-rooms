@@ -1,5 +1,5 @@
 import { Event, RoomCapacity } from '../../types';
-import { splitTimeString } from 'service/dates';
+import { splitTimeString, minutesToHours } from 'service/dates';
 
 export type CommonSlot = { width: number; offset: number };
 export type Slot = Event & { width: number };
@@ -62,14 +62,6 @@ export function formatCapacity(capacity: RoomCapacity) {
     return `до ${capacity.get('max')} человек`;
   }
   return '';
-}
-
-function minutesToHours(value: number) {
-  const hours = Math.floor(value / 60);
-  const minutes = Math.round(value % 60);
-  return `${hours.toString().padStart(2, '0')}:${minutes
-    .toString()
-    .padStart(2, '0')}`;
 }
 
 export function offsetToTime(

@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useContext, useMemo } from 'react';
 import classNames from 'classnames';
-// TODO: CRA does not supports `paths` option in tsconfig yet
-import { useFormState } from 'libs/react-use-form-state/dist';
+import { useForm, StateValues } from 'components/utils/use-form';
 
 import classes from './form.module.scss';
 import { Button } from 'components/ui/button/button';
@@ -33,8 +32,8 @@ type Props = {
 function getRecommendation(
   eventData: Event | NewEvent,
   rooms: RoomData[]
-): [RoomCard, RoomCard[]] {
-  let eventRoom: RoomCard;
+): [RoomCard | null, RoomCard[]] {
+  let eventRoom: RoomCard | null = null;
   const recommendedRooms = rooms.map(r => {
     if (eventData.room && r.id === eventData.room.id) {
       eventRoom = {
@@ -50,8 +49,17 @@ function getRecommendation(
       endTime: '14:00',
     };
   });
-  return [eventRoom!, recommendedRooms];
+  return [eventRoom, recommendedRooms];
 }
+
+const defaultEventData = {
+  title: '',
+  startTime: null,
+  endTime: null,
+  date: null,
+  participants: null,
+  room: null,
+};
 
 export const Form: FC<Props> = ({
   type,
@@ -65,12 +73,9 @@ export const Form: FC<Props> = ({
     () => getRecommendation(eventData, rooms),
     [eventData, rooms]
   );
-  const [formState, field] = useFormState<EditFormFields>({
-    topic: (eventData as Event).title || '',
-    date: eventData.date,
-    startTime: eventData.startTime,
-    endTime: eventData.endTime,
-    participants: (eventData as Event).participants || [],
+  const [formState, { field, form }] = useForm<EditFormFields>({
+    ...defaultEventData,
+    ...eventData,
     room: eventRoom,
   });
   const size = useContext(sizeContext);
@@ -89,20 +94,20 @@ export const Form: FC<Props> = ({
 
   function renderForm() {
     return [
-      <div key="topic" className={classes.topic}>
-        <label htmlFor="topic">Тема</label>
+      <div key="title">
+        <label htmlFor="title">Тема</label>
         <Input
-          id="topic"
+          id="title"
           size={size}
           placeholder="О чём будете говорить?"
           {...field({
-            name: 'topic',
-            validate: validation.topic,
+            name: 'title',
+            validate: validation.title,
           })}
-          error={formState.validity.topic === false}
+          error={formState.validity.title === false}
         />
-        {formState.errors.topic && (
-          <div className={classes.inputError}>{formState.errors.topic}</div>
+        {formState.errors.title && (
+          <div className={classes.inputError}>{formState.errors.title}</div>
         )}
       </div>,
       <div key="datetime" className={classes.dateTime}>
@@ -116,6 +121,7 @@ export const Form: FC<Props> = ({
             {...field({
               name: 'date',
               validate: validation.date,
+              touchOnChange: true,
             })}
             error={formState.validity.date === false}
           />
@@ -123,40 +129,55 @@ export const Form: FC<Props> = ({
             <div className={classes.inputError}>{formState.errors.date}</div>
           )}
         </div>
-        <div className={classes.time}>
-          {size === 'default' && <label>Начало</label>}
-          {/* https://github.com/wojtekmaj/react-time-picker/issues/18 */}
-          <TimePicker
-            size={size}
-            {...field({
-              name: 'startTime',
-              validate: validation.startTime,
-              touchOnChange: true,
-            })}
-            error={formState.validity.startTime === false}
-          />
-          {formState.errors.startTime && (
-            <div className={classes.inputError}>
-              {formState.errors.startTime}
-            </div>
-          )}
+        <div className={classes.timeContainer}>
+          <div className={classes.time}>
+            {size === 'default' && <label>Начало</label>}
+            {/* https://github.com/wojtekmaj/react-time-picker/issues/18 */}
+            <TimePicker
+              size={size}
+              {...field({
+                name: 'startTime',
+                validate: validation.startTime,
+                touchOnChange: true,
+              })}
+              error={
+                formState.validity.startTime === false ||
+                formState.validity.time === false
+              }
+            />
+            {formState.errors.startTime && (
+              <div className={classes.inputError}>
+                {formState.errors.startTime}
+              </div>
+            )}
+          </div>
+          <span>–</span>
+          <div className={classes.time}>
+            {size === 'default' && <label>Конец</label>}
+            <TimePicker
+              size={size}
+              {...field({
+                name: 'endTime',
+                validate: validation.endTime,
+                touchOnChange: true,
+              })}
+              error={
+                formState.validity.endTime === false ||
+                formState.validity.time === false
+              }
+            />
+            {formState.errors.endTime && (
+              <div className={classes.inputError}>
+                {formState.errors.endTime}
+              </div>
+            )}
+          </div>
         </div>
-        <span>–</span>
-        <div className={classes.time}>
-          {size === 'default' && <label>Конец</label>}
-          <TimePicker
-            size={size}
-            {...field({
-              name: 'endTime',
-              validate: validation.endTime,
-              touchOnChange: true,
-            })}
-            error={formState.validity.endTime === false}
-          />
-          {formState.errors.endTime && (
-            <div className={classes.inputError}>{formState.errors.endTime}</div>
-          )}
-        </div>
+        {formState.errors.time && (
+          <div className={classNames(classes.inputError, classes.timeErrors)}>
+            {formState.errors.time}
+          </div>
+        )}
       </div>,
       <div key="participants" className={classes.participants}>
         <label htmlFor="participants">Участники</label>
@@ -206,12 +227,29 @@ export const Form: FC<Props> = ({
         [classes.lg]: size === 'large',
       })}
     >
-      <form className={classes.form}>{renderForm()}</form>
+      <form
+        id="eventForm"
+        className={classes.form}
+        {...form({
+          name: 'form',
+          onSubmit(values: StateValues<EditFormFields>) {
+            debugger;
+          },
+        })}
+      >
+        {renderForm()}
+      </form>
       <div className={classes.actions}>
         <Button className={classes.action} onClick={handleCancel}>
           Отмена
         </Button>
-        <Button use="primary" className={classes.action}>
+        <Button
+          use="primary"
+          type="submit"
+          form="eventForm"
+          className={classes.action}
+          disabled={Object.values(formState.validity).some(v => v === false)}
+        >
           {type === 'add' ? 'Создать встречу' : 'Сохранить'}
         </Button>
       </div>
