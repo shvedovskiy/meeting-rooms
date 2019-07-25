@@ -11,7 +11,11 @@ export class RoomInput implements Partial<Room> {
 
   @Min(1)
   @Field(type => Int, { nullable: true })
-  capacity?: number = 1;
+  minCapacity?: number = 1;
+
+  @Min(1)
+  @Field(type => Int, { nullable: true })
+  maxCapacity?: number = 1;
 
   @Field(type => Int, { nullable: true })
   floor?: number = 0;
@@ -25,7 +29,11 @@ export class UpdateRoomInput implements Partial<Room> {
 
   @Min(1)
   @Field(type => Int, { nullable: true })
-  capacity?: number;
+  minCapacity?: number;
+
+  @Min(1)
+  @Field(type => Int, { nullable: true })
+  maxCapacity?: number;
 
   @Field(type => Int, { nullable: true })
   floor?: number;

@@ -45,27 +45,32 @@ export async function seedDatabase() {
   const rooms = roomRepository.create([
     {
       title: '404',
-      capacity: 5,
+      minCapacity: 5,
+      maxCapacity: 10,
       floor: 4,
     },
     {
       title: 'Деньги',
-      capacity: 4,
+      minCapacity: 1,
+      maxCapacity: 4,
       floor: 2,
     },
     {
       title: 'Карты',
-      capacity: 4,
+      minCapacity: 4,
+      maxCapacity: 8,
       floor: 2,
     },
     {
       title: 'Ствола',
-      capacity: 2,
+      minCapacity: 2,
+      maxCapacity: 2,
       floor: 2,
     },
     {
       title: '14',
-      capacity: 6,
+      minCapacity: 1,
+      maxCapacity: 6,
       floor: 3,
     },
   ]);

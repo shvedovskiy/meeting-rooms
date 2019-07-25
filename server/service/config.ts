@@ -3,6 +3,7 @@ import { config } from 'dotenv-flow';
 config();
 
 export const NODE_ENV = process.env.NODE_ENV || 'production';
+export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 export const isProdEnv = NODE_ENV === 'production';
 export const isTestEnv = NODE_ENV === 'test';

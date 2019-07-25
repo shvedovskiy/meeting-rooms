@@ -35,7 +35,8 @@ export async function createRoom(quantity: number = 1): Promise<Room | Room[]> {
     for (let i = 0; i !== quantity; i++) {
       roomsData[i] = Room.create({
         title: faker.random.word(),
-        capacity: faker.random.number({ max: 31999 }),
+        minCapacity: faker.random.number({ min: 1, max: 31999 }),
+        maxCapacity: faker.random.number({ min: 1, max: 31999 }),
         floor: faker.random.number({ max: 254 }),
       });
     }
@@ -43,7 +44,8 @@ export async function createRoom(quantity: number = 1): Promise<Room | Room[]> {
   } else {
     return Room.create({
       title: faker.random.word(),
-      capacity: faker.random.number({ max: 31999 }),
+      minCapacity: faker.random.number({ min: 1, max: 31999 }),
+      maxCapacity: faker.random.number({ min: 1, max: 31999 }),
       floor: faker.random.number({ max: 254 }),
     }).save();
   }

@@ -39,7 +39,8 @@ describe('Event Query', () => {
             id
             title
             floor
-            capacity
+            minCapacity
+            maxCapacity
           }
           users {
             id
@@ -75,7 +76,8 @@ describe('Event Query', () => {
                 id: dbRooms[0].id,
                 title: dbRooms[0].title,
                 floor: dbRooms[0].floor,
-                capacity: dbRooms[0].capacity,
+                minCapacity: dbRooms[0].minCapacity,
+                maxCapacity: dbRooms[0].maxCapacity,
               },
             },
             {
@@ -88,7 +90,8 @@ describe('Event Query', () => {
                 id: dbRooms[1].id,
                 title: dbRooms[1].title,
                 floor: dbRooms[1].floor,
-                capacity: dbRooms[1].capacity,
+                minCapacity: dbRooms[1].minCapacity,
+                maxCapacity: dbRooms[1].maxCapacity,
               },
             },
           ],
@@ -128,7 +131,8 @@ describe('Event Query', () => {
             id
             title
             floor
-            capacity
+            minCapacity
+            maxCapacity
           }
           users {
             id

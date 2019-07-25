@@ -26,7 +26,8 @@ describe('Room Query', () => {
         rooms {
           id
           title
-          capacity
+          minCapacity
+          maxCapacity
           floor
         }
       }
@@ -45,19 +46,21 @@ describe('Room Query', () => {
             {
               id: rooms[0].id,
               title: rooms[0].title,
-              capacity: rooms[0].capacity,
+              minCapacity: rooms[0].minCapacity,
+              maxCapacity: rooms[0].maxCapacity,
               floor: rooms[0].floor,
             },
             {
               id: rooms[1].id,
               title: rooms[1].title,
-              capacity: rooms[1].capacity,
+              minCapacity: rooms[1].minCapacity,
+              maxCapacity: rooms[1].maxCapacity,
               floor: rooms[1].floor,
             },
             {
               id: rooms[2].id,
-              title: rooms[2].title,
-              capacity: rooms[2].capacity,
+              minCapacity: rooms[2].minCapacity,
+              maxCapacity: rooms[2].maxCapacity,
               floor: rooms[2].floor,
             },
           ],
@@ -84,7 +87,8 @@ describe('Room Query', () => {
         room(id: $id) {
           id
           title
-          capacity
+          minCapacity
+          maxCapacity
           floor
           events {
             id
@@ -117,7 +121,8 @@ describe('Room Query', () => {
           room: {
             id: dbRoom.id,
             title: dbRoom.title,
-            capacity: dbRoom.capacity,
+            minCapacity: dbRoom.minCapacity,
+            maxCapacity: dbRoom.maxCapacity,
             floor: dbRoom.floor,
           },
         },

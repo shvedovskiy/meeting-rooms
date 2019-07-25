@@ -25,7 +25,11 @@ export class Room extends BaseEntity {
 
   @Field(type => Int)
   @Column('smallint')
-  capacity: number;
+  minCapacity: number;
+
+  @Field(type => Int)
+  @Column('smallint')
+  maxCapacity: number;
 
   @Field(type => Int)
   @Column('tinyint')

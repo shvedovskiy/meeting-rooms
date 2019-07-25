@@ -28,7 +28,8 @@ describe('Room Mutation', () => {
         createRoom(input: $input) {
           id
           title
-          capacity
+          minCapacity
+          maxCapacity
           floor
         }
       }
@@ -37,7 +38,8 @@ describe('Room Mutation', () => {
     it('creates a room with specified properties', async () => {
       const newRoomData = {
         title: faker.random.word(),
-        capacity: faker.random.number({ max: 32000 }),
+        minCapacity: faker.random.number({ min: 1, max: 32000 }),
+        maxCapacity: faker.random.number({ min: 1, max: 32000 }),
         floor: faker.random.number({ max: 255 }),
       };
 
@@ -57,7 +59,8 @@ describe('Room Mutation', () => {
           createRoom: {
             id: dbRoom!.id,
             title: newRoomData.title,
-            capacity: newRoomData.capacity,
+            minCapacity: newRoomData.minCapacity,
+            maxCapacity: newRoomData.maxCapacity,
             floor: newRoomData.floor,
           },
         },
@@ -75,6 +78,7 @@ describe('Room Mutation', () => {
           input: newRoomData,
         },
       });
+      console.log(response);
       const dbRoom = await Room.findOne({
         where: { title: newRoomData.title },
       });
@@ -85,7 +89,8 @@ describe('Room Mutation', () => {
           createRoom: {
             id: dbRoom!.id,
             title: newRoomData.title,
-            capacity: 1, // default
+            minCapacity: 1, // default
+            maxCapacity: 1, // default
             floor: 0, // default
           },
         },
@@ -94,7 +99,8 @@ describe('Room Mutation', () => {
 
     it('does not create a room without required data', async () => {
       const newRoomData = {
-        capacity: faker.random.number({ max: 32000 }),
+        minCapacity: faker.random.number({ min: 1, max: 32000 }),
+        maxCapacity: faker.random.number({ min: 1, max: 32000 }),
         floor: faker.random.number({ max: 255 }),
       };
 
@@ -116,12 +122,14 @@ describe('Room Mutation', () => {
       const commonTitle = faker.random.word();
       const firstRoomData = {
         title: commonTitle,
-        capacity: faker.random.number({ max: 32000 }),
+        minCapacity: faker.random.number({ min: 1, max: 32000 }),
+        maxCapacity: faker.random.number({ min: 1, max: 32000 }),
         floor: faker.random.number({ max: 255 }),
       };
       const secondRoomData = {
         title: commonTitle,
-        capacity: faker.random.number({ max: 32000 }),
+        minCapacity: faker.random.number({ min: 1, max: 32000 }),
+        maxCapacity: faker.random.number({ min: 1, max: 32000 }),
         floor: faker.random.number({ max: 255 }),
       };
 
@@ -153,7 +161,8 @@ describe('Room Mutation', () => {
         updateRoom(id: $id, input: $input) {
           id
           title
-          capacity
+          minCapacity
+          maxCapacity
           floor
         }
       }
@@ -167,7 +176,8 @@ describe('Room Mutation', () => {
     it('updates room data', async () => {
       const updateData = {
         title: faker.random.word(),
-        capacity: dbRoom.capacity + 1,
+        minCapacity: dbRoom.minCapacity + 1,
+        maxCapacity: dbRoom.maxCapacity + 1,
         floor: dbRoom.floor + 1,
       };
 
@@ -184,7 +194,8 @@ describe('Room Mutation', () => {
           updateRoom: {
             id: dbRoom.id,
             title: updateData.title,
-            capacity: updateData.capacity,
+            minCapacity: updateData.minCapacity,
+            maxCapacity: updateData.maxCapacity,
             floor: updateData.floor,
           },
         },
@@ -193,7 +204,7 @@ describe('Room Mutation', () => {
 
     it('updates part of room data', async () => {
       const updateData = {
-        capacity: dbRoom.capacity + 1,
+        maxCapacity: dbRoom.maxCapacity + 1,
       };
 
       const response = await graphQLCall({
@@ -209,7 +220,8 @@ describe('Room Mutation', () => {
           updateRoom: {
             id: dbRoom.id,
             title: dbRoom.title,
-            capacity: updateData.capacity,
+            minCapacity: dbRoom.minCapacity,
+            maxCapacity: updateData.maxCapacity,
             floor: dbRoom.floor,
           },
         },
@@ -219,7 +231,8 @@ describe('Room Mutation', () => {
     it('does not update the room when passing extra properties', async () => {
       const updateData = {
         title: faker.random.word(),
-        capacity: dbRoom.capacity + 1,
+        minCapacity: dbRoom.minCapacity + 1,
+        maxCapacity: dbRoom.maxCapacity + 1,
         floor: dbRoom.floor + 1,
         extra: true,
       };
@@ -242,7 +255,8 @@ describe('Room Mutation', () => {
     it('does not update unknown room', async () => {
       const updateData = {
         title: faker.random.word(),
-        capacity: dbRoom.capacity + 1,
+        minCapacity: dbRoom.minCapacity + 1,
+        maxCapacity: dbRoom.maxCapacity + 1,
         floor: dbRoom.floor + 1,
       };
 
@@ -268,7 +282,8 @@ describe('Room Mutation', () => {
         removeRoom(id: $id) {
           id
           title
-          capacity
+          minCapacity
+          maxCapacity
           floor
         }
       }
@@ -296,7 +311,8 @@ describe('Room Mutation', () => {
           removeRoom: {
             id: dbRoom.id,
             title: dbRoom.title,
-            capacity: dbRoom.capacity,
+            minCapacity: dbRoom.minCapacity,
+            maxCapacity: dbRoom.maxCapacity,
             floor: dbRoom.floor,
           },
         },
