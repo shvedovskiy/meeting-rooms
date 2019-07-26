@@ -1,0 +1,30 @@
+.container {
+  padding-right: 24px;
+  padding-left: 24px;
+}
+
+.title,
+.text {
+  word-break: break-word;
+}
+
+.title {
+  margin-top: 35px;
+  margin-bottom: 25px;
+  font-size: 45px;
+}
+
+.text:not(:first-of-type) {
+  margin-top: 20px;
+}
+
+.link {
+  font-size: var(--text-default);
+  color: #07c;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    color: #f33;
+  }
+}
