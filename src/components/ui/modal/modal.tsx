@@ -37,7 +37,7 @@ export const Modal = (props: Props) => {
         dialogClass={classNames(classes.modal, {
           [classes.lg]: size === 'large',
         })}
-        dialogStyle={{ textAlign: 'center', verticalAlign: undefined }}
+        dialogStyle={{ textAlign: 'center', verticalAlign: 'initial' }}
         focusDialog={true}
         onExit={() => setModalActive(false)}
         titleId="modal-title"

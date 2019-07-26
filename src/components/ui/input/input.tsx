@@ -8,8 +8,8 @@ import React, {
   InputHTMLAttributes,
 } from 'react';
 import classNames from 'classnames';
-import { Override } from 'service/typings';
 
+import { Override } from 'service/typings';
 import { Icon } from 'components/ui/icon/icon';
 import { Size } from 'context/size-context';
 import classes from './input.module.scss';

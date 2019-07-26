@@ -7,17 +7,12 @@ import classes from './option.module.scss';
 import { Avatar } from 'components/ui/avatar/avatar';
 
 export const Option = (props: OptionProps<UserData>) => {
-  const {
-    data,
-    className,
-    isSelected,
-    isFocused,
-    innerRef,
-    innerProps,
-  } = props;
+  const { className, isSelected, isFocused, innerRef, innerProps } = props;
+  const data = props.data as UserData;
   const elementClasses = classNames(classes.selectOption, className, {
     [classes.focused]: isFocused,
   });
+
   return (
     <div
       className={elementClasses}

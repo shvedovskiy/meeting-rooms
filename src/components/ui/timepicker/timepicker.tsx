@@ -39,7 +39,7 @@ const TimePickerComponent = (props: Props) => {
       disableClock
       locale="ru-RU"
       onChange={onChange}
-      value={value === null ? undefined : value}
+      value={value}
     />
   );
 };

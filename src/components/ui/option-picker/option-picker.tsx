@@ -34,12 +34,20 @@ export const OptionPicker = (props: Props) => {
       />
     </li>
   );
-  const renderOptions = () =>
-    items.map(i => (
+  const renderOptions = () => {
+    if (!items.length) {
+      return (
+        <li key="blank" className={classes.item}>
+          <Option size={size} />
+        </li>
+      );
+    }
+    return items.map(i => (
       <li key={i.id} className={classes.item}>
         <Option item={i} size={size} onSelect={() => handleSelect(i)} />
       </li>
     ));
+  };
 
   return <ul id={id}>{selected ? renderSelectedOption() : renderOptions()}</ul>;
 };
