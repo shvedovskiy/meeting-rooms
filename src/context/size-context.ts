@@ -2,4 +2,4 @@ import { createContext } from 'react';
 
 export type Size = 'default' | 'large';
 
-export default createContext<Size | undefined>(undefined);
+export default createContext<Size>('default');

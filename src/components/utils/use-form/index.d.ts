@@ -24,8 +24,10 @@ type Validator<T, Name extends keyof T = keyof T> = (
 type StateValues<T> = {
   readonly [A in keyof T]: T[A] extends number ? string : T[A];
 };
-type StateValidity<T> = { readonly [A in keyof T]: Maybe<boolean> };
-type StateErrors<T, E = string> = { readonly [A in keyof T]?: E | string };
+type StateValidity<T> = { readonly [A in keyof T]: boolean | undefined };
+type StateErrors<T, E = string> = {
+  readonly [A in keyof T]?: E | string | null;
+};
 type StateValidators<T> = { readonly [A in keyof T]?: Validator<T> };
 
 interface Inputs<T, Name extends keyof T = keyof T> {
@@ -59,5 +61,3 @@ interface FieldProps<T, Name extends keyof T, RawValue> {
 interface FormProps {
   onSubmit(...args: any[]): any;
 }
-
-type Maybe<T> = T | undefined;
