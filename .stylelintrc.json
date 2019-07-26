@@ -256,7 +256,12 @@
       "fill",
       "stroke"
     ],
-    "plugin/no-unsupported-browser-features": true,
+    "plugin/no-unsupported-browser-features": [
+      true,
+      {
+        "ignore": ["word-break", "css3-cursors"]
+      }
+    ],
     "rule-empty-line-before": null,
     "scss/at-function-named-arguments": "never",
     "scss/at-function-parentheses-space-before": "never",
