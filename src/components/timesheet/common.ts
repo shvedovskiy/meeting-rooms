@@ -43,23 +43,26 @@ export const users: UserData[] = [
 export const rooms: RoomData[] = [
   {
     id: 'Room 1',
-    name: 'Room 1',
+    title: 'Room 1',
     floor: 1,
-    capacity: new Map([['min', 3], ['max', 6]]),
+    minCapacity: 3,
+    maxCapacity: 6,
     available: false,
   },
   {
     id: 'Room 2',
-    name: 'Room 2',
+    title: 'Room 2',
     floor: 1,
-    capacity: new Map([['min', 3], ['max', 6]]),
+    minCapacity: 3,
+    maxCapacity: 6,
     available: true,
   },
   {
     id: 'Room 3',
-    name: 'Room 3',
+    title: 'Room 3',
     floor: 1,
-    capacity: new Map([['min', 3], ['max', 6]]),
+    minCapacity: 3,
+    maxCapacity: 6,
     available: true,
   },
 ];

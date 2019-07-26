@@ -64,7 +64,7 @@ export const Room = ({ room, events = [], size = 'default', date }: Props) => {
       return (
         <Tooltip key={range.id} trigger={slot} position="bottom center">
           <Card
-            room={room.name}
+            room={room.title}
             data={eventInfo}
             onAction={openEditEventPage}
           />
@@ -95,8 +95,10 @@ export const Room = ({ room, events = [], size = 'default', date }: Props) => {
           [classes.unavailable]: !room.available,
         })}
       >
-        <div className={classes.name}>{room.name}</div>
-        <p className={classes.capacity}>{formatCapacity(room.capacity)}</p>
+        <div className={classes.name}>{room.title}</div>
+        <p className={classes.capacity}>
+          {formatCapacity(room.minCapacity, room.maxCapacity)}
+        </p>
       </div>
     </div>
   );

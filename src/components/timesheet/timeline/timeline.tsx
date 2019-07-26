@@ -27,7 +27,7 @@ export const Timeline = ({ floors = [], tableData = {}, date }: Props) => {
             <h1 className={classes.floorName}>{floorNumber} ЭТАЖ</h1>
             <ul>
               {rooms.map(room => (
-                <li key={room.name} className={classes.room}>
+                <li key={room.title} className={classes.room}>
                   <Room
                     room={room}
                     events={tableData[room.id]}

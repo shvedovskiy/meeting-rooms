@@ -2,7 +2,16 @@ export interface UserData {
   id: string;
   login: string;
   homeFloor: number;
-  avatarUrl?: string;
+  avatarUrl: string | null;
+}
+
+export interface RoomData {
+  id: string;
+  title: string;
+  floor: number;
+  minCapacity: number | null;
+  maxCapacity: number | null;
+  available: boolean;
 }
 
 export interface Event {
@@ -20,16 +29,6 @@ export interface NewEvent {
   startTime?: string;
   endTime?: string;
   room?: RoomData;
-}
-
-export type RoomCapacity = Map<string, number>;
-
-export interface RoomData {
-  id: string;
-  name: string;
-  floor: number;
-  capacity: RoomCapacity;
-  available: boolean;
 }
 
 export type RoomCard = RoomData & {

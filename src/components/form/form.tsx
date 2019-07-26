@@ -23,8 +23,8 @@ import { PageType } from 'context/page-context';
 type Props = {
   type: PageType;
   eventData: Event | NewEvent;
-  users?: UserData[];
-  rooms: RoomData[];
+  users: UserData[] | null;
+  rooms: RoomData[] | null;
   onMount?: () => void;
   onClose?: () => void;
 };
@@ -70,7 +70,7 @@ export const Form: FC<Props> = ({
   onClose,
 }) => {
   const [eventRoom, recommendedRooms] = useMemo(
-    () => getRecommendation(eventData, rooms),
+    () => getRecommendation(eventData, rooms || []),
     [eventData, rooms]
   );
   const [formState, { field, form }] = useForm<EditFormFields>({

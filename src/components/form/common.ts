@@ -11,7 +11,7 @@ export interface EditFormFields {
   startTime: string | null;
   endTime: string | null;
   time: string | null;
-  participants: UserData[] | null | undefined;
+  participants: UserData[] | null;
   room: RoomCard | null;
 }
 
@@ -46,7 +46,7 @@ function validatePastTime(
   date: Date | null
 ) {
   if (
-    date &&
+    date !== null &&
     validateDate(date) === true &&
     isToday(date) &&
     isTimeInPast(value)
@@ -167,16 +167,13 @@ export const validation = {
       time,
     };
   },
-  participants(
-    value: UserData[] | null | undefined,
-    values: StateValues<EditFormFields>
-  ) {
+  participants(value: UserData[] | null, values: StateValues<EditFormFields>) {
     if (!value || value.length === 0) {
       return errors.EMPTY_USERS;
     }
     if (values.room) {
-      const maxCapacity = values.room.capacity.get('max');
-      if (maxCapacity && value.length > maxCapacity) {
+      const maxCapacity = values.room.maxCapacity;
+      if (maxCapacity !== null && value.length > maxCapacity) {
         return errors.TOO_MANY_USERS;
       }
     }

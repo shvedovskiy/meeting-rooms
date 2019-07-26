@@ -6,16 +6,15 @@ import { Spinner } from 'components/ui/spinner/spinner';
 import classes from './page.module.scss';
 import spinnerTransitionClasses from 'components/ui/spinner/spinner-transition.module.scss';
 import pageContext, { PageType } from 'context/page-context';
-import { users, rooms } from 'components/timesheet/common';
-import { Event, NewEvent } from 'components/timesheet/types';
 import sizeContext from 'context/size-context';
 import { IconButton } from 'components/ui/icon-button/icon-button';
+import { ContextData } from 'components/app/types';
 
 const Form = lazy(() => import('components/form'));
 
 type Props = {
   type: PageType;
-  pageData: Event | NewEvent;
+  pageData: ContextData;
 };
 
 export const Page = ({ type, pageData }: Props) => {
@@ -26,18 +25,22 @@ export const Page = ({ type, pageData }: Props) => {
   function closePage() {
     setPage(null);
   }
-
   function renderPage() {
-    const props = {
+    const formProps = {
       type,
-      users,
-      rooms,
+      eventData: pageData.event,
+      users: pageData.users,
+      rooms: pageData.rooms,
       onMount() {
         setIsLoading(false);
       },
       onClose: closePage,
     };
-    return <Form {...props} eventData={pageData} />;
+    return (
+      <Suspense fallback={null}>
+        <Form {...formProps} />
+      </Suspense>
+    );
   }
 
   return (
@@ -68,7 +71,7 @@ export const Page = ({ type, pageData }: Props) => {
           {type === 'add' ? 'Новая встреча' : 'Редактирование встречи'}
         </h1>
       </div>
-      <Suspense fallback={null}>{renderPage()}</Suspense>
+      {renderPage()}
     </div>
   );
 };

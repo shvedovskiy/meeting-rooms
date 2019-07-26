@@ -7,7 +7,7 @@ import { Size } from 'context/size-context';
 import { RoomCard } from 'components/timesheet/types';
 
 type Props = {
-  item: RoomCard;
+  item?: RoomCard;
   size?: Size;
   selected?: boolean;
   onSelect?: () => void;
@@ -27,13 +27,20 @@ export const Option = (props: Props) => {
     [classes.lg]: size === 'large',
   });
 
+  if (!item) {
+    return (
+      <div className={className}>
+        <span className={classes.title}>Нет комнат</span>
+      </div>
+    );
+  }
   return (
     <button className={className} onClick={selected ? onDeselect : onSelect}>
       <span className={classes.time}>
         {item.startTime}–{item.endTime}
       </span>
       <span className={classes.title}>
-        {item.name}&nbsp;·&nbsp;{item.floor} этаж
+        {item.title}&nbsp;·&nbsp;{item.floor} этаж
       </span>
 
       {selected && (

@@ -1,4 +1,4 @@
-import { Event, RoomCapacity } from '../../types';
+import { Event } from '../../types';
 import { splitTimeString, minutesToHours } from 'service/dates';
 
 export type CommonSlot = { width: number; offset: number };
@@ -29,7 +29,7 @@ export function prepareRanges(events: Event[], firstHour: number) {
     offset = 0;
 
   for (let m = 0; m <= rangesLength; m++) {
-    const currEvent = eventRanges[m] !== undefined;
+    const currEvent = typeof eventRanges[m] !== 'undefined';
     if (m === 0) {
       currentRange = 1;
     } else if (currEvent !== prevEvent || (!prevEvent && m % 4 === 0)) {
@@ -51,15 +51,20 @@ export function prepareRanges(events: Event[], firstHour: number) {
   return slotRanges;
 }
 
-export function formatCapacity(capacity: RoomCapacity) {
-  if (capacity.has('min')) {
-    if (capacity.has('max')) {
-      return `${capacity.get('min')}–${capacity.get('max')} человек`;
+export function formatCapacity(
+  minCapacity: number | null,
+  maxCapacity: number | null
+) {
+  const hasMinCapacity = minCapacity !== null && minCapacity !== 0;
+  const hasMaxCapacity = maxCapacity !== null && maxCapacity !== 0;
+  if (hasMinCapacity) {
+    if (hasMaxCapacity) {
+      return `${minCapacity}–${maxCapacity} человек`;
     }
-    return `от ${capacity.get('min')} человек`;
+    return `от ${minCapacity} человек`;
   }
-  if (capacity.has('max')) {
-    return `до ${capacity.get('max')} человек`;
+  if (hasMaxCapacity) {
+    return `до ${maxCapacity} человек`;
   }
   return '';
 }

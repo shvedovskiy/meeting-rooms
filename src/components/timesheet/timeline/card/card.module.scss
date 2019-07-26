@@ -34,7 +34,7 @@
 
 .header .title {
   font-size: var(--medium-text);
-  word-break: break-all;
+  word-break: break-word;
 
   .cardContainer.lg & {
     font-size: var(--large-text);
