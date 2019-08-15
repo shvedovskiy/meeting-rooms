@@ -24,19 +24,19 @@ export const users: UserData[] = [
     id: '3434',
     login: 'Первый участник',
     homeFloor: 42,
-    avatarUrl: 'http://localhost:5000/a',
+    avatarUrl: 'http://localhost:4000/avatars/a',
   },
   {
     id: '343цук4',
     login: 'Второй участник',
     homeFloor: 42,
-    avatarUrl: 'http://localhost:5000/a',
+    avatarUrl: 'http://localhost:4000/avatars/a',
   },
   {
     id: 'lsd;fsd',
     login: 'Третий участник',
     homeFloor: 42,
-    avatarUrl: 'http://localhost:5000/a',
+    avatarUrl: 'http://localhost:4000/avatars/a',
   },
 ];
 

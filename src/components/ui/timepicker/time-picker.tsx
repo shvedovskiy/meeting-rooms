@@ -54,8 +54,6 @@ export class TimePicker extends PureComponent<Props, State> {
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     const nextState: Partial<State> = {};
-    console.log(nextProps.value === null);
-
     const nextValue = nextProps.value;
     if (hoursAreDifferent(nextValue, prevState.value)) {
       if (typeof nextValue === 'string' && nextValue.length > 0) {
