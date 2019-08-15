@@ -11,11 +11,7 @@ export function getTimeString(date: Date) {
 }
 
 export function splitTimeString(time: string) {
-  return time
-    .split(':')
-    .map(part =>
-      Number.parseInt(part.startsWith('0') ? part.substring(1) : part)
-    );
+  return time.split(':').map(part => Number.parseInt(part, 10));
 }
 
 export function minutesToHours(value: number) {

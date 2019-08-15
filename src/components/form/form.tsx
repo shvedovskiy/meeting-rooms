@@ -14,7 +14,7 @@ import {
   NewEvent,
 } from 'components/timesheet/types';
 import { CalendarInput } from 'components/ui/calendar/calendar-input/calendar-input';
-import { TimePicker } from 'components/ui/timepicker/timepicker';
+import { TimePicker } from 'components/ui/timepicker/time-picker';
 import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
 import { EditFormFields, validation } from './common';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
@@ -54,8 +54,8 @@ function getRecommendation(
 
 const defaultEventData = {
   title: '',
-  startTime: null,
-  endTime: null,
+  startTime: '',
+  endTime: '',
   date: null,
   participants: null,
   room: null,
@@ -132,7 +132,6 @@ export const Form: FC<Props> = ({
         <div className={classes.timeContainer}>
           <div className={classes.time}>
             {size === 'default' && <label>Начало</label>}
-            {/* https://github.com/wojtekmaj/react-time-picker/issues/18 */}
             <TimePicker
               size={size}
               {...field({

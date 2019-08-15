@@ -51,15 +51,14 @@
   grid:
     "date time" auto
     "date timeErrors" auto
-    / auto auto;
+    / auto max-content;
 
   .formArea.lg & {
     display: block;
   }
 
   .date {
-    grid-area: "date";
-    flex-grow: 1;
+    grid-area: date;
     margin-right: 16px;
 
     .formArea.lg & {
@@ -70,6 +69,7 @@
   }
 
   .timeContainer {
+    grid-area: time;
     display: flex;
     align-items: flex-start;
 
@@ -91,12 +91,15 @@
   }
 
   .time {
-    flex-basis: 72px;
-    flex-grow: 1;
+    width: 72px;
+
+    .formArea.lg & {
+      flex-grow: 1;
+    }
   }
 
   .timeErrors {
-    grid-area: "timeErrors";
+    grid-area: timeErrors;
     margin-top: 4px;
   }
 }

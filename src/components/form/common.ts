@@ -8,8 +8,8 @@ import { HOURS } from 'components/timesheet/common';
 export interface EditFormFields {
   title: string;
   date: Date | null;
-  startTime: string | null;
-  endTime: string | null;
+  startTime: string;
+  endTime: string;
   time: string | null;
   participants: UserData[] | null;
   room: RoomCard | null;
@@ -56,8 +56,8 @@ function validatePastTime(
   return true;
 }
 
-function validateTime(time: 'start' | 'end', value: string | null) {
-  if (!value || value.trim().length === 0) {
+function validateTime(time: 'start' | 'end', value: string) {
+  if (value.trim().length === 0) {
     return time === 'start' ? errors.EMPTY_START : errors.EMPTY_END;
   }
   const [hours, minutes] = splitTimeString(value);
@@ -112,7 +112,7 @@ export const validation = {
 
     return result;
   },
-  startTime(value: string | null, values: StateValues<EditFormFields>) {
+  startTime(value: string, values: StateValues<EditFormFields>) {
     let valid = validateTime('start', value);
     if (valid !== true) {
       return {
@@ -139,7 +139,7 @@ export const validation = {
       time,
     };
   },
-  endTime(value: string | null, values: StateValues<EditFormFields>) {
+  endTime(value: string, values: StateValues<EditFormFields>) {
     let valid = validateTime('end', value);
     if (valid !== true) {
       return {

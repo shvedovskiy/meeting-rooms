@@ -18,3 +18,8 @@ declare module 'pluralize-ru' {
   ): string;
   export = pluralize;
 }
+
+declare module 'update-input-width' {
+  function updateInputWidth(element: EventTarget);
+  export = updateInputWidth;
+}

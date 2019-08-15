@@ -259,7 +259,12 @@
     "plugin/no-unsupported-browser-features": [
       true,
       {
-        "ignore": ["word-break", "css3-cursors"]
+        "ignore": [
+          "word-break",
+          "css3-cursors",
+          "css-appearance",
+          "text-size-adjust"
+        ]
       }
     ],
     "rule-empty-line-before": null,
