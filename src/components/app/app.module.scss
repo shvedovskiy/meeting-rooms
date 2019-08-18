@@ -1,5 +1,16 @@
 @import "../utils/mixins";
 
+.app {
+  width: 100%;
+  height: 100%;
+
+  --header-height: 72px;
+
+  &.sm {
+    --header-height: 48px;
+  }
+}
+
 .headerBtn {
   max-width: 200px;
   @include oneLineEllipsis;
@@ -11,5 +22,5 @@
 
 .content {
   position: relative;
-  flex-grow: 1;
+  height: calc(100% - var(--header-height));
 }

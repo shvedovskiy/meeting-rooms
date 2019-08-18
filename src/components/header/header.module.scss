@@ -1,15 +1,10 @@
 .root {
   display: flex;
-  flex-basis: 72px;
-  flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
+  height: var(--header-height);
   padding-right: 24px;
   padding-left: 24px;
   background-color: var(--bg-primary);
   border-bottom: 1px solid var(--border);
-
-  &.sm {
-    flex-basis: 48px;
-  }
 }

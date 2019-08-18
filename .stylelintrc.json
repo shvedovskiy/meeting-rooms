@@ -263,7 +263,8 @@
           "word-break",
           "css3-cursors",
           "css-appearance",
-          "text-size-adjust"
+          "text-size-adjust",
+          "css-filters"
         ]
       }
     ],
