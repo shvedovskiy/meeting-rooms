@@ -84,7 +84,7 @@ export const TimeInput = (props: Props) => {
         step={step}
         type="number"
         placeholder="--"
-        value={value || ''}
+        value={value === null ? '' : value}
       />
     </>
   );
