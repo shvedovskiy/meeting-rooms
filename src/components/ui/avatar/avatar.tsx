@@ -1,9 +1,10 @@
 import React from 'react';
 import { Size } from 'context/size-context';
 
+import classes from './avatar.module.scss';
+
 type Props = {
   avatarPath: string | null;
-  className?: string;
   size?: Size;
 };
 
@@ -16,7 +17,7 @@ function avatarSizes(url: string, size: Size) {
   };
 }
 
-export const Avatar = ({ avatarPath, size = 'default', className }: Props) => {
+export const Avatar = ({ avatarPath, size = 'default' }: Props) => {
   if (avatarPath === null) {
     return (
       <svg
@@ -42,7 +43,7 @@ export const Avatar = ({ avatarPath, size = 'default', className }: Props) => {
         type="image/webp"
       />
       <img
-        className={className}
+        className={classes.avatar}
         srcSet={`${avatar.triple}.png 3x, ${avatar.double}.png 2x, ${avatar.single}.png`}
         src={`${avatar.single}.png`}
         alt=""

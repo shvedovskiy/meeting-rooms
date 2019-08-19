@@ -22,11 +22,7 @@ export const Option = (props: OptionProps<UserData>) => {
       role="option"
     >
       <div className={classes.iconContainer}>
-        <Avatar
-          avatarPath={data.avatarUrl}
-          className={classes.icon}
-          size="default"
-        />
+        <Avatar avatarPath={data.avatarUrl} size="default" />
       </div>
       <div className={classes.optionText}>
         {data.login}&nbsp;·&nbsp;

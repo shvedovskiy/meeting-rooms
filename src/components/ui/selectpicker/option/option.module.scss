@@ -21,10 +21,6 @@
     margin-right: 8px;
   }
 
-  .icon {
-    border-radius: 50%;
-  }
-
   .optionText {
     flex-grow: 1;
     @include oneLineEllipsis;

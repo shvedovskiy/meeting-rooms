@@ -16,11 +16,7 @@ export const MultiValueLabel = ({
   return (
     <div {...props}>
       <div className={classes.iconContainer}>
-        <Avatar
-          avatarPath={data.avatarUrl}
-          className={classes.icon}
-          size="default"
-        />
+        <Avatar avatarPath={data.avatarUrl} size="default" />
       </div>
       <span className={classes.value}>{data.login}</span>
     </div>

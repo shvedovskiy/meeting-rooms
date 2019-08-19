@@ -26,11 +26,7 @@ export const CardParticipants = ({ items = [], size = 'default' }: Props) => {
   return (
     <div className={classes.participants}>
       <div className={classes.iconContainer}>
-        <Avatar
-          avatarPath={items[0].avatarUrl}
-          size={size}
-          className={classes.icon}
-        />
+        <Avatar avatarPath={items[0].avatarUrl} size={size} />
       </div>
       <p className={classes.name}>
         {items[0].login} {items.length > 1 && <span>{others}</span>}
