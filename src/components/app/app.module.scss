@@ -15,7 +15,7 @@
   max-width: 200px;
   @include oneLineEllipsis;
 
-  @media (max-width: 420px) {
+  @media (max-width: 26.25em) {
     display: none;
   }
 }
