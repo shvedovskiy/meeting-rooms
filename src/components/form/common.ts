@@ -23,9 +23,10 @@ const errors = {
   EMPTY_USERS: 'Необходимо добавить участников',
   EMPTY_ROOM: 'Необходимо выбрать переговорку',
   DATE_PAST: 'Прошедшая дата не может быть выбрана',
+  INVALID_TIME: 'Некорректное значение',
   START_PAST: 'Время начала не может быть в прошлом',
   END_PAST: 'Время окончания не может быть в прошлом',
-  INVALID_TIME: 'Нерабочее время',
+  OFF_TIME: 'Нерабочее время',
   END_BEFORE_START: 'Время начала должно быть раньше времени окончания',
   TOO_MANY_USERS: 'Слишком много участников для выбранной переговорки',
 };
@@ -56,7 +57,10 @@ function validatePastTime(
   return true;
 }
 
-function validateTime(time: 'start' | 'end', value: string) {
+function validateTime(time: 'start' | 'end', value: string | null) {
+  if (value === null) {
+    return errors.INVALID_TIME;
+  }
   if (value.trim().length === 0) {
     return time === 'start' ? errors.EMPTY_START : errors.EMPTY_END;
   }
@@ -67,7 +71,7 @@ function validateTime(time: 'start' | 'end', value: string) {
       (hours === HOURS[HOURS.length - 2] && minutes > 45) ||
       hours >= HOURS[HOURS.length - 1]
     ) {
-      return errors.INVALID_TIME;
+      return errors.OFF_TIME;
     }
   } else {
     if (
@@ -76,7 +80,7 @@ function validateTime(time: 'start' | 'end', value: string) {
       (hours === HOURS[HOURS.length - 1] && minutes > 0) ||
       hours > HOURS[HOURS.length - 1]
     ) {
-      return errors.INVALID_TIME;
+      return errors.OFF_TIME;
     }
   }
   return true;

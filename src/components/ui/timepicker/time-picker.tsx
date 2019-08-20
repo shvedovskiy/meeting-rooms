@@ -35,7 +35,7 @@ const focus = (element: HTMLInputElement | null) => element && element.focus();
 
 type Props = {
   size?: Size;
-  value: string;
+  value: string | null;
   error?: boolean;
   onChange?: (value: string | null) => void;
   onFocus?: FocusEventHandler;
@@ -55,7 +55,7 @@ export class TimePicker extends PureComponent<Props, State> {
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     const nextState: Partial<State> = {};
     const nextValue = nextProps.value;
-    if (hoursAreDifferent(nextValue, prevState.value)) {
+    if (nextValue !== null && hoursAreDifferent(nextValue, prevState.value)) {
       if (typeof nextValue === 'string' && nextValue.length > 0) {
         const [hour, minute] = splitTimeString(nextValue);
         nextState.hour = hour;
@@ -154,9 +154,11 @@ export class TimePicker extends PureComponent<Props, State> {
       values[f!.name] = f!.value;
     });
 
-    if (formElements.every(f => !f!.value)) {
+    if (formElements.every(f => f!.value === '')) {
       onChange('');
-    } else if (formElements.some(f => !f!.value && !f!.checkValidity())) {
+    } else if (
+      formElements.some(f => f!.value === '' || f!.checkValidity() === false)
+    ) {
       onChange(null);
     } else {
       const value = `${values.hour.padStart(2, '0')}:${values.minute.padStart(
@@ -240,7 +242,7 @@ export class TimePicker extends PureComponent<Props, State> {
           onFocus={e => e.stopPropagation()}
           step={60}
           type="time"
-          value={value}
+          value={value || ''}
         />
         {this.renderHour()}
         <span className={classes.divider}>:</span>
