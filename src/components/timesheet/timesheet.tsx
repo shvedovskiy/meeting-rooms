@@ -50,7 +50,7 @@ function calculateTimesheet(
     }
   }
 
-  return [floors, table];
+  return [new Map([...floors].sort((r1, r2) => r1[0] - r2[0])), table];
 }
 
 export const Timesheet = () => {
