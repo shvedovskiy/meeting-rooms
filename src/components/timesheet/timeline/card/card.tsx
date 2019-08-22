@@ -47,7 +47,7 @@ export const Card = ({ data, room, onAction }: Props) => {
         <h1 className={classes.title}>{data.title}</h1>
       </div>
       {renderInfo()}
-      <CardParticipants items={data.participants} size={size} />
+      <CardParticipants items={data.users} size={size} />
     </div>
   );
 };

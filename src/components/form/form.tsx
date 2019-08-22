@@ -57,7 +57,7 @@ const defaultEventData = {
   startTime: '',
   endTime: '',
   date: null,
-  participants: null,
+  users: null,
   room: null,
 };
 
@@ -178,23 +178,21 @@ export const Form: FC<Props> = ({
           </div>
         )}
       </div>,
-      <div key="participants" className={classes.participants}>
-        <label htmlFor="participants">Участники</label>
+      <div key="users" className={classes.users}>
+        <label htmlFor="users">Участники</label>
         <Selectpicker
           id="selectpicker"
           items={users || []}
           size={size}
           placeholder="Например, Тор Одинович"
           {...field({
-            name: 'participants',
-            validate: validation.participants,
+            name: 'users',
+            validate: validation.users,
           })}
-          error={formState.validity.participants === false}
+          error={formState.validity.users === false}
         />
-        {formState.errors.participants && (
-          <div className={classes.inputError}>
-            {formState.errors.participants}
-          </div>
+        {formState.errors.users && (
+          <div className={classes.inputError}>{formState.errors.users}</div>
         )}
       </div>,
       <div key="room" className={classes.room}>

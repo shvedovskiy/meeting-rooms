@@ -1,9 +1,13 @@
 import { isToday, isFuture } from 'date-fns/esm';
 import { StateValues } from 'components/utils/use-form';
 
-import { splitTimeString, isTimeInPast, compareTimes } from 'service/dates';
+import {
+  splitTimeString,
+  isTimeInPast,
+  compareTimes,
+  HOURS,
+} from 'service/dates';
 import { UserData, RoomCard } from 'components/timesheet/types';
-import { HOURS } from 'components/timesheet/common';
 
 export interface EditFormFields {
   title: string;
@@ -11,7 +15,7 @@ export interface EditFormFields {
   startTime: string;
   endTime: string;
   time: string | null;
-  participants: UserData[] | null;
+  users: UserData[] | null;
   room: RoomCard | null;
 }
 
@@ -23,7 +27,7 @@ const errors = {
   EMPTY_USERS: 'Необходимо добавить участников',
   EMPTY_ROOM: 'Необходимо выбрать переговорку',
   DATE_PAST: 'Прошедшая дата не может быть выбрана',
-  INVALID_TIME: 'Некорректное значение',
+  INVALID_TIME: 'Некорректное время',
   START_PAST: 'Время начала не может быть в прошлом',
   END_PAST: 'Время окончания не может быть в прошлом',
   OFF_TIME: 'Нерабочее время',
@@ -65,6 +69,9 @@ function validateTime(time: 'start' | 'end', value: string | null) {
     return time === 'start' ? errors.EMPTY_START : errors.EMPTY_END;
   }
   const [hours, minutes] = splitTimeString(value);
+  if (minutes % 15 !== 0) {
+    return errors.INVALID_TIME;
+  }
   if (time === 'start') {
     if (
       hours < HOURS[0] ||
@@ -171,7 +178,7 @@ export const validation = {
       time,
     };
   },
-  participants(value: UserData[] | null, values: StateValues<EditFormFields>) {
+  users(value: UserData[] | null, values: StateValues<EditFormFields>) {
     if (!value || value.length === 0) {
       return errors.EMPTY_USERS;
     }

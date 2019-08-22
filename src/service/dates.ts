@@ -1,6 +1,25 @@
 import { lightFormat, isBefore, isAfter, isEqual, parse } from 'date-fns/esm';
 import ruLocale from 'date-fns/locale/ru';
 
+export const HOURS = [
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+];
+
 export function roundDate(date: number) {
   const ms = 1000 * 60 * 5;
   return new Date(Math.ceil(date / ms) * ms);

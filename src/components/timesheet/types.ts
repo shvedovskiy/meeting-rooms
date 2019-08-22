@@ -11,7 +11,6 @@ export interface RoomData {
   floor: number;
   minCapacity: number | null;
   maxCapacity: number | null;
-  available: boolean;
 }
 
 export interface Event {
@@ -20,8 +19,12 @@ export interface Event {
   date: Date;
   startTime: string;
   endTime: string;
-  participants?: UserData[];
+  users?: UserData[];
   room: RoomData;
+}
+
+export interface ServerEvent extends Omit<Event, 'date'> {
+  date: string;
 }
 
 export interface NewEvent {
@@ -40,9 +43,6 @@ export interface RoomEvents {
   [room: string]: Event[];
 }
 
-export interface FloorDefinition {
-  floor: number;
-  rooms?: RoomData[];
-}
+export type FloorDefinition = Map<number, RoomData[]>;
 
 export type Table = Map<number, RoomEvents>;

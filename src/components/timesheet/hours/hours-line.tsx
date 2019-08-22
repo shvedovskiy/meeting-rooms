@@ -2,10 +2,9 @@ import React, { memo, useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { isSameDay, isBefore, getHours, getMinutes } from 'date-fns/esm';
 
-import { getTimeString } from 'service/dates';
+import { HOURS, getTimeString } from 'service/dates';
 import classes from './hours-line.module.scss';
 import { useCurrentTime } from './use-current-time';
-import { HOURS } from '../common';
 
 type Props = {
   displayedDate: Date;
