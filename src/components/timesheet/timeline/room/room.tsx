@@ -15,7 +15,7 @@ import pageContext from 'context/page-context';
 import { Tooltip } from 'components/ui/tooltip/tooltip';
 import { Card } from '../card/card';
 import { RoomData, Event, NewEvent } from '../../types';
-import { HOURS } from '../../common';
+import { HOURS } from 'service/dates';
 
 type Props = {
   room: RoomData;
@@ -92,7 +92,7 @@ export const Room = ({ room, events = [], size = 'default', date }: Props) => {
       <div className={classes.timeline}>{ranges.map(renderSlot)}</div>
       <div
         className={classNames(classes.roomInfo, {
-          [classes.unavailable]: !room.available,
+          [classes.unavailable]: ranges.every(r => r.hasOwnProperty('id')),
         })}
       >
         <div className={classes.name}>{room.title}</div>
