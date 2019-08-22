@@ -9,9 +9,10 @@ import { Timesheet } from 'components/timesheet/timesheet';
 import PageContext, { PageType, PageFn } from 'context/page-context';
 import classes from './app.module.scss';
 import pageTransitionClasses from 'components/page/page-transition.module.scss';
-import { ContextData, QueryType } from './types';
+import { ContextData } from './types';
 import { Error } from 'components/error/error';
 import sizeContext from 'context/size-context';
+import { UsersRoomsQueryType as QueryType } from 'service/queries';
 
 type Props = {
   appData?: QueryType;
@@ -23,7 +24,7 @@ export const AppComponent = ({ appData }: Props) => {
   const size = useContext(sizeContext) || 'default';
 
   useEffect(() => {
-    if (typeof appData !== 'undefined') {
+    if (appData) {
       setContextData(ctx => ({
         ...ctx,
         ...appData,
@@ -39,7 +40,7 @@ export const AppComponent = ({ appData }: Props) => {
     }));
   }, []);
   function handleOpen() {
-    if (typeof appData !== 'undefined') {
+    if (!appData) {
       openPage('add');
     }
   }

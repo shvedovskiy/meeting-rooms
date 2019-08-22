@@ -17,6 +17,7 @@ const hideLoader = () => {
 
 const client = new ApolloClient({
   uri: `http://${SERVER_HOST}:${SERVER_PORT}/graphql`,
+  resolvers: {},
 });
 
 render(

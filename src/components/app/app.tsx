@@ -3,8 +3,10 @@ import { useMediaLayout } from 'use-media';
 import { useQuery } from '@apollo/react-hooks';
 
 import SizeContext from 'context/size-context';
-import { QueryType } from './types';
-import { GET_USERS_ROOMS } from 'service/queries';
+import {
+  GET_USERS_ROOMS,
+  UsersRoomsQueryType as QueryType,
+} from 'service/queries';
 import { AppComponent } from './app-component';
 
 type Props = {

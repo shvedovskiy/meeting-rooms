@@ -10,8 +10,3 @@ export interface ContextData {
   rooms: RoomData[] | null;
   event: Event | NewEvent;
 }
-
-export interface QueryType {
-  users: UserData[];
-  rooms: RoomData[];
-}
