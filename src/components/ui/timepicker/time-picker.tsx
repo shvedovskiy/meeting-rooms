@@ -210,6 +210,7 @@ export class TimePicker extends PureComponent<Props, State> {
         max={59}
         min={0}
         name="minute"
+        step={15}
         showLeadingZeros
         value={minute}
         itemRef={(ref: HTMLInputElement | null) => {
