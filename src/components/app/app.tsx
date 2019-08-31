@@ -1,40 +1,112 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useMediaLayout } from 'use-media';
+import { CSSTransition } from 'react-transition-group';
 import { useQuery } from '@apollo/react-hooks';
+import cn from 'classnames';
 
+import { Header } from 'components/header/header';
+import { Button } from 'components/ui/button/button';
+import { Page } from 'components/page/page';
+import { Error } from 'components/error/error';
+import { Timesheet } from 'components/timesheet/timesheet';
 import SizeContext from 'context/size-context';
+import PageContext, { PageType, PageData, PageFn } from 'context/page-context';
 import {
-  GET_USERS_ROOMS,
-  UsersRoomsQueryType as QueryType,
+  ROOMS_EVENTS_QUERY as query,
+  RoomsEventsQueryType as QueryType,
 } from 'service/queries';
-import { AppComponent } from './app-component';
+import classes from './app.module.scss';
+import pageTransitionClasses from 'components/page/page-transition.module.scss';
 
 type Props = {
   onLoad: () => void;
 };
 
+interface PageDef {
+  type: PageType;
+  data?: PageData;
+}
+
 export const App = ({ onLoad }: Props) => {
+  const [page, setPage] = useState<PageDef>({ type: null });
   const size = useMediaLayout({ maxWidth: '34.625em' }) ? 'large' : 'default';
-  const { loading, data: fetchData } = useQuery<QueryType>(GET_USERS_ROOMS);
+  const { data, error, loading } = useQuery<QueryType>(query);
 
   useEffect(() => {
-    if (loading === false) {
+    if (!loading) {
       onLoad();
     }
-  }, [onLoad, loading]);
+  }, [loading, onLoad]);
+
+  const openPage = useCallback<PageFn>((pageType, pageData) => {
+    setPage({
+      type: pageType,
+      data: pageData,
+    });
+  }, []);
 
   if (loading) {
     return null;
   }
+
+  function renderHeader() {
+    if (page.type === null && data && data.rooms.length) {
+      return (
+        <Header>
+          <Button
+            use="primary"
+            className={classes.headerBtn}
+            size={size}
+            onClick={() => openPage('add')}
+          >
+            Создать встречу
+          </Button>
+        </Header>
+      );
+    }
+    return <Header />;
+  }
+
+  function renderContent() {
+    if (error) {
+      return <Error className={classes.error} />;
+    }
+
+    return (
+      <>
+        <Timesheet />
+        <CSSTransition
+          appear
+          classNames={pageTransitionClasses}
+          in={page.type !== null}
+          mountOnEnter
+          unmountOnExit
+          timeout={350}
+        >
+          <Page type={page.type!} pageData={page.data} />
+        </CSSTransition>
+      </>
+    );
+  }
+
   return (
     <SizeContext.Provider value={size}>
-      <AppComponent appData={fetchData} />
-      {/* <Modal
+      <PageContext.Provider value={openPage}>
+        <div
+          className={cn(classes.app, {
+            [classes.sm]: size === 'large',
+          })}
+        >
+          {renderHeader()}
+          <main className={classes.content}>{renderContent()}</main>
+        </div>
+        {/* <Modal
         icon="🙅🏻"
         title="Modal Title"
         text="Modal Text"
         buttons={[{ id: '1', text: 'Text 1' }, { id: '2', text: 'Text 1' }]}
       /> */}
+      </PageContext.Provider>
     </SizeContext.Provider>
   );
 };

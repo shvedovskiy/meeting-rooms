@@ -1,255 +1,38 @@
-import React, { FC, useEffect, useContext, useMemo } from 'react';
-import classNames from 'classnames';
-import { useForm, StateValues } from 'components/utils/use-form';
+import React, { useEffect, FC } from 'react';
+import { useQuery } from '@apollo/react-hooks';
 
+import { Error } from 'components/error/error';
+import { FormComponent } from './form-component';
+import { PageType, PageData } from 'context/page-context';
+import { USERS_ROOMS_QUERY, UsersRoomsQueryType } from 'service/queries';
 import classes from './form.module.scss';
-import { Button } from 'components/ui/button/button';
-import sizeContext from 'context/size-context';
-import { Input } from 'components/ui/input/input';
-import {
-  Event,
-  UserData,
-  RoomData,
-  RoomCard,
-  NewEvent,
-} from 'components/timesheet/types';
-import { CalendarInput } from 'components/ui/calendar/calendar-input/calendar-input';
-import { TimePicker } from 'components/ui/timepicker/time-picker';
-import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
-import { EditFormFields, validation } from './common';
-import { OptionPicker } from 'components/ui/option-picker/option-picker';
-import { PageType } from 'context/page-context';
 
 type Props = {
-  type: PageType;
-  eventData: Event | NewEvent;
-  users: UserData[] | null;
-  rooms: RoomData[] | null;
-  onMount?: () => void;
-  onClose?: () => void;
+  type: NonNullable<PageType>;
+  formData?: PageData;
+  onMount: () => void;
+  onClose: () => void;
 };
 
-function getRecommendation(
-  eventData: Event | NewEvent,
-  rooms: RoomData[]
-): [RoomCard | null, RoomCard[]] {
-  let eventRoom: RoomCard | null = null;
-  const recommendedRooms = rooms.map(r => {
-    if (eventData.room && r.id === eventData.room.id) {
-      eventRoom = {
-        ...r,
-        startTime: eventData.startTime!,
-        endTime: eventData.endTime!,
-      };
-      return eventRoom;
-    }
-    return {
-      ...r,
-      startTime: '13:00',
-      endTime: '14:00',
-    };
-  });
-  return [eventRoom, recommendedRooms];
-}
-
-const defaultEventData = {
-  title: '',
-  startTime: '',
-  endTime: '',
-  date: null,
-  users: null,
-  room: null,
-};
-
-export const Form: FC<Props> = ({
-  type,
-  eventData,
-  users,
-  rooms,
-  onMount,
-  onClose,
-}) => {
-  const [eventRoom, recommendedRooms] = useMemo(
-    () => getRecommendation(eventData, rooms || []),
-    [eventData, rooms]
+export const Form: FC<Props> = ({ onMount, ...formProps }) => {
+  const { data, loading, error } = useQuery<UsersRoomsQueryType>(
+    USERS_ROOMS_QUERY
   );
-  const [formState, { field, form }] = useForm<EditFormFields>({
-    ...defaultEventData,
-    ...eventData,
-    room: eventRoom,
-  });
-  const size = useContext(sizeContext);
 
   useEffect(() => {
-    if (onMount) {
+    if (!loading) {
       onMount();
     }
-  }, [onMount]);
+  }, [loading, onMount]);
 
-  function handleCancel() {
-    if (onClose) {
-      onClose();
-    }
+  if (loading) {
+    return null;
   }
-
-  function renderForm() {
-    return [
-      <div key="title">
-        <label htmlFor="title">Тема</label>
-        <Input
-          id="title"
-          size={size}
-          placeholder="О чём будете говорить?"
-          {...field({
-            name: 'title',
-            validate: validation.title,
-          })}
-          error={formState.validity.title === false}
-        />
-        {formState.errors.title && (
-          <div className={classes.inputError}>{formState.errors.title}</div>
-        )}
-      </div>,
-      <div key="datetime" className={classes.dateTime}>
-        <div className={classes.date}>
-          <label htmlFor="date">
-            {size === 'default' ? 'Дата' : 'Дата и время'}
-          </label>
-          <CalendarInput
-            id="date"
-            size={size}
-            {...field({
-              name: 'date',
-              validate: validation.date,
-              touchOnChange: true,
-            })}
-            error={formState.validity.date === false}
-          />
-          {formState.errors.date && (
-            <div className={classes.inputError}>{formState.errors.date}</div>
-          )}
-        </div>
-        <div className={classes.timeContainer}>
-          <div className={classes.time}>
-            {size === 'default' && <label>Начало</label>}
-            <TimePicker
-              size={size}
-              {...field({
-                name: 'startTime',
-                validate: validation.startTime,
-                touchOnChange: true,
-              })}
-              error={
-                formState.validity.startTime === false ||
-                formState.validity.time === false
-              }
-            />
-            {formState.errors.startTime && (
-              <div className={classes.inputError}>
-                {formState.errors.startTime}
-              </div>
-            )}
-          </div>
-          <span>–</span>
-          <div className={classes.time}>
-            {size === 'default' && <label>Конец</label>}
-            <TimePicker
-              size={size}
-              {...field({
-                name: 'endTime',
-                validate: validation.endTime,
-                touchOnChange: true,
-              })}
-              error={
-                formState.validity.endTime === false ||
-                formState.validity.time === false
-              }
-            />
-            {formState.errors.endTime && (
-              <div className={classes.inputError}>
-                {formState.errors.endTime}
-              </div>
-            )}
-          </div>
-        </div>
-        {formState.errors.time && (
-          <div className={classNames(classes.inputError, classes.timeErrors)}>
-            {formState.errors.time}
-          </div>
-        )}
-      </div>,
-      <div key="users" className={classes.users}>
-        <label htmlFor="users">Участники</label>
-        <Selectpicker
-          id="selectpicker"
-          items={users || []}
-          size={size}
-          placeholder="Например, Тор Одинович"
-          {...field({
-            name: 'users',
-            validate: validation.users,
-          })}
-          error={formState.validity.users === false}
-        />
-        {formState.errors.users && (
-          <div className={classes.inputError}>{formState.errors.users}</div>
-        )}
-      </div>,
-      <div key="room" className={classes.room}>
-        <label htmlFor="room">
-          {formState.values.room
-            ? 'Ваша переговорка'
-            : 'Рекомендуемые переговорки'}
-        </label>
-        <OptionPicker
-          id="room"
-          size={size}
-          items={recommendedRooms}
-          {...field({
-            name: 'room',
-            validate: validation.room,
-            touchOnChange: true,
-          })}
-        />
-        {formState.errors.room && (
-          <div className={classes.inputError}>{formState.errors.room}</div>
-        )}
-      </div>,
-    ];
+  if (error || !data) {
+    return <Error className={classes.loadingError} />;
   }
 
   return (
-    <div
-      className={classNames(classes.formArea, {
-        [classes.lg]: size === 'large',
-      })}
-    >
-      <form
-        id="eventForm"
-        className={classes.form}
-        {...form({
-          name: 'form',
-          onSubmit(values: StateValues<EditFormFields>) {
-            debugger;
-          },
-        })}
-      >
-        {renderForm()}
-      </form>
-      <div className={classes.actions}>
-        <Button className={classes.action} onClick={handleCancel}>
-          Отмена
-        </Button>
-        <Button
-          use="primary"
-          type="submit"
-          form="eventForm"
-          className={classes.action}
-          disabled={Object.values(formState.validity).some(v => v === false)}
-        >
-          {type === 'add' ? 'Создать встречу' : 'Сохранить'}
-        </Button>
-      </div>
-    </div>
+    <FormComponent {...formProps} users={data!.users} rooms={data!.rooms} />
   );
 };

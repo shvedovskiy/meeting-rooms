@@ -10,14 +10,8 @@ import classes from './timesheet.module.scss';
 import { DateSwitch } from './date-switch/date-switch';
 import { Timeline } from './timeline/timeline';
 import { useDay } from 'components/utils/use-day';
-import { FloorDefinition, Table } from './types';
 
-type Props = {
-  floors: FloorDefinition;
-  table: Table;
-};
-
-export const TimesheetComponent = ({ floors, table }: Props) => {
+export const TimesheetComponent = () => {
   const [dateShown, setDateShown] = useDay();
   const [scrolled, setScrolled] = useState(false);
   const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);
@@ -51,11 +45,7 @@ export const TimesheetComponent = ({ floors, table }: Props) => {
       </div>
       <div className={classes.timelineContainer}>
         <scrollContext.Provider value={scrolled}>
-          <Timeline
-            floors={floors}
-            tableData={table.get(dateShown.getTime())}
-            date={dateShown}
-          />
+          <Timeline date={dateShown} />
         </scrollContext.Provider>
         <div className={classes.asidePlaceholder}></div>
         <div className={classes.timesheetPlaceholder}></div>

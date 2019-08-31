@@ -2,15 +2,14 @@ import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { parseISO } from 'date-fns/esm';
 
-import {
-  GET_EVENTS,
-  GET_ROOMS_LOCAL,
-  RoomsQueryType,
-  EventsQueryType,
-} from 'service/queries';
 import { TimesheetComponent } from './timesheet-component';
 import { Table, FloorDefinition, RoomData, ServerEvent, Event } from './types';
-import { Spinner } from 'components/ui/spinner/spinner';
+import {
+  ROOMS_EVENTS_QUERY,
+  FLOORS_QUERY,
+  TABLE_QUERY,
+  RoomsEventsQueryType as QueryType,
+} from 'service/queries';
 
 function calculateTimesheet(
   rooms: RoomData[],
@@ -49,21 +48,25 @@ function calculateTimesheet(
       });
     }
   }
-
   return [new Map([...floors].sort((r1, r2) => r1[0] - r2[0])), table];
 }
 
 export const Timesheet = () => {
-  const { loading, data: eventsData } = useQuery<EventsQueryType>(GET_EVENTS);
-  const { data: roomsData } = useQuery<RoomsQueryType>(GET_ROOMS_LOCAL);
+  const { data, client } = useQuery<QueryType>(ROOMS_EVENTS_QUERY);
 
-  if (loading) {
-    return <Spinner />;
-  }
+  const [floors, table] = calculateTimesheet(data!.rooms, data!.events);
+  client.cache.writeQuery({
+    query: TABLE_QUERY,
+    data: {
+      table,
+    },
+  });
+  client.cache.writeQuery({
+    query: FLOORS_QUERY,
+    data: {
+      floors,
+    },
+  });
 
-  const events = eventsData ? eventsData.events : [];
-  const rooms = roomsData ? roomsData.rooms : [];
-  const [floors, table] = calculateTimesheet(rooms, events);
-
-  return <TimesheetComponent floors={floors} table={table} />;
+  return <TimesheetComponent />;
 };

@@ -1,5 +1,6 @@
 import React, { useContext, useMemo, useCallback } from 'react';
-import classNames from 'classnames';
+import { useQuery } from '@apollo/react-hooks';
+import cn from 'classnames';
 
 import {
   prepareRanges,
@@ -8,29 +9,37 @@ import {
   CommonSlot,
   offsetToTime,
 } from './common';
-import classes from './room.module.scss';
+import { Tooltip } from 'components/ui/tooltip/tooltip';
+import { Card } from '../card/card';
+import { RoomData, Event } from '../../types';
 import { Size } from 'context/size-context';
 import scrollContext from 'context/scroll-context';
 import pageContext from 'context/page-context';
-import { Tooltip } from 'components/ui/tooltip/tooltip';
-import { Card } from '../card/card';
-import { RoomData, Event, NewEvent } from '../../types';
 import { HOURS } from 'service/dates';
+import { ROOM_EVENTS_QUERY, RoomEventsQueryType } from 'service/queries';
+import classes from './room.module.scss';
 
 type Props = {
   room: RoomData;
-  events?: Event[];
   size?: Size;
   date: Date;
 };
 
-export const Room = ({ room, events = [], size = 'default', date }: Props) => {
+export const Room = ({ room, size = 'default', date }: Props) => {
   const scrolled = useContext(scrollContext);
   const openPage = useContext(pageContext);
-  const ranges = useMemo(() => prepareRanges(events, HOURS[0]), [events]);
+  const { data: eventsData = { events: [] } } = useQuery<RoomEventsQueryType>(
+    ROOM_EVENTS_QUERY,
+    {
+      variables: { timestamp: date.getTime(), id: room.id },
+    }
+  );
+  const ranges = useMemo(() => prepareRanges(eventsData.events, HOURS[0]), [
+    eventsData,
+  ]);
 
   function openAddPage([startTime, endTime]: string[]) {
-    const newEventData: NewEvent = {
+    const newEventData: Partial<Event> = {
       date,
       startTime,
       endTime,
@@ -38,6 +47,7 @@ export const Room = ({ room, events = [], size = 'default', date }: Props) => {
     };
     openPage('add', newEventData);
   }
+
   const openEditEventPage = useCallback(
     (eventData: Event) => {
       openPage('edit', eventData);
@@ -54,11 +64,7 @@ export const Room = ({ room, events = [], size = 'default', date }: Props) => {
     if (range.id) {
       const slot = (
         <button
-          className={classNames(
-            classes.slot,
-            classes[`slot--${width}`],
-            classes.busy
-          )}
+          className={cn(classes.slot, classes[`slot--${width}`], classes.busy)}
         />
       );
       return (
@@ -74,7 +80,7 @@ export const Room = ({ room, events = [], size = 'default', date }: Props) => {
     return (
       <button
         key={index}
-        className={classNames(classes.slot, classes[`slot--${width}`])}
+        className={cn(classes.slot, classes[`slot--${width}`])}
         onClick={() =>
           openAddPage(offsetToTime(HOURS[0], range.offset, range.width))
         }
@@ -84,14 +90,14 @@ export const Room = ({ room, events = [], size = 'default', date }: Props) => {
 
   return (
     <div
-      className={classNames(classes.room, {
+      className={cn(classes.room, {
         [classes.lg]: size === 'large',
         [classes.scrolled]: scrolled,
       })}
     >
       <div className={classes.timeline}>{ranges.map(renderSlot)}</div>
       <div
-        className={classNames(classes.roomInfo, {
+        className={cn(classes.roomInfo, {
           [classes.unavailable]: ranges.every(r => r.hasOwnProperty('id')),
         })}
       >

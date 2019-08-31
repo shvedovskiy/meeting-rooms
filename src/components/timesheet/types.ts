@@ -27,13 +27,6 @@ export interface ServerEvent extends Omit<Event, 'date'> {
   date: string;
 }
 
-export interface NewEvent {
-  date?: Date;
-  startTime?: string;
-  endTime?: string;
-  room?: RoomData;
-}
-
 export type RoomCard = RoomData & {
   startTime: string;
   endTime: string;

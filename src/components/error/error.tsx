@@ -1,9 +1,14 @@
 import React from 'react';
+import cn from 'classnames';
 
 import classes from './error.module.scss';
 
-export const Error = () => (
-  <div className={classes.container}>
+type Props = {
+  className?: string;
+};
+
+export const Error = ({ className }: Props) => (
+  <div className={cn(className)}>
     <h1 className={classes.title}>Что-то пошло не так</h1>
     <p className={classes.text}>
       Сайт не работает, но мы уже решаем эту проблему.

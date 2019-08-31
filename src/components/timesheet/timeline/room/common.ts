@@ -6,7 +6,7 @@ export type Slot = Event & { width: number };
 
 const rangesLength = 60;
 
-export function prepareRanges(events: Event[], firstHour: number) {
+export function prepareRanges(events: Event[] = [], firstHour: number) {
   const eventsData = new Map();
   const eventRanges = new Array<string>(rangesLength);
 

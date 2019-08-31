@@ -1,7 +1,9 @@
 import { createContext } from 'react';
-import { Event, NewEvent } from 'components/timesheet/types';
+import { Event } from 'components/timesheet/types';
 
-export type PageType = 'add' | 'edit';
-export type PageFn = (type: PageType | null, data?: Event | NewEvent) => void;
+export type PageType = 'add' | 'edit' | null;
+export type PageData = Partial<Event>;
+
+export type PageFn = (pageType: PageType, pageData?: PageData) => void;
 
 export default createContext<PageFn>(() => {});

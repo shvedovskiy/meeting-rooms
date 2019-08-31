@@ -1,23 +1,27 @@
 import React, { useContext } from 'react';
-import classNames from 'classnames';
+import { useQuery } from '@apollo/react-hooks';
+import cn from 'classnames';
 
 import { Room } from './room/room';
-import { FloorDefinition, RoomEvents } from '../types';
 import classes from './timeline.module.scss';
 import sizeContext from 'context/size-context';
+import { FLOORS_QUERY, FloorsQueryType } from 'service/queries';
 
 type Props = {
-  floors: FloorDefinition;
-  tableData?: RoomEvents;
   date: Date;
 };
 
-export const Timeline = ({ floors, tableData = {}, date }: Props) => {
+export const Timeline = ({ date }: Props) => {
   const size = useContext(sizeContext) || 'default';
+  const { data: floorsData } = useQuery<FloorsQueryType>(FLOORS_QUERY);
 
   function renderRooms() {
-    const components: JSX.Element[] = [];
+    const { floors } = floorsData!;
+    if (!floors || !floors.size) {
+      return <li className={classes.roomPlaceholder}>Комнат нет</li>;
+    }
 
+    const components: JSX.Element[] = [];
     for (let [floorNumber, rooms] of floors) {
       components.push(
         <li key={floorNumber} className={classes.floor}>
@@ -25,12 +29,7 @@ export const Timeline = ({ floors, tableData = {}, date }: Props) => {
           <ul>
             {rooms.map(room => (
               <li key={room.title} className={classes.room}>
-                <Room
-                  room={room}
-                  events={tableData[room.id]}
-                  date={date}
-                  size={size}
-                />
+                <Room room={room} date={date} size={size} />
               </li>
             ))}
           </ul>
@@ -42,7 +41,7 @@ export const Timeline = ({ floors, tableData = {}, date }: Props) => {
 
   return (
     <ul
-      className={classNames(classes.floors, {
+      className={cn(classes.floors, {
         [classes.lg]: size === 'large',
       })}
     >

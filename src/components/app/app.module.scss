@@ -24,3 +24,8 @@
   position: relative;
   height: calc(100% - var(--header-height));
 }
+
+.error {
+  padding-right: 24px;
+  padding-left: 24px;
+}

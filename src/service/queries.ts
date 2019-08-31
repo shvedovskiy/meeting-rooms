@@ -1,8 +1,14 @@
 import { gql } from 'apollo-boost';
 
-import { UserData, RoomData, ServerEvent } from 'components/timesheet/types';
+import {
+  UserData,
+  RoomData,
+  ServerEvent,
+  FloorDefinition,
+  Event,
+} from 'components/timesheet/types';
 
-export const GET_USERS_ROOMS = gql`
+export const USERS_ROOMS_QUERY = gql`
   {
     users {
       id
@@ -20,41 +26,20 @@ export const GET_USERS_ROOMS = gql`
   }
 `;
 
-export const GET_USERS_LOCAL = gql`
-  {
-    users @client {
-      id
-      login
-      homeFloor
-      avatarUrl
-    }
-  }
-`;
+export interface UsersRoomsQueryType {
+  users: UserData[];
+  rooms: RoomData[];
+}
 
-export const GET_ROOMS_LOCAL = gql`
+export const ROOMS_EVENTS_QUERY = gql`
   {
-    rooms @client {
+    rooms {
       id
       title
       minCapacity
       maxCapacity
       floor
     }
-  }
-`;
-
-export interface UsersQueryType {
-  users: UserData[];
-}
-
-export interface RoomsQueryType {
-  rooms: RoomData[];
-}
-
-export type UsersRoomsQueryType = UsersQueryType & RoomsQueryType;
-
-export const GET_EVENTS = gql`
-  {
     events {
       id
       title
@@ -78,6 +63,33 @@ export const GET_EVENTS = gql`
   }
 `;
 
-export interface EventsQueryType {
+export interface RoomsEventsQueryType {
+  rooms: RoomData[];
   events: ServerEvent[];
+}
+
+export const FLOORS_QUERY = gql`
+  {
+    floors @client(always: true)
+  }
+`;
+
+export const TABLE_QUERY = gql`
+  {
+    table @client(always: true)
+  }
+`;
+
+export interface FloorsQueryType {
+  floors: FloorDefinition;
+}
+
+export const ROOM_EVENTS_QUERY = gql`
+  query RoomEvents($timestamp: Number!, $id: String!) {
+    roomEvents(timestamp: $timestamp, id: $id) @client(always: true)
+  }
+`;
+
+export interface RoomEventsQueryType {
+  events: Event[];
 }

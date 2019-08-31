@@ -1,20 +1,19 @@
 import React, { lazy, Suspense, useState, useContext } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 import { Spinner } from 'components/ui/spinner/spinner';
+import { IconButton } from 'components/ui/icon-button/icon-button';
+import pageContext, { PageType, PageData } from 'context/page-context';
+import sizeContext from 'context/size-context';
 import classes from './page.module.scss';
 import spinnerTransitionClasses from 'components/ui/spinner/spinner-transition.module.scss';
-import pageContext, { PageType } from 'context/page-context';
-import sizeContext from 'context/size-context';
-import { IconButton } from 'components/ui/icon-button/icon-button';
-import { ContextData } from 'components/app/types';
 
 const Form = lazy(() => import('components/form'));
 
 type Props = {
-  type: PageType;
-  pageData: ContextData;
+  type: NonNullable<PageType>;
+  pageData?: PageData;
 };
 
 export const Page = ({ type, pageData }: Props) => {
@@ -28,9 +27,7 @@ export const Page = ({ type, pageData }: Props) => {
   function renderPage() {
     const formProps = {
       type,
-      eventData: pageData.event,
-      users: pageData.users,
-      rooms: pageData.rooms,
+      formData: pageData,
       onMount() {
         setIsLoading(false);
       },
@@ -45,7 +42,7 @@ export const Page = ({ type, pageData }: Props) => {
 
   return (
     <div
-      className={classNames(classes.page, {
+      className={cn(classes.page, {
         [classes.lg]: size === 'large',
       })}
     >
