@@ -11,7 +11,7 @@ import { DateSwitch } from './date-switch/date-switch';
 import { Timeline } from './timeline/timeline';
 import { useDay } from 'components/utils/use-day';
 
-export const TimesheetComponent = () => {
+export const TimesheetUI = () => {
   const [dateShown, setDateShown] = useDay();
   const [scrolled, setScrolled] = useState(false);
   const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);

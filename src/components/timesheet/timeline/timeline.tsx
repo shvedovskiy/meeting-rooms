@@ -17,7 +17,7 @@ export const Timeline = ({ date }: Props) => {
 
   function renderRooms() {
     const { floors } = floorsData!;
-    if (!floors || !floors.size) {
+    if (floors.size === 0) {
       return <li className={classes.roomPlaceholder}>Комнат нет</li>;
     }
 

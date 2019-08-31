@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { parseISO } from 'date-fns/esm';
 
-import { TimesheetComponent } from './timesheet-component';
+import { TimesheetUI } from './timesheet-ui';
 import { Table, FloorDefinition, RoomData, ServerEvent, Event } from './types';
 import {
   ROOMS_EVENTS_QUERY,
@@ -68,5 +68,5 @@ export const Timesheet = () => {
     },
   });
 
-  return <TimesheetComponent />;
+  return <TimesheetUI />;
 };
