@@ -10,7 +10,7 @@ export class UserInput implements Partial<User> {
   login: string;
 
   @Field(type => Int, { nullable: true })
-  homeFloor?: number = 0;
+  homeFloor? = 0;
 
   @Length(1, 255)
   @IsUrl()

@@ -11,14 +11,14 @@ export class RoomInput implements Partial<Room> {
 
   @Min(1)
   @Field(type => Int, { nullable: true })
-  minCapacity?: number = 1;
+  minCapacity? = 1;
 
   @Min(1)
   @Field(type => Int, { nullable: true })
-  maxCapacity?: number = 1;
+  maxCapacity? = 1;
 
   @Field(type => Int, { nullable: true })
-  floor?: number = 0;
+  floor? = 0;
 }
 
 @InputType({ description: 'Update room data' })
