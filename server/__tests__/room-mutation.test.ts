@@ -78,7 +78,6 @@ describe('Room Mutation', () => {
           input: newRoomData,
         },
       });
-      console.log(response);
       const dbRoom = await Room.findOne({
         where: { title: newRoomData.title },
       });
