@@ -5,6 +5,7 @@ import {
   format as dateFnsFormat,
   parse as dateFnsParse,
   isValid,
+  startOfDay,
 } from 'date-fns/esm';
 import ruLocale from 'date-fns/locale/ru';
 
@@ -20,7 +21,7 @@ type Props = {
   id?: string;
   value?: Date | null;
   error?: boolean;
-  onChange?: (newDate: Date | null) => void;
+  onChange: (newDate: Date | null) => void;
 };
 
 function formatDate(date: Date, format: string) {
@@ -44,9 +45,7 @@ export const CalendarInput = (props: Props) => {
       if (date) {
         setSelected(date);
       }
-      if (onChange) {
-        onChange(date);
-      }
+      onChange(date !== null ? startOfDay(date) : null);
     }
   }
 

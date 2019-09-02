@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import DayPicker, { DayModifiers, ClassNames } from 'react-day-picker';
+import { startOfDay } from 'date-fns/esm';
 
 import classes from './calendar.module.scss';
 import { MONTHS, LABELS, Weekday } from './common';
@@ -7,7 +8,7 @@ import { MONTHS, LABELS, Weekday } from './common';
 type Props = {
   className?: string;
   initialDate?: Date;
-  onChange?: (newDate: Date) => void;
+  onChange: (newDate: Date) => void;
 };
 
 export const Calendar = (props: Props) => {
@@ -18,9 +19,7 @@ export const Calendar = (props: Props) => {
   function handleDayClick(date: Date, modifiers: DayModifiers) {
     if (!modifiers.disabled && !modifiers.selected) {
       setSelected(date);
-      if (onChange) {
-        onChange(date);
-      }
+      onChange(startOfDay(date));
     }
   }
 

@@ -12,7 +12,7 @@ import { Calendar } from 'components/ui/calendar/calendar';
 type Props = {
   date: Date;
   size?: Size;
-  onChange?: (date: Date) => void;
+  onChange: (date: Date) => void;
 };
 
 export const DateSwitch = (props: Props) => {
@@ -31,12 +31,6 @@ export const DateSwitch = (props: Props) => {
   const handleCalendarToggle = useCallback(() => {
     setCalendarVisible(v => !v);
   }, []);
-
-  function handleCalendarChange(newDate: Date) {
-    if (onChange) {
-      onChange(newDate);
-    }
-  }
 
   const dateString =
     format(date, 'd MMM', { locale: ruLocale }).slice(0, -1) +
@@ -78,7 +72,7 @@ export const DateSwitch = (props: Props) => {
           <Calendar
             className={classes.calendar}
             initialDate={date}
-            onChange={handleCalendarChange}
+            onChange={onChange}
           />
         )}
       </div>
