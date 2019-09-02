@@ -5,18 +5,33 @@ import cn from 'classnames';
 import { Room } from './room/room';
 import classes from './timeline.module.scss';
 import sizeContext from 'context/size-context';
-import { FLOORS_QUERY, FloorsQueryType } from 'service/queries';
+import { ROOMS_QUERY, RoomsQueryType } from 'service/queries';
+import { RoomData, FloorDefinition } from '../types';
 
 type Props = {
   date: Date;
 };
 
+function generateFloorsTable(rooms: RoomData[]): FloorDefinition {
+  const floors: FloorDefinition = new Map();
+
+  for (let room of rooms) {
+    if (floors.has(room.floor)) {
+      floors.get(room.floor)!.push(room);
+    } else {
+      floors.set(room.floor, [room]);
+    }
+  }
+  return new Map([...floors].sort((r1, r2) => r1[0] - r2[0]));
+}
+
 export const Timeline = ({ date }: Props) => {
   const size = useContext(sizeContext) || 'default';
-  const { data: floorsData } = useQuery<FloorsQueryType>(FLOORS_QUERY);
+  const { data: roomsData } = useQuery<RoomsQueryType>(ROOMS_QUERY);
+
+  const floors = generateFloorsTable(roomsData!.rooms);
 
   function renderRooms() {
-    const { floors } = floorsData!;
     if (floors.size === 0) {
       return <li className={classes.roomPlaceholder}>Комнат нет</li>;
     }

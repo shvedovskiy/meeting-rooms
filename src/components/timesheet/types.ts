@@ -32,10 +32,11 @@ export type RoomCard = RoomData & {
   endTime: string;
 };
 
-export interface RoomEvents {
-  [room: string]: Event[];
-}
-
 export type FloorDefinition = Map<number, RoomData[]>;
 
-export type Table = Map<number, RoomEvents>;
+export type Table = Map<
+  number,
+  {
+    [room: string]: Event[];
+  }
+>;

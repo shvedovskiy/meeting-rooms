@@ -1,72 +1,73 @@
-import React from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { parseISO } from 'date-fns/esm';
+import { useThrottleCallback } from '@react-hook/throttle';
+import useEventListener from '@use-it/event-listener';
+import classNames from 'classnames';
 
-import { TimesheetUI } from './timesheet-ui';
-import { Table, FloorDefinition, RoomData, ServerEvent, Event } from './types';
+import { HoursLine } from './hours/hours-line';
+import { DateSwitch } from './date-switch/date-switch';
+import { Timeline } from './timeline/timeline';
+import { useDay } from 'components/utils/use-day';
+import sizeContext from 'context/size-context';
+import scrollContext from 'context/scroll-context';
 import {
-  ROOMS_EVENTS_QUERY,
-  FLOORS_QUERY,
+  EVENTS_QUERY,
   TABLE_QUERY,
-  RoomsEventsQueryType as QueryType,
+  EventsQueryType as QueryType,
 } from 'service/queries';
-
-function calculateTimesheet(
-  rooms: RoomData[],
-  events: ServerEvent[]
-): [FloorDefinition, Table] {
-  const floors: FloorDefinition = new Map();
-  const table: Table = new Map();
-
-  for (let room of rooms) {
-    if (floors.has(room.floor)) {
-      floors.get(room.floor)!.push(room);
-    } else {
-      floors.set(room.floor, [room]);
-    }
-  }
-
-  for (let payloadEvent of events) {
-    const eventDate = parseISO(payloadEvent.date);
-    const event: Event = {
-      ...payloadEvent,
-      date: eventDate,
-    };
-    const eventTimestamp = eventDate.getTime();
-    const roomID = event.room.id;
-
-    if (table.has(eventTimestamp)) {
-      const dayTable = table.get(eventTimestamp)!;
-      if (dayTable[roomID]) {
-        dayTable[roomID].push(event);
-      } else {
-        dayTable[roomID] = [event];
-      }
-    } else {
-      table.set(eventTimestamp, {
-        [roomID]: [event],
-      });
-    }
-  }
-  return [new Map([...floors].sort((r1, r2) => r1[0] - r2[0])), table];
-}
+import { calculateTable } from './common';
+import classes from './timesheet.module.scss';
 
 export const Timesheet = () => {
-  const { data, client } = useQuery<QueryType>(ROOMS_EVENTS_QUERY);
+  const [dateShown, setDateShown] = useDay();
+  const [scrolled, setScrolled] = useState(false);
+  const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);
+  const size = useContext(sizeContext) || 'default';
 
-  const [floors, table] = calculateTimesheet(data!.rooms, data!.events);
-  client.cache.writeQuery({
-    query: TABLE_QUERY,
-    data: {
-      table,
-    },
-  });
-  client.cache.writeQuery({
-    query: FLOORS_QUERY,
-    data: {
-      floors,
-    },
-  });
+  const { data: eventsData, client } = useQuery<QueryType>(EVENTS_QUERY);
 
-  return <TimesheetUI />;
+  useEffect(() => {
+    client.cache.writeQuery({
+      query: TABLE_QUERY,
+      data: {
+        table: calculateTable(eventsData!.events),
+      },
+    });
+  }, [client.cache, eventsData]);
+
+  const handleScroll = useThrottleCallback((event: any) => {
+    if (size === 'large') {
+      if (event.target.scrollLeft > 180 && !scrolled) {
+        setScrolled(true);
+        return;
+      }
+      if (event.target.scrollLeft <= 180 && scrolled) {
+        setScrolled(false);
+      }
+    }
+  }, 200);
+  useEventListener('scroll', handleScroll, containerEl as HTMLElement);
+
+  return (
+    <div
+      className={classNames(classes.timesheet, {
+        [classes.lg]: size === 'large',
+      })}
+      ref={el => setContainerEl(el)}
+    >
+      <div className={classes.dateSwitch}>
+        <DateSwitch size={size} date={dateShown} onChange={setDateShown} />
+      </div>
+      <div className={classes.hours}>
+        <HoursLine displayedDate={dateShown} />
+      </div>
+      <div className={classes.timelineContainer}>
+        <scrollContext.Provider value={scrolled}>
+          <Timeline date={dateShown} />
+        </scrollContext.Provider>
+        <div className={classes.asidePlaceholder}></div>
+        <div className={classes.timesheetPlaceholder}></div>
+      </div>
+    </div>
+  );
 };
