@@ -120,5 +120,5 @@ export const ROOM_EVENTS_QUERY = gql`
   }
 `;
 export interface RoomEventsQueryType {
-  events: Event[];
+  roomEvents: Event[];
 }
