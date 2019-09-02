@@ -11,9 +11,9 @@ type Props = {
 function avatarSizes(url: string, size: Size) {
   const base = size === 'default' ? 24 : 32;
   return {
-    single: `${url}${base}`,
-    double: `${url}${base * 2}`,
-    triple: `${url}${base * 3}`,
+    single: `${url}_${base}`,
+    double: `${url}_${base * 2}`,
+    triple: `${url}_${base * 3}`,
   };
 }
 

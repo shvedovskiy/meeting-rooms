@@ -2,7 +2,7 @@ import React, { useEffect, FC } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 
 import { Error } from 'components/error/error';
-import { FormComponent } from './form-component';
+import { FormUI } from './form-ui';
 import { PageType, PageData } from 'context/page-context';
 import { USERS_ROOMS_QUERY, UsersRoomsQueryType } from 'service/queries';
 import classes from './form.module.scss';
@@ -31,8 +31,5 @@ export const Form: FC<Props> = ({ onMount, ...formProps }) => {
   if (error || !data) {
     return <Error className={classes.loadingError} />;
   }
-
-  return (
-    <FormComponent {...formProps} users={data!.users} rooms={data!.rooms} />
-  );
+  return <FormUI {...formProps} users={data!.users} rooms={data!.rooms} />;
 };

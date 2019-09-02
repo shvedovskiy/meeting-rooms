@@ -1,7 +1,12 @@
 import React, { useContext, useMemo } from 'react';
 import classNames from 'classnames';
 
-import { useForm, StateValues } from 'components/utils/use-form';
+import {
+  useForm,
+  StateValues,
+  FormState,
+  StateErrors,
+} from 'components/utils/use-form';
 import classes from './form.module.scss';
 import { Button } from 'components/ui/button/button';
 import sizeContext from 'context/size-context';
@@ -10,7 +15,7 @@ import { RoomData, RoomCard, UserData } from 'components/timesheet/types';
 import { CalendarInput } from 'components/ui/calendar/calendar-input/calendar-input';
 import { TimePicker } from 'components/ui/timepicker/time-picker';
 import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
-import { EditFormFields, validation } from './common';
+import { validation, EditFormFields } from './validators';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
 import { PageType, PageData } from 'context/page-context';
 
@@ -45,6 +50,16 @@ function getRecommendation(
   return [eventRoom, recommendedRooms];
 }
 
+function isSubmitBlocked(
+  formState: FormState<EditFormFields, StateErrors<EditFormFields, string>>
+) {
+  return (
+    Object.keys(formState.validity).length - 1 !== // TODO smell
+      Object.keys(formState.validators).length ||
+    Object.values(formState.validity).some(v => v === false)
+  );
+}
+
 const defaultFormData = {
   title: '',
   startTime: '',
@@ -54,7 +69,7 @@ const defaultFormData = {
   room: null,
 };
 
-export const FormComponent = ({
+export const FormUI = ({
   type,
   formData = {},
   users,
@@ -231,7 +246,7 @@ export const FormComponent = ({
           type="submit"
           form="eventForm"
           className={classes.action}
-          disabled={Object.values(formState.validity).some(v => v === false)}
+          disabled={isSubmitBlocked(formState)}
         >
           {type === 'add' ? 'Создать встречу' : 'Сохранить'}
         </Button>
