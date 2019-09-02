@@ -67,53 +67,59 @@ export class EventResolver {
   }
 
   @Mutation(returns => Event, { nullable: true })
-  async addUserToEvent(
+  async addUsersToEvent(
     @Args() { id }: MutationArgs,
-    @Arg('userId') userId: string
+    @Arg('userIds', type => [String]) userIds: string[]
   ): Promise<Event> {
     const event = await this.eventRepository.findOne(id);
     if (!event) {
       throw new Error('Invalid event ID');
     }
-    const user = await this.userRepository.findOne(userId);
-    if (!user) {
-      throw new Error('Invalid user ID');
-    }
+
     const eventUsers = await event.users;
-    const foundSameUser = eventUsers.find(u => u.id === userId);
-    if (foundSameUser) {
-      throw new Error('Unable to add same user');
+    for (let userId of userIds) {
+      const user = await this.userRepository.findOne(userId);
+      if (!user) {
+        throw new Error('Invalid user ID');
+      }
+
+      const foundSameUser = eventUsers.find(u => u.id === userId);
+      if (foundSameUser) {
+        throw new Error('Unable to add same user');
+      }
+
+      await this.eventRepository
+        .createQueryBuilder()
+        .relation(Event, 'users')
+        .of(id)
+        .add(userId);
     }
-
-    await this.eventRepository
-      .createQueryBuilder()
-      .relation(Event, 'users')
-      .of(id)
-      .add(userId);
-
     return this.eventRepository.findOne(id) as Promise<Event>;
   }
 
   @Mutation(returns => Event, { nullable: true })
-  async removeUserFromEvent(
+  async removeUsersFromEvent(
     @Args() { id }: MutationArgs,
-    @Arg('userId') userId: string
+    @Arg('userIds', type => [String]) userIds: string[]
   ): Promise<Event> {
     const event = await this.eventRepository.findOne(id);
     if (!event) {
       throw new Error('Invalid event ID');
     }
     const eventUsers = await event.users;
-    const foundSameUser = eventUsers.find(u => u.id === userId);
-    if (!foundSameUser) {
-      throw new Error('Unable to remove user');
-    }
 
-    await this.eventRepository
-      .createQueryBuilder()
-      .relation(Event, 'users')
-      .of(id)
-      .remove(userId);
+    for (let userId of userIds) {
+      const foundSameUser = eventUsers.find(u => u.id === userId);
+      if (!foundSameUser) {
+        throw new Error('Unable to remove user');
+      }
+
+      await this.eventRepository
+        .createQueryBuilder()
+        .relation(Event, 'users')
+        .of(id)
+        .remove(userId);
+    }
 
     return this.eventRepository.findOne(id) as Promise<Event>;
   }

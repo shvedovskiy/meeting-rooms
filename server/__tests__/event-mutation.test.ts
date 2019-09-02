@@ -578,10 +578,10 @@ describe('Event Mutation', () => {
     });
   });
 
-  describe('addUserToEvent()', () => {
-    const addUserToEventQuery = `
-      mutation AddUserToEvent($id: ID!, $userId: String!) {
-        addUserToEvent(id: $id, userId: $userId) {
+  describe('addUsersToEvent()', () => {
+    const addUsersToEventQuery = `
+      mutation AddUsersToEvent($id: ID!, $userIds: [String!]!) {
+        addUsersToEvent(id: $id, userIds: $userIds) {
           id
           title
           date
@@ -607,13 +607,13 @@ describe('Event Mutation', () => {
     });
 
     it('adds new user to event', async () => {
-      const newDbUser = await createUser();
+      const newDbUsers = await createUser(2);
 
       const response = await graphQLCall({
-        source: addUserToEventQuery,
+        source: addUsersToEventQuery,
         variableValues: {
           id: dbEvent.id,
-          userId: newDbUser.id,
+          userIds: [newDbUsers[0].id, newDbUsers[1].id],
         },
       });
       const dbEventAfterUpdate = await Event.findOne(dbEvent.id);
@@ -621,7 +621,7 @@ describe('Event Mutation', () => {
 
       expect(response).toMatchObject({
         data: {
-          addUserToEvent: {
+          addUsersToEvent: {
             id: dbEvent.id,
             title: dbEvent.title,
             date: dbEvent.date.toISOString(),
@@ -630,52 +630,53 @@ describe('Event Mutation', () => {
           },
         },
       });
-      expect(response!.data!.addUserToEvent.users).toIncludeSameMembers([
+      expect(response!.data!.addUsersToEvent.users).toIncludeSameMembers([
         ...dbUsers,
-        newDbUser,
+        ...newDbUsers,
       ]);
-      expect(dbEventUsers.find(u => u.id === newDbUser.id)).toBeDefined();
+      expect(dbEventUsers.find(u => u.id === newDbUsers[0].id)).toBeDefined();
+      expect(dbEventUsers.find(u => u.id === newDbUsers[1].id)).toBeDefined();
     });
 
     it('does not add existing user to event', async () => {
       const response = await graphQLCall({
-        source: addUserToEventQuery,
+        source: addUsersToEventQuery,
         variableValues: {
           id: dbEvent.id,
-          userId: dbUsers[0].id,
+          userIds: [dbUsers[0].id],
         },
       });
       const dbEventAfterUpdate = await Event.findOne(dbEvent.id);
       const dbEventUsers = await dbEventAfterUpdate!.users;
 
       expect(dbEventUsers).toIncludeSameMembers(dbUsers);
-      expect(response.data!.addUserToEvent).toEqual(null);
+      expect(response.data!.addUsersToEvent).toEqual(null);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
     });
 
     it('does not add unknown user to event', async () => {
       const response = await graphQLCall({
-        source: addUserToEventQuery,
+        source: addUsersToEventQuery,
         variableValues: {
           id: dbEvent.id,
-          userId: dbUsers[0].id + '__unknown__',
+          userIds: [dbUsers[0].id + '__unknown__'],
         },
       });
       const dbEventAfterUpdate = await Event.findOne(dbEvent.id);
       const dbEventUsers = await dbEventAfterUpdate!.users;
 
       expect(dbEventUsers).not.toContain({ id: dbUsers[0].id + '__unknown__' });
-      expect(response.data!.addUserToEvent).toEqual(null);
+      expect(response.data!.addUsersToEvent).toEqual(null);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
     });
   });
 
-  describe('removeUserFromEvent()', () => {
-    const removeUserFromEventQuery = `
-      mutation RemoveUserFromEvent($id: ID!, $userId: String!) {
-        removeUserFromEvent(id: $id, userId: $userId) {
+  describe('removeUsersFromEvent()', () => {
+    const removeUsersFromEventQuery = `
+      mutation RemoveUsersFromEvent($id: ID!, $userIds: [String!]!) {
+        removeUsersFromEvent(id: $id, userIds: $userIds) {
           id
           title
           date
@@ -700,12 +701,12 @@ describe('Event Mutation', () => {
       dbEvent = await createEvent(dbRoom.id, dbUsers);
     });
 
-    it('removes a user from event', async () => {
+    it('removes a users from event', async () => {
       const response = await graphQLCall({
-        source: removeUserFromEventQuery,
+        source: removeUsersFromEventQuery,
         variableValues: {
           id: dbEvent.id,
-          userId: dbUsers[1].id,
+          userIds: [dbUsers[1].id],
         },
       });
       const dbEventAfterUpdate = await Event.findOne(dbEvent.id);
@@ -714,7 +715,7 @@ describe('Event Mutation', () => {
 
       expect(response).toMatchObject({
         data: {
-          removeUserFromEvent: {
+          removeUsersFromEvent: {
             id: dbEvent.id,
             title: dbEvent.title,
             date: dbEvent.date.toISOString(),
@@ -723,7 +724,7 @@ describe('Event Mutation', () => {
           },
         },
       });
-      expect(response!.data!.removeUserFromEvent.users).toIncludeSameMembers(
+      expect(response!.data!.removeUsersFromEvent.users).toIncludeSameMembers(
         eventUsers
       );
       expect(dbEventUsers.find(u => u.id === dbUsers[1].id)).toBeUndefined();
@@ -732,34 +733,34 @@ describe('Event Mutation', () => {
     it('does not remove a user that does not belong to event', async () => {
       const user = await createUser();
       const response = await graphQLCall({
-        source: removeUserFromEventQuery,
+        source: removeUsersFromEventQuery,
         variableValues: {
           id: dbEvent.id,
-          userId: user.id,
+          userIds: [user.id],
         },
       });
       const dbEventAfterUpdate = await Event.findOne(dbEvent.id);
       const dbEventUsers = await dbEventAfterUpdate!.users;
 
       expect(dbEventUsers).toIncludeSameMembers(dbUsers);
-      expect(response.data!.removeUserFromEvent).toEqual(null);
+      expect(response.data!.removeUsersFromEvent).toEqual(null);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
     });
 
     it('does not remove unknown user from event', async () => {
       const response = await graphQLCall({
-        source: removeUserFromEventQuery,
+        source: removeUsersFromEventQuery,
         variableValues: {
           id: dbEvent.id,
-          userId: dbUsers[0].id + '__unknown__',
+          userIds: [dbUsers[0].id + '__unknown__'],
         },
       });
       const dbEventAfterUpdate = await Event.findOne(dbEvent.id);
       const dbEventUsers = await dbEventAfterUpdate!.users;
 
       expect(dbEventUsers).toIncludeSameMembers(dbUsers);
-      expect(response.data!.removeUserFromEvent).toEqual(null);
+      expect(response.data!.removeUsersFromEvent).toEqual(null);
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
     });
