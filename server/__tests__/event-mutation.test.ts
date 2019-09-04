@@ -31,8 +31,8 @@ afterEach(async () => {
 describe('Event Mutation', () => {
   describe('createEvent()', () => {
     const createEventQuery = `
-      mutation CreateEvent($input: EventInput!, $roomId: ID!, $usersIds: [ID!]) {
-        createEvent(input: $input, roomId: $roomId, usersIds: $usersIds) {
+      mutation CreateEvent($input: EventInput!, $roomId: ID!, $userIds: [ID!]) {
+        createEvent(input: $input, roomId: $roomId, userIds: $userIds) {
           id
           title
           date
@@ -68,7 +68,7 @@ describe('Event Mutation', () => {
         variableValues: {
           input: newEventData,
           roomId: dbRoom.id,
-          usersIds: dbUsers.map(user => user.id),
+          userIds: dbUsers.map(user => user.id),
         },
       });
       const dbEvent = await Event.findOne({
@@ -109,7 +109,7 @@ describe('Event Mutation', () => {
         variableValues: {
           input: newEventData,
           roomId: dbRoom.id,
-          usersIds: dbUsers.map(user => user.id),
+          userIds: dbUsers.map(user => user.id),
         },
       });
       const dbEvents = await Event.find();
@@ -130,7 +130,7 @@ describe('Event Mutation', () => {
         variableValues: {
           input: newEventData,
           roomId: dbRoom.id,
-          usersIds: dbUsers.map(user => user.id),
+          userIds: dbUsers.map(user => user.id),
         },
       });
       const dbEvents = await Event.find();
@@ -143,7 +143,7 @@ describe('Event Mutation', () => {
 
     it('does not create an event without specified room', async () => {
       const eventQuery = `
-        mutation CreateEvent($input: EventInput!, $usersIds: [ID!]) {
+        mutation CreateEvent($input: EventInput!, $userIds: [ID!]) {
           createEvent(input: $input, userIds: $userIds) {
             id
             title
@@ -170,7 +170,7 @@ describe('Event Mutation', () => {
         source: eventQuery,
         variableValues: {
           input: newEventData,
-          usersIds: dbUsers.map(user => user.id),
+          userIds: dbUsers.map(user => user.id),
         },
       });
       const dbEvents = await Event.find();
@@ -194,7 +194,7 @@ describe('Event Mutation', () => {
         variableValues: {
           input: newEventData,
           roomId: dbRoom.id + '__unknown__',
-          usersIds: dbUsers.map(user => user.id),
+          userIds: dbUsers.map(user => user.id),
         },
       });
       const dbEvents = await Event.find();
@@ -272,7 +272,7 @@ describe('Event Mutation', () => {
         variableValues: {
           input: newEventData,
           roomId: dbRoom.id,
-          usersIds: [
+          userIds: [
             dbUsers[0].id,
             dbUsers[1].id + '__unknown__',
             dbUsers[2].id,
@@ -321,7 +321,7 @@ describe('Event Mutation', () => {
         variableValues: {
           input: firstEventData,
           roomId: dbRoom.id,
-          usersIds: dbUsers.map(user => user.id),
+          userIds: dbUsers.map(user => user.id),
         },
       });
       const response = await graphQLCall({
@@ -329,7 +329,7 @@ describe('Event Mutation', () => {
         variableValues: {
           input: secondEventData,
           roomId: dbRoom.id,
-          usersIds: dbUsers.map(user => user.id),
+          userIds: dbUsers.map(user => user.id),
         },
       });
       const dbEvents = await Event.find();
@@ -385,7 +385,7 @@ describe('Event Mutation', () => {
           input: updateData,
         },
       });
-      const usersIds = [
+      const userIds = [
         { id: dbUsers[0].id },
         { id: dbUsers[1].id },
         { id: dbUsers[2].id },
@@ -405,7 +405,7 @@ describe('Event Mutation', () => {
           },
         },
       });
-      expect(response!.data!.updateEvent.users).toIncludeAllMembers(usersIds);
+      expect(response!.data!.updateEvent.users).toIncludeAllMembers(userIds);
     });
 
     it('updates part of event data', async () => {
@@ -420,7 +420,7 @@ describe('Event Mutation', () => {
           input: updateData,
         },
       });
-      const usersIds = [
+      const userIds = [
         { id: dbUsers[0].id },
         { id: dbUsers[1].id },
         { id: dbUsers[2].id },
@@ -440,7 +440,7 @@ describe('Event Mutation', () => {
           },
         },
       });
-      expect(response!.data!.updateEvent.users).toIncludeAllMembers(usersIds);
+      expect(response!.data!.updateEvent.users).toIncludeAllMembers(userIds);
     });
 
     it('does not update the event when passing extra properties', async () => {

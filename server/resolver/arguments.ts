@@ -17,7 +17,7 @@ export class MutationArgs extends IdArg {}
 @ArgsType()
 export class EventRelationArgs {
   @Field(type => [ID], { nullable: true })
-  usersIds: string[] = [];
+  userIds: string[] = [];
 
   @IsNotEmpty()
   @Field(type => ID)

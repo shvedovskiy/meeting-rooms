@@ -31,11 +31,11 @@ export class EventResolver {
   @Mutation(returns => Event)
   async createEvent(
     @Arg('input', type => EventInput) newEventData: EventInput,
-    @Args() { usersIds, roomId }: EventRelationArgs
+    @Args() { userIds, roomId }: EventRelationArgs
   ): Promise<Event> {
     const event = this.eventRepository.create(newEventData);
     const users: User[] = [];
-    for (const userId of usersIds) {
+    for (const userId of userIds) {
       const user = await this.userRepository.findOne(userId);
       if (user) {
         users.push(user);
