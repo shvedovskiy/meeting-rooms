@@ -34,7 +34,7 @@ interface Inputs<T, Name extends keyof T = keyof T> {
   field<RawValue, Name extends keyof T = keyof T>(
     options: FieldOptions<T, Name, RawValue>
   ): FieldProps<T, Name, RawValue>;
-  form(options: FormOptions<T>): FormProps;
+  form<F>(options: FormOptions<F>): FormProps;
 }
 
 interface FieldOptions<T, Name extends keyof T, RawValue> {
@@ -46,9 +46,9 @@ interface FieldOptions<T, Name extends keyof T, RawValue> {
   onBlur?(...args: any[]): void;
 }
 
-interface FormOptions<T> {
+interface FormOptions<F> {
   name: string;
-  onSubmit?(values: StateValues<T>): any;
+  onSubmit?(values: F): void;
 }
 
 interface FieldProps<T, Name extends keyof T, RawValue> {
