@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import AriaModal from 'react-aria-modal';
 import { CSSTransition } from 'react-transition-group';
 import Emoji from 'a11y-react-emoji';
@@ -11,23 +11,48 @@ import SizeContext from 'context/size-context';
 
 export type ModalButtonType = ButtonType & { id: string; text: string };
 
-type Props = {
+export type Props = {
   icon?: string;
   iconLabel?: string;
   title?: string;
-  text?: string;
+  text?: string | string[];
   buttons?: ModalButtonType[];
+  onBackdropClick?: () => void;
 };
 
-export const Modal = (props: Props) => {
-  const [modalActive, setModalActive] = useState(false);
+export const Modal = ({
+  icon,
+  iconLabel,
+  title,
+  text,
+  buttons,
+  onBackdropClick,
+}: Props) => {
   const size = useContext(SizeContext) || 'default';
 
-  const modal = (
+  function onExit() {
+    if (onBackdropClick) {
+      onBackdropClick();
+    }
+  }
+
+  function renderText(text?: string | string[]) {
+    if (typeof text === 'string') {
+      return <p className={classes.modalText}>{text}</p>;
+    } else if (Array.isArray(text)) {
+      return text.map((t, idx) => (
+        <p key={idx} className={classes.modalText}>
+          {t}
+        </p>
+      ));
+    }
+  }
+
+  return (
     <CSSTransition
       classNames={transitionClasses}
       exit={false}
-      in={modalActive}
+      in={true}
       timeout={200}
       unmountOnExit
     >
@@ -39,21 +64,21 @@ export const Modal = (props: Props) => {
         })}
         dialogStyle={{ textAlign: 'center', verticalAlign: 'initial' }}
         focusDialog={true}
-        onExit={() => setModalActive(false)}
+        onExit={onExit}
         titleId="modal-title"
         underlayColor="rgba(0, 16, 33, 0.8)"
         verticallyCenter={true}
       >
-        {props.icon && (
+        {icon && (
           <span className={classes.modalIcon}>
-            <Emoji symbol={props.icon} label={props.iconLabel} />
+            <Emoji symbol={icon} label={iconLabel} />
           </span>
         )}
-        {props.title && <h1 id="modal-title">{props.title}</h1>}
-        {props.text && <p className={classes.modalText}>{props.text}</p>}
-        {props.buttons && (
+        {title && <h1 id="modal-title">{title}</h1>}
+        {renderText(text)}
+        {buttons && (
           <div className={classes.modalButtons}>
-            {props.buttons.map(({ id, text, ...rest }: ModalButtonType) => (
+            {buttons.map(({ id, text, ...rest }: ModalButtonType) => (
               <Button key={id} {...rest} size={size}>
                 {text}
               </Button>
@@ -62,12 +87,5 @@ export const Modal = (props: Props) => {
         )}
       </AriaModal>
     </CSSTransition>
-  );
-
-  return (
-    <div>
-      <button onClick={() => setModalActive(true)}>Activate modal</button>
-      {modal}
-    </div>
   );
 };
