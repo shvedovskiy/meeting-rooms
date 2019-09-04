@@ -22,6 +22,10 @@
   margin-top: 8px;
   margin-bottom: 4px;
   font-size: var(--medium-text);
+
+  &:first-of-type {
+    margin-top: 12px;
+  }
 }
 
 .modalButtons {

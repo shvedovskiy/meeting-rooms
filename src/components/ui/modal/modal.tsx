@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import AriaModal from 'react-aria-modal';
 import { CSSTransition } from 'react-transition-group';
 import Emoji from 'a11y-react-emoji';
@@ -28,7 +28,12 @@ export const Modal = ({
   buttons,
   onBackdropClick,
 }: Props) => {
+  const [showModal, setShowModal] = useState(false);
   const size = useContext(SizeContext) || 'default';
+
+  useEffect(() => {
+    setShowModal(true);
+  }, []);
 
   function onExit() {
     if (onBackdropClick) {
@@ -52,7 +57,7 @@ export const Modal = ({
     <CSSTransition
       classNames={transitionClasses}
       exit={false}
-      in={true}
+      in={showModal}
       timeout={200}
       unmountOnExit
     >
