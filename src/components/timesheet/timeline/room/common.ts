@@ -32,7 +32,11 @@ export function prepareRanges(events: Event[] = [], firstHour: number) {
     const currEvent = typeof eventRanges[m] !== 'undefined';
     if (m === 0) {
       currentRange = 1;
-    } else if (currEvent !== prevEvent || (!prevEvent && m % 4 === 0)) {
+    } else if (
+      currEvent !== prevEvent || // the type of range has changed
+      eventRanges[m] !== eventRanges[m - 1] || // the boundary between two event ranges has been reached
+      (!prevEvent && m % 4 === 0) // the next hour reached in the free time range
+    ) {
       if (prevEvent) {
         const event: Slot = Object.assign(eventsData.get(eventRanges[m - 1]), {
           width: currentRange,
