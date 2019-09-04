@@ -7,4 +7,8 @@
   overflow: hidden auto;
   text-align: center;
   background-color: var(--bg-primary);
+
+  &.transparent {
+    background-color: rgba(0, 16, 33, 0.8);
+  }
 }
