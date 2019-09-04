@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { useThrottleCallback } from '@react-hook/throttle';
 import useEventListener from '@use-it/event-listener';
 import classNames from 'classnames';
+import gql from 'graphql-tag';
 
 import { HoursLine } from './hours/hours-line';
 import { DateSwitch } from './date-switch/date-switch';
@@ -24,7 +25,11 @@ export const Timesheet = () => {
   const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);
   const size = useContext(sizeContext) || 'default';
 
-  const { data: eventsData, client } = useQuery<QueryType>(EVENTS_QUERY);
+  const { data: eventsData, client } = useQuery<QueryType>(gql`
+    query Events {
+      ${EVENTS_QUERY}
+    }
+  `);
 
   useEffect(() => {
     client.cache.writeQuery({

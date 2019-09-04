@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import cn from 'classnames';
+import gql from 'graphql-tag';
 
 import { Room } from './room/room';
 import classes from './timeline.module.scss';
@@ -27,7 +28,11 @@ function generateFloorsTable(rooms: RoomData[]): FloorDefinition {
 
 export const Timeline = ({ date }: Props) => {
   const size = useContext(sizeContext) || 'default';
-  const { data: roomsData } = useQuery<RoomsQueryType>(ROOMS_QUERY);
+  const { data: roomsData } = useQuery<RoomsQueryType>(gql`
+    query Rooms {
+      ${ROOMS_QUERY}
+    }
+  `);
 
   const floors = generateFloorsTable(roomsData!.rooms);
 

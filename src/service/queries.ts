@@ -7,104 +7,55 @@ import {
   Event,
 } from 'components/timesheet/types';
 
-export const ROOMS_QUERY = gql`
-  {
-    rooms {
-      id
-      title
-      minCapacity
-      maxCapacity
-      floor
-    }
+export const USERS_QUERY = `
+  users {
+    id
+    login
+    homeFloor
+    avatarUrl
+  }
+`;
+
+export interface UsersQueryType {
+  users: UserData[];
+}
+
+export const ROOMS_QUERY = `
+  rooms {
+    id
+    title
+    minCapacity
+    maxCapacity
+    floor
   }
 `;
 export interface RoomsQueryType {
   rooms: RoomData[];
 }
 
-export const EVENTS_QUERY = gql`
-  {
-    events {
+export const EVENTS_QUERY = `
+  events {
+    id
+    title
+    date
+    startTime
+    endTime
+    room {
       id
       title
-      date
-      startTime
-      endTime
-      room {
-        id
-        title
-        minCapacity
-        maxCapacity
-        floor
-      }
-      users {
-        id
-        login
-        homeFloor
-        avatarUrl
-      }
+      minCapacity
+      maxCapacity
+      floor
     }
-  }
-`;
-export interface EventsQueryType {
-  events: ServerEvent[];
-}
-
-export const USERS_ROOMS_QUERY = gql`
-  {
     users {
       id
       login
       homeFloor
       avatarUrl
     }
-    rooms {
-      id
-      title
-      minCapacity
-      maxCapacity
-      floor
-    }
   }
 `;
-export interface UsersRoomsQueryType {
-  users: UserData[];
-  rooms: RoomData[];
-}
-
-export const ROOMS_EVENTS_QUERY = gql`
-  {
-    rooms {
-      id
-      title
-      minCapacity
-      maxCapacity
-      floor
-    }
-    events {
-      id
-      title
-      date
-      startTime
-      endTime
-      room {
-        id
-        title
-        minCapacity
-        maxCapacity
-        floor
-      }
-      users {
-        id
-        login
-        homeFloor
-        avatarUrl
-      }
-    }
-  }
-`;
-export interface RoomsEventsQueryType {
-  rooms: RoomData[];
+export interface EventsQueryType {
   events: ServerEvent[];
 }
 
