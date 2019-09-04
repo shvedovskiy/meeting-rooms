@@ -19,9 +19,13 @@ export interface Event {
   date: Date;
   startTime: string;
   endTime: string;
-  users?: UserData[];
+  users: UserData[];
   room: RoomData;
 }
+
+export type NewEvent = Omit<Event, 'users'> & {
+  users: UserData[];
+};
 
 export interface ServerEvent extends Omit<Event, 'date'> {
   date: string;

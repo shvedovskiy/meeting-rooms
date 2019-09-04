@@ -1,20 +1,21 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import classNames from 'classnames';
 
-import {
-  useForm,
-  StateValues,
-  FormState,
-  StateErrors,
-} from 'components/utils/use-form';
+import { useForm, FormState, StateErrors } from 'components/utils/use-form';
 import classes from './form.module.scss';
 import { Button } from 'components/ui/button/button';
 import sizeContext from 'context/size-context';
 import { Input } from 'components/ui/input/input';
-import { RoomData, RoomCard, UserData } from 'components/timesheet/types';
+import {
+  RoomData,
+  RoomCard,
+  UserData,
+  NewEvent,
+} from 'components/timesheet/types';
 import { CalendarInput } from 'components/ui/calendar/calendar-input/calendar-input';
 import { TimePicker } from 'components/ui/timepicker/time-picker';
 import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
+import { Modal } from 'components/ui/modal/modal';
 import { validation, EditFormFields } from './validators';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
 import { PageType, PageData } from 'context/page-context';
@@ -25,6 +26,8 @@ type Props = {
   users: UserData[];
   rooms: RoomData[];
   onClose: () => void;
+  onRemove: (id: string) => void;
+  onSubmit: (values: NewEvent, initialFormData: PageData) => void;
 };
 
 function getRecommendation(
@@ -51,13 +54,28 @@ function getRecommendation(
 }
 
 function isSubmitBlocked(
+  formType: NonNullable<PageType>,
   formState: FormState<EditFormFields, StateErrors<EditFormFields, string>>
 ) {
-  return (
-    Object.keys(formState.validity).length - 1 !== // TODO smell
-      Object.keys(formState.validators).length ||
-    Object.values(formState.validity).some(v => v === false)
-  );
+  if (formType === 'add') {
+    return (
+      Object.keys(formState.validity).length <= 6 || // number of fields
+      Object.values(formState.validity).some(v => v === false)
+    );
+  } else {
+    // TODO
+    return false;
+    // let changed = false;
+    // for (let [fieldName, fieldValue] of Object.entries(formState.values)) {
+    //   // @ts-ignore
+    //   if (initialData[fieldName] !== fieldValue) {
+    //     changed = true;
+    //     break;
+    //   }
+    // }
+
+    // return changed;
+  }
 }
 
 const defaultFormData = {
@@ -75,7 +93,10 @@ export const FormUI = ({
   users,
   rooms,
   onClose,
+  onRemove,
+  onSubmit,
 }: Props) => {
+  const [modalOpen, setModalOpen] = useState(false);
   const [eventRoom, recommendedRooms] = useMemo(
     () => getRecommendation(formData, rooms),
     [formData, rooms]
@@ -86,12 +107,6 @@ export const FormUI = ({
     room: eventRoom,
   });
   const size = useContext(sizeContext);
-
-  function handleCancel() {
-    if (onClose) {
-      onClose();
-    }
-  }
 
   function renderForm() {
     return [
@@ -151,7 +166,7 @@ export const FormUI = ({
               </div>
             )}
           </div>
-          <span>–</span>
+          <span>&mdash;</span>
           <div className={classes.time}>
             {size === 'default' && <label>Конец</label>}
             <TimePicker
@@ -219,38 +234,73 @@ export const FormUI = ({
     ];
   }
 
-  return (
-    <div
-      className={classNames(classes.formArea, {
-        [classes.lg]: size === 'large',
-      })}
-    >
-      <form
-        id="eventForm"
-        className={classes.form}
-        {...form({
-          name: 'form',
-          onSubmit(values: StateValues<EditFormFields>) {
-            debugger;
-          },
-        })}
-      >
-        {renderForm()}
-      </form>
-      <div className={classes.actions}>
-        <Button className={classes.action} onClick={handleCancel}>
+  function renderFormActions() {
+    return (
+      <>
+        <Button className={classes.action} onClick={() => onClose()}>
           Отмена
         </Button>
+        {type === 'edit' && (
+          <Button className={classes.action} onClick={() => setModalOpen(true)}>
+            Удалить встречу
+          </Button>
+        )}
         <Button
-          use="primary"
+          use={type === 'add' ? 'primary' : 'default'}
           type="submit"
           form="eventForm"
           className={classes.action}
-          disabled={isSubmitBlocked(formState)}
+          // disabled={isSubmitBlocked(type, formState)} <-- TODO
         >
           {type === 'add' ? 'Создать встречу' : 'Сохранить'}
         </Button>
+      </>
+    );
+  }
+
+  return (
+    <>
+      {modalOpen && (
+        <Modal
+          icon="🙅🏻"
+          iconLabel="none"
+          title="Встреча будет удалена безвозвратно"
+          buttons={[
+            {
+              id: '1',
+              text: 'Отмена',
+              onClick() {
+                setModalOpen(false);
+              },
+            },
+            {
+              id: '2',
+              text: 'Удалить',
+              onClick() {
+                onRemove(formData.id!);
+              },
+            },
+          ]}
+          onBackdropClick={() => setModalOpen(false)}
+        />
+      )}
+      <div
+        className={classNames(classes.formArea, {
+          [classes.lg]: size === 'large',
+        })}
+      >
+        <form
+          id="eventForm"
+          className={classes.form}
+          {...form<NewEvent>({
+            name: 'form',
+            onSubmit: (values: NewEvent) => onSubmit(values, formData),
+          })}
+        >
+          {renderForm()}
+        </form>
+        <div className={classes.actions}>{renderFormActions()}</div>
       </div>
-    </div>
+    </>
   );
 };

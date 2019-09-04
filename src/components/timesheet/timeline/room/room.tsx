@@ -27,7 +27,7 @@ type Props = {
 
 export const Room = ({ room, size = 'default', date }: Props) => {
   const scrolled = useContext(scrollContext);
-  const openPage = useContext(pageContext);
+  const [openPage] = useContext(pageContext);
   const { data: eventsData = { roomEvents: [] } } = useQuery<
     RoomEventsQueryType
   >(ROOM_EVENTS_QUERY, {
