@@ -18,6 +18,7 @@ export type Props = {
   text?: string | string[];
   buttons?: ModalButtonType[];
   onBackdropClick?: () => void;
+  enterAnimation?: boolean;
 };
 
 export const Modal = ({
@@ -27,6 +28,7 @@ export const Modal = ({
   text,
   buttons,
   onBackdropClick,
+  enterAnimation = true,
 }: Props) => {
   const [showModal, setShowModal] = useState(false);
   const size = useContext(SizeContext) || 'default';
@@ -56,8 +58,9 @@ export const Modal = ({
   return (
     <CSSTransition
       classNames={transitionClasses}
+      enter={enterAnimation}
       exit={false}
-      in={showModal}
+      in={enterAnimation ? showModal : true}
       timeout={200}
       unmountOnExit
     >
