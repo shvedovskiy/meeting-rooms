@@ -6,16 +6,12 @@ import classes from './form.module.scss';
 import { Button } from 'components/ui/button/button';
 import sizeContext from 'context/size-context';
 import { Input } from 'components/ui/input/input';
-import {
-  RoomData,
-  RoomCard,
-  UserData,
-  NewEvent,
-} from 'components/timesheet/types';
+import { RoomData, UserData, NewEvent } from 'components/timesheet/types';
 import { CalendarInput } from 'components/ui/calendar/calendar-input/calendar-input';
 import { TimePicker } from 'components/ui/timepicker/time-picker';
 import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
 import { Modal } from 'components/ui/modal/modal';
+import { getRecommendation } from './common';
 import { validation, EditFormFields } from './validators';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
 import { PageType, PageData } from 'context/page-context';
@@ -29,29 +25,6 @@ type Props = {
   onRemove: (id: string) => void;
   onSubmit: (values: NewEvent, initialFormData: PageData) => void;
 };
-
-function getRecommendation(
-  event: PageData,
-  rooms: RoomData[]
-): [RoomCard | null, RoomCard[]] {
-  let eventRoom: RoomCard | null = null;
-  const recommendedRooms = rooms.map(r => {
-    if (event.room && r.id === event.room.id) {
-      eventRoom = {
-        ...r,
-        startTime: event.startTime!,
-        endTime: event.endTime!,
-      };
-      return eventRoom;
-    }
-    return {
-      ...r,
-      startTime: '13:00',
-      endTime: '14:00',
-    };
-  });
-  return [eventRoom, recommendedRooms];
-}
 
 function isSubmitBlocked(
   formType: NonNullable<PageType>,

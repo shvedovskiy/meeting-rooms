@@ -1,12 +1,9 @@
 import React, { lazy, Suspense, useState, useContext } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import { format, parseISO } from 'date-fns/esm';
-import ruLocale from 'date-fns/locale/ru';
 import cn from 'classnames';
 
 import { Spinner } from 'components/ui/spinner/spinner';
 import { IconButton } from 'components/ui/icon-button/icon-button';
-import { ServerEvent } from 'components/timesheet/types';
 import pageContext, { PageType, PageData } from 'context/page-context';
 import sizeContext from 'context/size-context';
 import classes from './page.module.scss';
@@ -21,45 +18,13 @@ type Props = {
 
 export const Page = ({ type, pageData }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [setPage, setModal] = useContext(pageContext);
+  const setPage = useContext(pageContext);
   const size = useContext(sizeContext);
 
-  function closePage(eventData?: ServerEvent) {
-    setPage(null);
-    if (eventData) {
-      const {
-        date,
-        startTime,
-        endTime,
-        room: { title, floor },
-      } = eventData;
-      const dateStr = format(parseISO(date), 'd MMMM', {
-        locale: ruLocale,
-      });
-      setModal({
-        icon: '🎉',
-        iconLabel: 'none',
-        title: 'Встреча создана!',
-        text: [
-          `${dateStr}, ${startTime}\u2013${endTime}`,
-          `${title}\u00A0·\u00A0${floor} этаж`,
-        ],
-        buttons: [
-          {
-            id: '1',
-            text: 'Хорошо',
-            use: 'primary',
-            onClick() {
-              setModal(null);
-            },
-          },
-        ],
-        onBackdropClick() {
-          setModal(null);
-        },
-      });
-    }
+  function onPageClosed() {
+    setPage(null); // TODO use bind
   }
+
   function renderPage() {
     const formProps = {
       type,
@@ -67,7 +32,7 @@ export const Page = ({ type, pageData }: Props) => {
       onMount() {
         setIsLoading(false);
       },
-      onClose: closePage,
+      onClose: onPageClosed,
     };
     return (
       <Suspense fallback={null}>
@@ -97,7 +62,7 @@ export const Page = ({ type, pageData }: Props) => {
             ariaLabel="Отмена"
             icon="close"
             className={classes.closePage}
-            onClick={closePage}
+            onClick={onPageClosed}
           />
         )}
         <h1 className={classes.title}>

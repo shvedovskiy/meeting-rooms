@@ -10,14 +10,8 @@ import { Button } from 'components/ui/button/button';
 import { Page } from 'components/page/page';
 import { Error } from 'components/error/error';
 import { Timesheet } from 'components/timesheet/timesheet';
-import { Modal, Props as ModalDef } from 'components/ui/modal/modal';
 import SizeContext from 'context/size-context';
-import PageContext, {
-  PageType,
-  PageData,
-  PageFn,
-  ModalFn,
-} from 'context/page-context';
+import PageContext, { PageType, PageData, PageFn } from 'context/page-context';
 import {
   ROOMS_QUERY,
   EVENTS_QUERY,
@@ -38,7 +32,6 @@ interface PageDef {
 
 export const App = ({ onLoad }: Props) => {
   const [page, setPage] = useState<PageDef>({ type: null });
-  const [modal, setModal] = useState<ModalDef | null>(null);
 
   const size = useMediaLayout({ maxWidth: '34.625em' }) ? 'large' : 'default';
   const { data, error, loading } = useQuery<RoomsQueryType & EventsQueryType>(
@@ -61,10 +54,6 @@ export const App = ({ onLoad }: Props) => {
       type: pageType,
       data: pageData,
     });
-  }, []);
-
-  const openModal = useCallback<ModalFn>((modalDef: ModalDef | null) => {
-    setModal(modalDef);
   }, []);
 
   if (loading) {
@@ -107,14 +96,13 @@ export const App = ({ onLoad }: Props) => {
         >
           <Page type={page.type!} pageData={page.data} />
         </CSSTransition>
-        {modal !== null && <Modal {...modal} />}
       </>
     );
   }
 
   return (
     <SizeContext.Provider value={size}>
-      <PageContext.Provider value={[openPage, openModal]}>
+      <PageContext.Provider value={openPage}>
         <div
           className={cn(classes.app, {
             [classes.sm]: size === 'large',

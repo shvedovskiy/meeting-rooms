@@ -1,11 +1,12 @@
-import React, { useEffect, FC } from 'react';
+import React, { useEffect, FC, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
 import { FormUI } from './form-ui';
 import { Error } from 'components/error/error';
-import { NewEvent, ServerEvent } from 'components/timesheet/types';
+import { NewEvent } from 'components/timesheet/types';
 import { Spinner } from 'components/ui/spinner/spinner';
+import { Props as ModalDef, Modal } from 'components/ui/modal/modal';
 import { PageType, PageData } from 'context/page-context';
 import {
   USERS_QUERY,
@@ -20,13 +21,14 @@ import {
   CreateEventMutationType,
   UpdateEventMutationType,
 } from 'service/mutations';
+import { generateCreateModal, generateUpdateModal } from './common';
 import classes from './form.module.scss';
 
 type Props = {
   type: NonNullable<PageType>;
   formData?: PageData;
   onMount: () => void;
-  onClose: (eventData?: ServerEvent) => void;
+  onClose: () => void;
 };
 
 interface UploadConfig {
@@ -37,6 +39,8 @@ interface UploadConfig {
 }
 
 export const Form: FC<Props> = ({ onMount, onClose, ...formProps }) => {
+  const [modal, setModal] = useState<ModalDef | null>(null);
+
   const {
     data: fetchData,
     loading: fetchLoading,
@@ -50,12 +54,18 @@ export const Form: FC<Props> = ({ onMount, onClose, ...formProps }) => {
   const [createEvent, { loading: eventCreating }] = useMutation<
     CreateEventMutationType
   >(CREATE_EVENT_MUTATION, {
-    onCompleted: ({ createEvent }) => onClose(createEvent),
+    onCompleted({ createEvent: eventData }) {
+      const modalConfig = generateCreateModal(eventData, onClose);
+      setModal(modalConfig);
+    },
   });
   const [updateEvent, { loading: eventUpdating }] = useMutation<
     UpdateEventMutationType
   >(UPDATE_EVENT_MUTATION, {
-    onCompleted: ({ updateEvent }) => onClose(updateEvent),
+    onCompleted({ updateEvent: eventData }) {
+      const modalConfig = generateUpdateModal(eventData, onClose);
+      setModal(modalConfig);
+    },
   });
   const [removeEvent, { loading: eventRemoving }] = useMutation(
     REMOVE_EVENT_MUTATION,
@@ -76,6 +86,7 @@ export const Form: FC<Props> = ({ onMount, onClose, ...formProps }) => {
   }
 
   function handleFormSubmit(values: NewEvent, initialFormData: PageData) {
+    // TODO validate fields
     const { title, date, startTime, endTime, users, room } = values;
     const event = {
       title,
@@ -157,7 +168,8 @@ export const Form: FC<Props> = ({ onMount, onClose, ...formProps }) => {
 
   return (
     <>
-      {(eventCreating || eventRemoving) && <Spinner transparent />}
+      {(eventCreating || eventRemoving) && <Spinner fullscreen transparent />}
+      {modal && <Modal {...modal} enterAnimation={false} />}
       <FormUI
         {...formProps}
         users={fetchData!.users}
