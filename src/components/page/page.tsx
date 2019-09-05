@@ -41,7 +41,7 @@ export const Page = ({ type, pageData }: Props) => {
         iconLabel: 'none',
         title: 'Встреча создана!',
         text: [
-          `${dateStr}, ${startTime}–${endTime}`,
+          `${dateStr}, ${startTime}\u2013${endTime}`,
           `${title}\u00A0·\u00A0${floor} этаж`,
         ],
         buttons: [

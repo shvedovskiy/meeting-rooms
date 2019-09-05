@@ -28,7 +28,7 @@ export const Card = ({ data, room, onAction }: Props) => {
     const { date, startTime, endTime } = data;
     const info = `${format(date, 'd MMMM', {
       locale: ruLocale,
-    })}, ${startTime}—${endTime}\u00A0·\u00A0${room}`;
+    })}, ${startTime}\u2013${endTime}\u00A0·\u00A0${room}`;
     return <p>{info}</p>;
   }
 

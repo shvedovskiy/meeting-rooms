@@ -63,7 +63,7 @@ export function formatCapacity(
   const hasMaxCapacity = maxCapacity !== null && maxCapacity !== 0;
   if (hasMinCapacity) {
     if (hasMaxCapacity) {
-      return `${minCapacity}–${maxCapacity} человек`;
+      return `${minCapacity}\u2013${maxCapacity} человек`;
     }
     return `от ${minCapacity} человек`;
   }

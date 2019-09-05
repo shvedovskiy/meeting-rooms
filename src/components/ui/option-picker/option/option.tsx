@@ -37,7 +37,7 @@ export const Option = (props: Props) => {
   return (
     <button className={className} onClick={selected ? onDeselect : onSelect}>
       <span className={classes.time}>
-        {item.startTime}–{item.endTime}
+        {item.startTime}&ndash;{item.endTime}
       </span>
       <span className={classes.title}>
         {item.title}&nbsp;·&nbsp;{item.floor} этаж
