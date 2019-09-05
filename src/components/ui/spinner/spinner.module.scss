@@ -2,11 +2,16 @@
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 10000;
   width: 100%;
   height: 100%;
   overflow: hidden auto;
   text-align: center;
   background-color: var(--bg-primary);
+
+  &.fullscreen {
+    position: fixed;
+  }
 
   &.transparent {
     background-color: rgba(0, 16, 33, 0.8);
