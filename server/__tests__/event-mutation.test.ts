@@ -342,9 +342,9 @@ describe('Event Mutation', () => {
     });
   });
 
-  describe('updateEvent()', () => {
+  describe('updateEvent()::$input', () => {
     const updateEventQuery = `
-      mutation UpdateEvent($id: ID!, $input: UpdateEventInput!) {
+      mutation UpdateEvent($id: ID!, $input: UpdateEventInput) {
         updateEvent(id: $id, input: $input) {
           id
           title
@@ -488,6 +488,159 @@ describe('Event Mutation', () => {
       expect(response.data).toEqual({ updateEvent: null });
       expect(response.errors).toBeDefined();
       expect(response.errors).not.toHaveLength(0);
+    });
+  });
+
+  describe('updateEvent()::$roomId', () => {
+    const updateEventQuery = `
+      mutation UpdateEvent($id: ID!, $roomId: ID) {
+        updateEvent(id: $id, roomId: $roomId) {
+          id
+          room {
+            id
+            title
+          }
+        }
+      }
+    `;
+    let dbRoom: Room;
+    let dbEvent: Event;
+
+    beforeEach(async () => {
+      dbRoom = await createRoom();
+      dbEvent = await createEvent(dbRoom.id);
+    });
+
+    it('changes event room', async () => {
+      const newDbRoom = await createRoom();
+
+      const response = await graphQLCall({
+        source: updateEventQuery,
+        variableValues: {
+          id: dbEvent.id,
+          roomId: newDbRoom.id,
+        },
+      });
+      const dbEventAfterUpdate = await Event.findOne(dbEvent.id);
+
+      expect(response).toMatchObject({
+        data: {
+          updateEvent: {
+            id: dbEvent.id,
+            room: {
+              id: newDbRoom.id,
+              title: newDbRoom.title,
+            },
+          },
+        },
+      });
+      expect(dbEventAfterUpdate!.roomId).toBe(newDbRoom.id);
+    });
+
+    it('does not change event room to the same', async () => {
+      const response = await graphQLCall({
+        source: updateEventQuery,
+        variableValues: {
+          id: dbEvent.id,
+          roomId: dbRoom.id,
+        },
+      });
+      const dbEventAfterUpdate = await Event.findOne(dbEvent.id);
+
+      expect(dbEventAfterUpdate!.roomId).toBe(dbRoom.id);
+      expect(response.data!.updateEvent).toEqual(null);
+      expect(response.errors).toBeDefined();
+      expect(response.errors).not.toHaveLength(0);
+    });
+
+    it('does not change event room to the unknown', async () => {
+      const response = await graphQLCall({
+        source: updateEventQuery,
+        variableValues: {
+          id: dbEvent.id,
+          roomId: dbRoom.id + '__unknown__',
+        },
+      });
+      const dbEventAfterUpdate = await Event.findOne(dbEvent.id);
+
+      expect(dbEventAfterUpdate!.roomId).toBe(dbRoom.id);
+      expect(response.data!.updateEvent).toEqual(null);
+      expect(response.errors).toBeDefined();
+      expect(response.errors).not.toHaveLength(0);
+    });
+  });
+
+  describe('updateEvent()::$userIds', () => {
+    const updateEventQuery = `
+      mutation UpdateEvent($id: ID!, $userIds: [ID!]) {
+        updateEvent(id: $id, userIds: $userIds) {
+          id
+          users {
+            id
+            login
+            homeFloor
+            avatarUrl
+          }
+        }
+      }
+    `;
+    let dbUsers: User[];
+    let dbRoom: Room;
+    let dbEvent: Event;
+
+    beforeEach(async () => {
+      dbUsers = await createUser(2);
+      dbRoom = await createRoom();
+      dbEvent = await createEvent(dbRoom.id, dbUsers);
+    });
+
+    it('changes event users list', async () => {
+      const newDbUsers = await createUser(2);
+
+      const response = await graphQLCall({
+        source: updateEventQuery,
+        variableValues: {
+          id: dbEvent.id,
+          userIds: [newDbUsers[0].id, newDbUsers[1].id],
+        },
+      });
+      const dbEventAfterUpdate = await Event.findOne(dbEvent.id);
+      const dbEventUsers = await dbEventAfterUpdate!.users;
+
+      expect(response).toMatchObject({
+        data: {
+          updateEvent: {
+            id: dbEvent.id,
+          },
+        },
+      });
+      expect(response!.data!.updateEvent.users).toIncludeSameMembers([
+        ...newDbUsers,
+      ]);
+      expect(dbEventUsers.find(u => u.id === newDbUsers[0].id)).toBeDefined();
+      expect(dbEventUsers.find(u => u.id === newDbUsers[1].id)).toBeDefined();
+    });
+
+    it('removes all users from list', async () => {
+      const response = await graphQLCall({
+        source: updateEventQuery,
+        variableValues: {
+          id: dbEvent.id,
+          userIds: [],
+        },
+      });
+      const dbEventAfterUpdate = await Event.findOne(dbEvent.id);
+      const dbEventUsers = await dbEventAfterUpdate!.users;
+
+      expect(response).toMatchObject({
+        data: {
+          updateEvent: {
+            id: dbEvent.id,
+          },
+        },
+      });
+      expect(response!.data!.updateEvent.users).toEqual([]);
+      expect(dbEventUsers).toEqual([]);
     });
   });
 

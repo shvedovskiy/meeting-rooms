@@ -5,8 +5,13 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { User } from '../entity/user';
 import { Room } from '../entity/room';
 import { Event } from '../entity/event';
-import { EventInput, UpdateEventInput } from './types/event-input';
-import { QueryArgs, MutationArgs, EventRelationArgs } from './arguments';
+import { EventInput } from './types/event-input';
+import {
+  QueryArgs,
+  MutationArgs,
+  EventRelationArgs,
+  EventUpdateArgs,
+} from './arguments';
 
 @Resolver()
 export class EventResolver {
@@ -28,12 +33,7 @@ export class EventResolver {
     return event || null;
   }
 
-  @Mutation(returns => Event)
-  async createEvent(
-    @Arg('input', type => EventInput) newEventData: EventInput,
-    @Args() { userIds, roomId }: EventRelationArgs
-  ): Promise<Event> {
-    const event = this.eventRepository.create(newEventData);
+  private async _setEventUsers(event: Event, userIds: string[]) {
     const users: User[] = [];
     for (const userId of userIds) {
       const user = await this.userRepository.findOne(userId);
@@ -42,6 +42,15 @@ export class EventResolver {
       }
     }
     event.users = Promise.resolve(users);
+  }
+
+  @Mutation(returns => Event)
+  async createEvent(
+    @Arg('input', type => EventInput) newEventData: EventInput,
+    @Args() { userIds, roomId }: EventRelationArgs
+  ): Promise<Event> {
+    const event = this.eventRepository.create(newEventData);
+    await this._setEventUsers(event, userIds);
     const room = await this.roomRepository.findOne(roomId);
     if (!room) {
       throw new Error('Unknown room ID');
@@ -53,16 +62,27 @@ export class EventResolver {
   @Mutation(returns => Event, { nullable: true })
   async updateEvent(
     @Args() { id }: MutationArgs,
-    @Arg('input', type => UpdateEventInput) newEventData: UpdateEventInput
+    @Args() { input, userIds, roomId }: EventUpdateArgs
   ): Promise<Event> {
     const eventToUpdate = await this.eventRepository.findOne(id);
     if (!eventToUpdate) {
       throw new Error('Invalid event ID');
     }
-    const event = Event.create({
-      ...eventToUpdate,
-      ...newEventData,
-    });
+    let event = eventToUpdate;
+
+    if (input) {
+      event = Event.create({
+        ...eventToUpdate,
+        ...input,
+      });
+    }
+    if (roomId) {
+      this._changeEventRoom(event, roomId);
+    }
+    if (userIds) {
+      await this._setEventUsers(event, userIds);
+    }
+
     return this.eventRepository.save(event);
   }
 
@@ -124,6 +144,15 @@ export class EventResolver {
     return this.eventRepository.findOne(id) as Promise<Event>;
   }
 
+  private _changeEventRoom(event: Event, roomId: string) {
+    if (roomId.length > 0) {
+      if (event.roomId === roomId) {
+        throw new Error('Cannot change room to the same');
+      }
+      event.roomId = roomId;
+    }
+  }
+
   @Mutation(returns => Event, { nullable: true })
   async changeEventRoom(
     @Args() { id }: MutationArgs,
@@ -134,12 +163,7 @@ export class EventResolver {
       throw new Error('Invalid event ID');
     }
 
-    if (roomId.length > 0) {
-      if (event.roomId === roomId) {
-        throw new Error('Cannot change room to the same');
-      }
-      event.roomId = roomId;
-    }
+    this._changeEventRoom(event, roomId);
     await this.eventRepository.save(event);
     return event;
   }
