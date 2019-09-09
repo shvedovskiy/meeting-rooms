@@ -3,12 +3,6 @@
   flex-direction: column;
   justify-content: space-between;
 }
-
-.loadingError {
-  padding-right: 16px;
-  padding-left: 16px;
-}
-
 .form {
   display: grid;
   width: 100%;
@@ -128,8 +122,4 @@
   justify-content: center;
   background-color: var(--bg-primary);
   border-top: 1px solid var(--border);
-}
-
-.action:not(:last-of-type) {
-  margin-right: 16px;
 }

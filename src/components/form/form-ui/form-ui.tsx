@@ -1,57 +1,32 @@
 import React, { useState, useContext, useMemo } from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 
-import { useForm, FormState, StateErrors } from 'components/utils/use-form';
-import classes from './form.module.scss';
-import { Button } from 'components/ui/button/button';
-import sizeContext from 'context/size-context';
+import { FormActions } from '../form-actions/form-actions';
 import { Input } from 'components/ui/input/input';
-import { RoomData, UserData, NewEvent } from 'components/timesheet/types';
 import { CalendarInput } from 'components/ui/calendar/calendar-input/calendar-input';
 import { TimePicker } from 'components/ui/timepicker/time-picker';
 import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
-import { Modal } from 'components/ui/modal/modal';
-import { getRecommendation } from './common';
-import { validation, EditFormFields } from './validators';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
+import { Modal } from 'components/ui/modal/modal';
+import { RoomData, UserData, Event } from 'components/timesheet/types';
+import { useForm } from 'components/utils/use-form';
+import sizeContext from 'context/size-context';
 import { PageType, PageData } from 'context/page-context';
+import { getRecommendation } from '../service/common';
+import { validation, EditFormFields } from '../service/validators';
+import classes from './form-ui.module.scss';
 
 type Props = {
   type: NonNullable<PageType>;
-  formData?: PageData;
+  initialValues?: PageData;
   users: UserData[];
   rooms: RoomData[];
   onClose: () => void;
   onRemove: (id: string) => void;
-  onSubmit: (values: NewEvent, initialFormData: PageData) => void;
+  onSubmit: (values: Event, initialFormData: PageData) => void;
 };
 
-function isSubmitBlocked(
-  formType: NonNullable<PageType>,
-  formState: FormState<EditFormFields, StateErrors<EditFormFields, string>>
-) {
-  if (formType === 'add') {
-    return (
-      Object.keys(formState.validity).length <= 6 || // number of fields
-      Object.values(formState.validity).some(v => v === false)
-    );
-  } else {
-    // TODO
-    return false;
-    // let changed = false;
-    // for (let [fieldName, fieldValue] of Object.entries(formState.values)) {
-    //   // @ts-ignore
-    //   if (initialData[fieldName] !== fieldValue) {
-    //     changed = true;
-    //     break;
-    //   }
-    // }
-
-    // return changed;
-  }
-}
-
-const defaultFormData = {
+const defaultFormValues = {
   title: '',
   startTime: '',
   endTime: '',
@@ -62,7 +37,7 @@ const defaultFormData = {
 
 export const FormUI = ({
   type,
-  formData = {},
+  initialValues = {},
   users,
   rooms,
   onClose,
@@ -71,12 +46,12 @@ export const FormUI = ({
 }: Props) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [eventRoom, recommendedRooms] = useMemo(
-    () => getRecommendation(formData, rooms),
-    [formData, rooms]
+    () => getRecommendation(initialValues, rooms),
+    [initialValues, rooms]
   );
   const [formState, { field, form }] = useForm<EditFormFields>({
-    ...defaultFormData,
-    ...formData,
+    ...defaultFormValues,
+    ...initialValues,
     room: eventRoom,
   });
   const size = useContext(sizeContext);
@@ -162,7 +137,7 @@ export const FormUI = ({
           </div>
         </div>
         {formState.errors.time && (
-          <div className={classNames(classes.inputError, classes.timeErrors)}>
+          <div className={cn(classes.inputError, classes.timeErrors)}>
             {formState.errors.time}
           </div>
         )}
@@ -207,30 +182,6 @@ export const FormUI = ({
     ];
   }
 
-  function renderFormActions() {
-    return (
-      <>
-        <Button className={classes.action} onClick={() => onClose()}>
-          Отмена
-        </Button>
-        {type === 'edit' && (
-          <Button className={classes.action} onClick={() => setModalOpen(true)}>
-            Удалить встречу
-          </Button>
-        )}
-        <Button
-          use={type === 'add' ? 'primary' : 'default'}
-          type="submit"
-          form="eventForm"
-          className={classes.action}
-          // disabled={isSubmitBlocked(type, formState)} <-- TODO
-        >
-          {type === 'add' ? 'Создать встречу' : 'Сохранить'}
-        </Button>
-      </>
-    );
-  }
-
   return (
     <>
       {modalOpen && (
@@ -250,7 +201,7 @@ export const FormUI = ({
               id: '2',
               text: 'Удалить',
               onClick() {
-                onRemove(formData.id!);
+                onRemove(initialValues.id!);
               },
             },
           ]}
@@ -258,21 +209,28 @@ export const FormUI = ({
         />
       )}
       <div
-        className={classNames(classes.formArea, {
+        className={cn(classes.formArea, {
           [classes.lg]: size === 'large',
         })}
       >
         <form
           id="eventForm"
           className={classes.form}
-          {...form<NewEvent>({
+          {...form<Event>({
             name: 'form',
-            onSubmit: (values: NewEvent) => onSubmit(values, formData),
+            onSubmit: (submittedValues: Event) =>
+              onSubmit(submittedValues, initialValues),
           })}
         >
           {renderForm()}
         </form>
-        <div className={classes.actions}>{renderFormActions()}</div>
+        <div className={classes.actions}>
+          <FormActions
+            type={type}
+            closePage={onClose}
+            openModal={() => setModalOpen(true)}
+          />
+        </div>
       </div>
     </>
   );

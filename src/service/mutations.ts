@@ -1,6 +1,23 @@
 import gql from 'graphql-tag';
 
-import { ServerEvent } from 'components/timesheet/types';
+import { ServerEvent, EventInput } from 'components/timesheet/types';
+
+export interface CreateEventVariables {
+  input: EventInput;
+  roomId: string;
+  userIds: string[];
+}
+
+export interface UpdateEventVariables {
+  id: string;
+  input?: Partial<EventInput>;
+  roomId?: string;
+  userIds?: string[];
+}
+
+export interface RemoveEventVariables {
+  id: string;
+}
 
 export const CREATE_EVENT_MUTATION = gql`
   mutation CreateEvent($userIds: [ID!], $roomId: ID!, $input: EventInput!) {
@@ -11,6 +28,7 @@ export const CREATE_EVENT_MUTATION = gql`
       startTime
       endTime
       room {
+        id
         title
         floor
       }
@@ -23,14 +41,20 @@ export interface CreateEventMutationType {
 }
 
 export const UPDATE_EVENT_MUTATION = gql`
-  mutation UpdateEvent($input: UpdateEventInput!, $id: ID!) {
-    updateEvent(input: $input, id: $id) {
+  mutation UpdateEvent(
+    $id: ID!
+    $input: UpdateEventInput
+    $roomId: ID
+    $userIds: [ID!]
+  ) {
+    updateEvent(id: $id, input: $input, roomId: $roomId, userIds: $userIds) {
       id
       title
       date
       startTime
       endTime
       room {
+        id
         title
         floor
       }
@@ -45,30 +69,6 @@ export interface UpdateEventMutationType {
 export const REMOVE_EVENT_MUTATION = gql`
   mutation RemoveEvent($id: ID!) {
     removeEvent(id: $id) {
-      id
-    }
-  }
-`;
-
-export const ADD_USERS_TO_EVENT_MUTATION = gql`
-  mutation AddUsersToEvent($id: ID!, $userIds: [String!]!) {
-    addUsersToEvent(id: $id, userIds: $userIds) {
-      id
-    }
-  }
-`;
-
-export const REMOVE_USERS_FROM_EVENT_MUTATION = gql`
-  mutation RemoveUsersFromEvent($id: ID!, $userIds: [String!]!) {
-    removeUsersFromEvent(id: $id, userIds: $userIds) {
-      id
-    }
-  }
-`;
-
-export const CHANGE_EVENT_ROOM_MUTATION = gql`
-  mutation ChangeEventRoom($id: ID!, $roomId: String!) {
-    changeEventRoom(id: $id, roomId: $roomId) {
       id
     }
   }

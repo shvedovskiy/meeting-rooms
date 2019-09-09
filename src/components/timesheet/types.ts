@@ -23,12 +23,15 @@ export interface Event {
   room: RoomData;
 }
 
-export type NewEvent = Omit<Event, 'users'> & {
-  users: UserData[];
-};
-
 export interface ServerEvent extends Omit<Event, 'date'> {
   date: string;
+}
+
+export interface EventInput {
+  title: string;
+  date: Date;
+  startTime: string;
+  endTime: string;
 }
 
 export type RoomCard = RoomData & {

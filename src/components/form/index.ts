@@ -1,1 +1,1 @@
-export { Form as default } from './form';
+export { FormConnector as default } from './form-connector';
