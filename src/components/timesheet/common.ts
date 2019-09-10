@@ -5,7 +5,7 @@ import { Table, ServerEvent, Event } from './types';
 export function calculateTable(events: ServerEvent[]): Table {
   const table: Table = new Map();
 
-  for (let payloadEvent of events) {
+  for (const payloadEvent of events) {
     const eventDate = parseISO(payloadEvent.date);
     const event: Event = {
       ...payloadEvent,

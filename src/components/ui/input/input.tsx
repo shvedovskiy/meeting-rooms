@@ -70,7 +70,7 @@ export const Input = (props: Props) => {
     if (!sideIcon) {
       return null;
     }
-    let iconContent = sideIcon instanceof Function ? sideIcon() : sideIcon;
+    const iconContent = sideIcon instanceof Function ? sideIcon() : sideIcon;
     if (onSideIconClick) {
       return (
         <button className={classes.sideIcon} onClick={onSideIconClick}>

@@ -7,7 +7,7 @@ import { Event } from '../entity/event';
 
 export function createUser(): Promise<User>;
 export function createUser(quantity: number): Promise<User[]>;
-export async function createUser(quantity: number = 1): Promise<User | User[]> {
+export async function createUser(quantity = 1): Promise<User | User[]> {
   if (quantity > 1) {
     const usersData: User[] = [];
     for (let i = 0; i !== quantity; i++) {
@@ -29,7 +29,7 @@ export async function createUser(quantity: number = 1): Promise<User | User[]> {
 
 export function createRoom(): Promise<Room>;
 export function createRoom(quantity: number): Promise<Room[]>;
-export async function createRoom(quantity: number = 1): Promise<Room | Room[]> {
+export async function createRoom(quantity = 1): Promise<Room | Room[]> {
   if (quantity > 1) {
     const roomsData: Room[] = [];
     for (let i = 0; i !== quantity; i++) {

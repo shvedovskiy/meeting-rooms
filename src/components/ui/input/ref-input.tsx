@@ -79,7 +79,7 @@ export const Input = forwardRef<HTMLInputElement, Props>((props, ref) => {
     if (!sideIcon) {
       return null;
     }
-    let iconContent = sideIcon instanceof Function ? sideIcon() : sideIcon;
+    const iconContent = sideIcon instanceof Function ? sideIcon() : sideIcon;
     if (onSideIconClick) {
       return (
         <button className={classes.sideIcon} onClick={onSideIconClick}>

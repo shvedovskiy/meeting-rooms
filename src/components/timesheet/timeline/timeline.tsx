@@ -16,7 +16,7 @@ type Props = {
 function generateFloorsTable(rooms: RoomData[]): FloorDefinition {
   const floors: FloorDefinition = new Map();
 
-  for (let room of rooms) {
+  for (const room of rooms) {
     if (floors.has(room.floor)) {
       floors.get(room.floor)!.push(room);
     } else {
@@ -42,7 +42,7 @@ export const Timeline = ({ date }: Props) => {
     }
 
     const components: JSX.Element[] = [];
-    for (let [floorNumber, rooms] of floors) {
+    for (const [floorNumber, rooms] of floors) {
       components.push(
         <li key={floorNumber} className={classes.floor}>
           <h1 className={classes.floorName}>{floorNumber} ЭТАЖ</h1>

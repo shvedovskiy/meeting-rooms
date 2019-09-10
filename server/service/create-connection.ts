@@ -9,9 +9,9 @@ import { seedDatabase } from './seed-database';
 import { DATABASE_NAME } from './config';
 
 export async function connectToDatabase(
-  production: boolean = false,
-  drop: boolean = false,
-  seed: boolean = false
+  production = false,
+  drop = false,
+  seed = false
 ) {
   useContainer(Container);
 

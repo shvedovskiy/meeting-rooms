@@ -97,7 +97,7 @@ export class EventResolver {
     }
 
     const eventUsers = await event.users;
-    for (let userId of userIds) {
+    for (const userId of userIds) {
       const user = await this.userRepository.findOne(userId);
       if (!user) {
         throw new Error('Invalid user ID');
@@ -128,7 +128,7 @@ export class EventResolver {
     }
     const eventUsers = await event.users;
 
-    for (let userId of userIds) {
+    for (const userId of userIds) {
       const foundSameUser = eventUsers.find(u => u.id === userId);
       if (!foundSameUser) {
         throw new Error('Unable to remove user');
