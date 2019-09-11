@@ -8,12 +8,12 @@ import { TimePicker } from 'components/ui/timepicker/time-picker';
 import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
 import { Modal } from 'components/ui/modal/modal';
-import { RoomData, UserData, Event } from 'components/timesheet/types';
+import { RoomData, UserData, NewEvent } from 'components/timesheet/types';
 import { useForm } from 'components/utils/use-form';
 import sizeContext from 'context/size-context';
 import { PageType, PageData } from 'context/page-context';
 import { getRecommendation } from '../service/common';
-import { validation, EditFormFields } from '../service/validators';
+import { validation, FormFields } from '../service/validators';
 import classes from './form-ui.module.scss';
 
 type Props = {
@@ -23,7 +23,7 @@ type Props = {
   rooms: RoomData[];
   onClose: () => void;
   onRemove: (id: string) => void;
-  onSubmit: (values: Event, initialFormData: PageData) => void;
+  onSubmit: (values: NewEvent, initialFormData: PageData) => void;
 };
 
 const defaultFormValues = {
@@ -49,7 +49,7 @@ export const FormUI = ({
     () => getRecommendation(initialValues, rooms),
     [initialValues, rooms]
   );
-  const [formState, { field, form }] = useForm<EditFormFields>({
+  const [formState, { field, form }] = useForm<FormFields>({
     ...defaultFormValues,
     ...initialValues,
     room: eventRoom,
@@ -216,9 +216,9 @@ export const FormUI = ({
         <form
           id="eventForm"
           className={classes.form}
-          {...form<Event>({
+          {...form<NewEvent>({
             name: 'form',
-            onSubmit: (submittedValues: Event) =>
+            onSubmit: (submittedValues: NewEvent) =>
               onSubmit(submittedValues, initialValues),
           })}
         >
@@ -227,6 +227,9 @@ export const FormUI = ({
         <div className={classes.actions}>
           <FormActions
             type={type}
+            initialValues={initialValues}
+            values={formState.values}
+            validity={formState.validity}
             closePage={onClose}
             openModal={() => setModalOpen(true)}
           />

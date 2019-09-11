@@ -1,43 +1,61 @@
 import React from 'react';
 
 import { Button } from 'components/ui/button/button';
-import { FormState, StateErrors } from 'components/utils/use-form';
-import { EditFormFields } from '../service/validators';
-import { PageType } from 'context/page-context';
+import { StateValidity } from 'components/utils/use-form';
+import { FormFields } from '../service/validators';
+import { compareFormStates } from '../service/common';
+import { PageType, PageData } from 'context/page-context';
 import classes from './form-actions.module.scss';
 
 type Props = {
   type: NonNullable<PageType>;
+  initialValues: PageData;
+  values: FormFields;
+  validity: StateValidity<FormFields>;
   closePage: () => void;
   openModal: () => void;
 };
 
 function isSubmitBlocked(
   formType: NonNullable<PageType>,
-  formState: FormState<EditFormFields, StateErrors<EditFormFields, string>>
+  initialValues: PageData,
+  values: FormFields,
+  validity: StateValidity<FormFields>
 ) {
-  if (formType === 'add') {
-    return (
-      Object.keys(formState.validity).length <= 6 || // number of fields
-      Object.values(formState.validity).some(v => v === false)
-    );
-  } else {
-    // TODO
-    return false;
-    // let changed = false;
-    // for (let [fieldName, fieldValue] of Object.entries(formState.values)) {
-    //   // @ts-ignore
-    //   if (initialData[fieldName] !== fieldValue) {
-    //     changed = true;
-    //     break;
-    //   }
-    // }
+  const fieldsValidities = Object.values(validity);
+  switch (formType) {
+    case 'add':
+      return (
+        // Number of fields
+        Object.values(values).filter(Boolean).length < 6 ||
+        fieldsValidities.some(v => v === false)
+      );
 
-    // return changed;
+    case 'edit':
+      if (fieldsValidities.some(v => v === false)) {
+        return true;
+      }
+      const { input, roomId, userIds } = compareFormStates(
+        values,
+        initialValues
+      );
+      if ([input, roomId, userIds].some(Boolean)) {
+        return false;
+      }
+      return true;
+    default:
+      return false;
   }
 }
 
-export const FormActions = ({ type, closePage, openModal }: Props) => (
+export const FormActions = ({
+  type,
+  initialValues,
+  values,
+  validity,
+  closePage,
+  openModal,
+}: Props) => (
   <>
     <Button className={classes.action} onClick={() => closePage()}>
       Отмена
@@ -52,7 +70,7 @@ export const FormActions = ({ type, closePage, openModal }: Props) => (
       type="submit"
       form="eventForm"
       className={classes.action}
-      // disabled={isSubmitBlocked(type, formState)} <-- TODO
+      disabled={isSubmitBlocked(type, initialValues, values, validity)}
     >
       {type === 'add' ? 'Создать встречу' : 'Сохранить'}
     </Button>

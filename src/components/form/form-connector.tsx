@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 
 import { FormUI } from './form-ui/form-ui';
 import { Error } from 'components/error/error';
-import { Event } from 'components/timesheet/types';
+import { Event, NewEvent } from 'components/timesheet/types';
 import { Spinner } from 'components/ui/spinner/spinner';
 import { Props as ModalDef, Modal } from 'components/ui/modal/modal';
 import { PageType, PageData } from 'context/page-context';
@@ -21,7 +21,12 @@ import {
   UpdateEventMutationType,
   UpdateEventVariables,
 } from 'service/mutations';
-import { generateCreateModal, generateUpdateModal } from './service/common';
+import {
+  generateCreateModal,
+  generateUpdateModal,
+  compareFormStates,
+} from './service/common';
+import { FormFields } from './service/validators';
 import classes from './form-connector.module.scss';
 
 type Props = {
@@ -32,9 +37,10 @@ type Props = {
 };
 
 export const FormConnector: FC<Props> = ({
+  type,
+  formData,
   onMount,
   onClose,
-  ...formProps
 }) => {
   const [modal, setModal] = useState<ModalDef | null>(null);
   const [variables, setVariables] = useState<Partial<UpdateEventVariables>>({});
@@ -62,15 +68,15 @@ export const FormConnector: FC<Props> = ({
   >(
     gql`
       mutation UpdateEvent(
-        $id: ID!,
+        $id: ID!
         ${variables.input ? ',$input: UpdateEventInput' : ''}
         ${variables.roomId ? ',$roomId: ID' : ''}
         ${variables.userIds ? ',$userIds: [ID!]' : ''}
       ) {
         updateEvent(
-          id: $id,
+          id: $id
           ${variables.input ? ',input: $input' : ''}
-          ${variables.roomId ? ',roomId: $roomId' : ''},
+          ${variables.roomId ? ',roomId: $roomId' : ''}
           ${variables.userIds ? ',userIds: $userIds' : ''}) {
           id
           title
@@ -117,8 +123,7 @@ export const FormConnector: FC<Props> = ({
     return <Error className={classes.loadingError} />;
   }
 
-  function handleFormSubmit(values: Event, initialValues: PageData) {
-    // TODO validate fields
+  function handleFormSubmit(values: NewEvent, initialValues: Partial<Event>) {
     const { title, date, startTime, endTime, users, room } = values;
     const event = {
       title,
@@ -127,7 +132,7 @@ export const FormConnector: FC<Props> = ({
       endTime,
     };
 
-    if (formProps.type === 'add') {
+    if (type === 'add') {
       createEvent({
         variables: {
           input: event,
@@ -142,36 +147,11 @@ export const FormConnector: FC<Props> = ({
       id: initialValues.id!,
     };
 
-    const inputFields = Object.keys(event).reduce((diff, name) => {
-      if (
-        (name === 'date' &&
-          event.date.getTime() === initialValues.date!.getTime()) ||
-        event[name as keyof typeof event] ===
-          initialValues[name as keyof typeof event]
-      ) {
-        return diff;
-      }
-      return {
-        ...diff,
-        [name]: event[name as keyof typeof event],
-      };
-    }, {});
-    if (Object.keys(inputFields).length !== 0) {
-      variables.input = inputFields;
-    }
-
-    if (initialValues.room!.id !== room.id) {
-      variables.roomId = room.id;
-    }
-
-    if (
-      initialValues.users!.length !== users.length ||
-      users.some(u1 => !initialValues.users!.find(u2 => u2.id === u1.id))
-    ) {
-      variables.userIds = users.map(u => u.id);
-    }
-
-    if ([variables.input, variables.roomId, variables.userIds].some(Boolean)) {
+    const { input, roomId, userIds } = compareFormStates(
+      values as FormFields,
+      initialValues
+    );
+    if ([input, roomId, userIds].some(Boolean)) {
       setVariables(variables);
     }
   }
@@ -183,7 +163,8 @@ export const FormConnector: FC<Props> = ({
       )}
       {modal && <Modal {...modal} enterAnimation={false} />}
       <FormUI
-        {...formProps}
+        type={type}
+        initialValues={formData}
         users={fetchData!.users}
         rooms={fetchData!.rooms}
         onClose={onClose}

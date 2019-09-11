@@ -9,7 +9,7 @@ import {
 } from 'service/dates';
 import { UserData, RoomCard } from 'components/timesheet/types';
 
-export interface EditFormFields {
+export interface FormFields {
   title: string;
   date: Date | null;
   startTime: string;
@@ -100,7 +100,7 @@ export const validation = {
     }
     return true;
   },
-  date(value: Date | null, values: StateValues<EditFormFields>) {
+  date(value: Date | null, values: StateValues<FormFields>) {
     const valid = validateDate(value);
     if (valid !== true) {
       return valid;
@@ -123,7 +123,7 @@ export const validation = {
 
     return result;
   },
-  startTime(value: string, values: StateValues<EditFormFields>) {
+  startTime(value: string, values: StateValues<FormFields>) {
     let valid = validateTime('start', value);
     if (valid !== true) {
       return {
@@ -150,7 +150,7 @@ export const validation = {
       time,
     };
   },
-  endTime(value: string, values: StateValues<EditFormFields>) {
+  endTime(value: string, values: StateValues<FormFields>) {
     let valid = validateTime('end', value);
     if (valid !== true) {
       return {
@@ -178,7 +178,7 @@ export const validation = {
       time,
     };
   },
-  users(value: UserData[] | null, values: StateValues<EditFormFields>) {
+  users(value: UserData[] | null, values: StateValues<FormFields>) {
     if (!value || value.length === 0) {
       return errors.EMPTY_USERS;
     }
