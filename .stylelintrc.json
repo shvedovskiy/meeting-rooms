@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "stylelint-config-standard",
-    "stylelint-config-recommended-scss",
-    "stylelint-config-prettier"
-  ],
+  "extends": ["stylelint-config-standard", "stylelint-config-recommended-scss", "stylelint-config-prettier"],
   "plugins": ["stylelint-order", "stylelint-no-unsupported-browser-features"],
   "rules": {
     "at-rule-empty-line-before": null,
@@ -259,13 +255,7 @@
     "plugin/no-unsupported-browser-features": [
       true,
       {
-        "ignore": [
-          "word-break",
-          "css3-cursors",
-          "css-appearance",
-          "text-size-adjust",
-          "css-filters"
-        ]
+        "ignore": ["word-break", "css3-cursors", "css-appearance", "text-size-adjust", "css-filters", "css-sticky"]
       }
     ],
     "rule-empty-line-before": null,
