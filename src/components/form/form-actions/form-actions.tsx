@@ -4,11 +4,11 @@ import { Button } from 'components/ui/button/button';
 import { StateValidity } from 'components/utils/use-form';
 import { FormFields } from '../service/validators';
 import { compareFormStates } from '../service/common';
-import { PageType, PageData } from 'context/page-context';
+import { PageMode, PageData } from 'context/page-context';
 import classes from './form-actions.module.scss';
 
 type Props = {
-  type: NonNullable<PageType>;
+  mode: NonNullable<PageMode>;
   initialValues: PageData;
   values: FormFields;
   validity: StateValidity<FormFields>;
@@ -17,7 +17,7 @@ type Props = {
 };
 
 function isSubmitBlocked(
-  formType: NonNullable<PageType>,
+  formType: NonNullable<PageMode>,
   initialValues: PageData,
   values: FormFields,
   validity: StateValidity<FormFields>
@@ -49,7 +49,7 @@ function isSubmitBlocked(
 }
 
 export const FormActions = ({
-  type,
+  mode,
   initialValues,
   values,
   validity,
@@ -60,19 +60,19 @@ export const FormActions = ({
     <Button className={classes.action} onClick={() => closePage()}>
       Отмена
     </Button>
-    {type === 'edit' && (
+    {mode === 'edit' && (
       <Button className={classes.action} onClick={() => openModal()}>
         Удалить встречу
       </Button>
     )}
     <Button
-      use={type === 'add' ? 'primary' : 'default'}
+      use={mode === 'add' ? 'primary' : 'default'}
       type="submit"
       form="eventForm"
       className={classes.action}
-      disabled={isSubmitBlocked(type, initialValues, values, validity)}
+      disabled={isSubmitBlocked(mode, initialValues, values, validity)}
     >
-      {type === 'add' ? 'Создать встречу' : 'Сохранить'}
+      {mode === 'add' ? 'Создать встречу' : 'Сохранить'}
     </Button>
   </>
 );

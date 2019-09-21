@@ -4,7 +4,7 @@ import cn from 'classnames';
 
 import { Spinner } from 'components/ui/spinner/spinner';
 import { IconButton } from 'components/ui/icon-button/icon-button';
-import pageContext, { PageType, PageData } from 'context/page-context';
+import pageContext, { PageMode, PageData } from 'context/page-context';
 import sizeContext from 'context/size-context';
 import classes from './page.module.scss';
 import spinnerTransitionClasses from 'components/ui/spinner/spinner-transition.module.scss';
@@ -12,11 +12,11 @@ import spinnerTransitionClasses from 'components/ui/spinner/spinner-transition.m
 const Form = lazy(() => import('components/form'));
 
 type Props = {
-  type: NonNullable<PageType>;
+  mode: NonNullable<PageMode>;
   pageData?: PageData;
 };
 
-export const Page = ({ type, pageData }: Props) => {
+export const Page = ({ mode, pageData: formData }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
   const setPage = useContext(pageContext);
   const size = useContext(sizeContext);
@@ -27,8 +27,8 @@ export const Page = ({ type, pageData }: Props) => {
 
   function renderPage() {
     const formProps = {
-      type,
-      formData: pageData,
+      mode,
+      formData,
       onMount() {
         setIsLoading(false);
       },
@@ -66,7 +66,7 @@ export const Page = ({ type, pageData }: Props) => {
           />
         )}
         <h1 className={classes.title}>
-          {type === 'add' ? 'Новая встреча' : 'Редактирование встречи'}
+          {mode === 'add' ? 'Новая встреча' : 'Редактирование встречи'}
         </h1>
       </div>
       {renderPage()}

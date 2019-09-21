@@ -11,7 +11,7 @@ import { Page } from 'components/page/page';
 import { Error } from 'components/error/error';
 import { Timesheet } from 'components/timesheet/timesheet';
 import SizeContext from 'context/size-context';
-import PageContext, { PageType, PageData, PageFn } from 'context/page-context';
+import PageContext, { PageMode, PageData, PageFn } from 'context/page-context';
 import {
   ROOMS_QUERY,
   EVENTS_QUERY,
@@ -26,12 +26,12 @@ type Props = {
 };
 
 interface PageDef {
-  type: PageType;
+  mode: PageMode;
   data?: PageData;
 }
 
 export const App = ({ onLoad }: Props) => {
-  const [page, setPage] = useState<PageDef>({ type: null });
+  const [page, setPage] = useState<PageDef>({ mode: null });
 
   const size = useMediaLayout({ maxWidth: '34.625em' }) ? 'large' : 'default';
   const { data, error, loading } = useQuery<RoomsQueryType & EventsQueryType>(
@@ -49,11 +49,8 @@ export const App = ({ onLoad }: Props) => {
     }
   }, [loading, onLoad]);
 
-  const openPage = useCallback<PageFn>((pageType, pageData) => {
-    setPage({
-      type: pageType,
-      data: pageData,
-    });
+  const openPage = useCallback<PageFn>((mode, data) => {
+    setPage({ mode, data });
   }, []);
 
   if (loading) {
@@ -61,7 +58,7 @@ export const App = ({ onLoad }: Props) => {
   }
 
   function renderHeader() {
-    if (page.type === null && data && data.rooms.length) {
+    if (page.mode === null && data && data.rooms.length) {
       return (
         <Header>
           <Button
@@ -89,12 +86,12 @@ export const App = ({ onLoad }: Props) => {
         <CSSTransition
           appear
           classNames={pageTransitionClasses}
-          in={page.type !== null}
+          in={page.mode !== null}
           mountOnEnter
           unmountOnExit
           timeout={350}
         >
-          <Page type={page.type!} pageData={page.data} />
+          <Page mode={page.mode!} pageData={page.data} />
         </CSSTransition>
       </>
     );

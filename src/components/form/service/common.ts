@@ -4,7 +4,6 @@ import ruLocale from 'date-fns/locale/ru';
 import {
   RoomData,
   RoomCard,
-  Event,
   ServerEvent,
   EventInput,
 } from 'components/timesheet/types';
@@ -87,10 +86,10 @@ export function generateUpdateModal(
 }
 
 export function compareFormStates(
-  values: FormFields,
-  initialValues: Partial<Event>
+  formValues: FormFields,
+  initialValues: PageData
 ) {
-  const { title, date, startTime, endTime, users, room } = values;
+  const { title, date, startTime, endTime, users, room } = formValues;
   const event = {
     title,
     date,

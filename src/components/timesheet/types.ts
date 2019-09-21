@@ -27,7 +27,7 @@ export interface ServerEvent extends Omit<Event, 'date'> {
   date: string;
 }
 
-export type NewEvent = Omit<Event, 'id'>;
+export type CreatedEvent = Omit<Event, 'id'>;
 
 export interface EventInput {
   title: string;

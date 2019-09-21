@@ -4,10 +4,10 @@ import gql from 'graphql-tag';
 
 import { FormUI } from './form-ui/form-ui';
 import { Error } from 'components/error/error';
-import { Event, NewEvent } from 'components/timesheet/types';
+import { Event, CreatedEvent } from 'components/timesheet/types';
 import { Spinner } from 'components/ui/spinner/spinner';
 import { Props as ModalDef, Modal } from 'components/ui/modal/modal';
-import { PageType, PageData } from 'context/page-context';
+import { PageMode, PageData } from 'context/page-context';
 import {
   USERS_QUERY,
   ROOMS_QUERY,
@@ -30,15 +30,15 @@ import { FormFields } from './service/validators';
 import classes from './form-connector.module.scss';
 
 type Props = {
-  type: NonNullable<PageType>;
+  mode: NonNullable<PageMode>;
   formData?: PageData;
   onMount: () => void;
   onClose: () => void;
 };
 
 export const FormConnector: FC<Props> = ({
-  type,
-  formData,
+  mode,
+  formData: initialValues,
   onMount,
   onClose,
 }) => {
@@ -55,45 +55,41 @@ export const FormConnector: FC<Props> = ({
       ${ROOMS_QUERY}
     }
   `);
-  const [createEvent, { loading: eventCreating }] = useMutation<
-    CreateEventMutationType
-  >(CREATE_EVENT_MUTATION, {
-    onCompleted({ createEvent: eventData }) {
-      const modalConfig = generateCreateModal(eventData, onClose);
-      setModal(modalConfig);
-    },
-  });
-  const [updateEvent, { loading: eventUpdating }] = useMutation<
-    UpdateEventMutationType
+  const [storeEvent, { loading: eventStoring }] = useMutation<
+    CreateEventMutationType | UpdateEventMutationType
   >(
-    gql`
+    mode === 'add'
+      ? CREATE_EVENT_MUTATION
+      : gql`
       mutation UpdateEvent(
         $id: ID!
-        ${variables.input ? ',$input: UpdateEventInput' : ''}
-        ${variables.roomId ? ',$roomId: ID' : ''}
-        ${variables.userIds ? ',$userIds: [ID!]' : ''}
+        ${variables.input ? '$input: UpdateEventInput' : ''}
+        ${variables.roomId ? '$roomId: ID' : ''}
+        ${variables.userIds ? '$userIds: [ID!]' : ''}
       ) {
         updateEvent(
           id: $id
-          ${variables.input ? ',input: $input' : ''}
-          ${variables.roomId ? ',roomId: $roomId' : ''}
-          ${variables.userIds ? ',userIds: $userIds' : ''}) {
-          id
-          title
-          date
-          startTime
-          endTime
-          room {
-            id
-            title
-            floor
-          }
+          ${variables.input ? 'input: $input' : ''}
+          ${variables.roomId ? 'roomId: $roomId' : ''}
+          ${variables.userIds ? 'userIds: $userIds' : ''}) {
+          id, title, date, startTime, endTime, room { id, title, floor }
         }
       }
     `,
     {
-      onCompleted({ updateEvent: eventData }) {
-        const modalConfig = generateUpdateModal(eventData, onClose);
+      onCompleted(response) {
+        let modalConfig: ModalDef;
+        if (mode === 'add') {
+          modalConfig = generateCreateModal(
+            (response as CreateEventMutationType).createEvent,
+            onClose
+          );
+        } else {
+          modalConfig = generateUpdateModal(
+            (response as UpdateEventMutationType).updateEvent,
+            onClose
+          );
+        }
         setModal(modalConfig);
       },
     }
@@ -111,10 +107,10 @@ export const FormConnector: FC<Props> = ({
 
   useEffect(() => {
     if (Object.keys(variables).length !== 0) {
-      updateEvent({ variables });
+      storeEvent({ variables });
       setVariables({});
     }
-  }, [updateEvent, variables]);
+  }, [storeEvent, variables]);
 
   if (fetchLoading) {
     return null;
@@ -123,8 +119,8 @@ export const FormConnector: FC<Props> = ({
     return <Error className={classes.loadingError} />;
   }
 
-  function handleFormSubmit(values: NewEvent, initialValues: Partial<Event>) {
-    const { title, date, startTime, endTime, users, room } = values;
+  function handleFormSubmit(formValues: CreatedEvent) {
+    const { title, date, startTime, endTime, users, room } = formValues;
     const event = {
       title,
       date,
@@ -132,8 +128,8 @@ export const FormConnector: FC<Props> = ({
       endTime,
     };
 
-    if (type === 'add') {
-      createEvent({
+    if (mode === 'add') {
+      storeEvent({
         variables: {
           input: event,
           roomId: room.id,
@@ -143,32 +139,32 @@ export const FormConnector: FC<Props> = ({
       return;
     }
 
-    const variables: UpdateEventVariables = {
-      id: initialValues.id!,
-    };
-
-    const { input, roomId, userIds } = compareFormStates(
-      values as FormFields,
-      initialValues
+    const { id } = initialValues as Event;
+    let variables: UpdateEventVariables = { id };
+    const diff = compareFormStates(
+      formValues as FormFields,
+      initialValues as Event
     );
-    if ([input, roomId, userIds].some(Boolean)) {
-      setVariables(variables);
+    if (['input', 'roomId', 'userIds'].some(i => diff.hasOwnProperty(i))) {
+      variables = {
+        ...variables,
+        ...diff,
+      };
     }
+    setVariables(variables);
   }
 
   return (
     <>
-      {(eventCreating || eventUpdating || eventRemoving) && (
-        <Spinner fullscreen transparent />
-      )}
+      {(eventStoring || eventRemoving) && <Spinner fullscreen transparent />}
       {modal && <Modal {...modal} enterAnimation={false} />}
       <FormUI
-        type={type}
-        initialValues={formData}
+        mode={mode}
+        initialValues={initialValues}
         users={fetchData!.users}
         rooms={fetchData!.rooms}
         onClose={onClose}
-        onRemove={id => removeEvent({ variables: { id } })}
+        onRemove={() => removeEvent({ variables: { id: initialValues!.id } })}
         onSubmit={handleFormSubmit}
       />
     </>

@@ -8,22 +8,22 @@ import { TimePicker } from 'components/ui/timepicker/time-picker';
 import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
 import { Modal } from 'components/ui/modal/modal';
-import { RoomData, UserData, NewEvent } from 'components/timesheet/types';
+import { RoomData, UserData, CreatedEvent } from 'components/timesheet/types';
 import { useForm } from 'components/utils/use-form';
 import sizeContext from 'context/size-context';
-import { PageType, PageData } from 'context/page-context';
+import { PageMode, PageData } from 'context/page-context';
 import { getRecommendation } from '../service/common';
 import { validation, FormFields } from '../service/validators';
 import classes from './form-ui.module.scss';
 
 type Props = {
-  type: NonNullable<PageType>;
+  mode: NonNullable<PageMode>;
   initialValues?: PageData;
   users: UserData[];
   rooms: RoomData[];
   onClose: () => void;
-  onRemove: (id: string) => void;
-  onSubmit: (values: NewEvent, initialFormData: PageData) => void;
+  onRemove: () => void;
+  onSubmit: (values: CreatedEvent) => void;
 };
 
 const defaultFormValues = {
@@ -36,7 +36,7 @@ const defaultFormValues = {
 };
 
 export const FormUI = ({
-  type,
+  mode,
   initialValues = {},
   users,
   rooms,
@@ -200,9 +200,7 @@ export const FormUI = ({
             {
               id: '2',
               text: 'Удалить',
-              onClick() {
-                onRemove(initialValues.id!);
-              },
+              onClick: onRemove,
             },
           ]}
           onBackdropClick={() => setModalOpen(false)}
@@ -216,17 +214,13 @@ export const FormUI = ({
         <form
           id="eventForm"
           className={classes.form}
-          {...form<NewEvent>({
-            name: 'form',
-            onSubmit: (submittedValues: NewEvent) =>
-              onSubmit(submittedValues, initialValues),
-          })}
+          {...form<CreatedEvent>({ name: 'form', onSubmit })}
         >
           {renderForm()}
         </form>
         <div className={classes.actions}>
           <FormActions
-            type={type}
+            mode={mode}
             initialValues={initialValues}
             values={formState.values}
             validity={formState.validity}
