@@ -1,4 +1,4 @@
-@import "../utils/mixins";
+@import "../../service/styles/mixins";
 
 .page {
   position: absolute;
@@ -25,7 +25,7 @@
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   padding: 0 16px;
 
   &::after {

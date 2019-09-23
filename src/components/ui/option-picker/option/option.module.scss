@@ -59,8 +59,10 @@
 
 .icon {
   position: absolute;
+  top: 50%;
   right: 12px;
   filter: invert(1);
+  transform: translateY(-50%);
 
   .option.lg & {
     right: 14px;

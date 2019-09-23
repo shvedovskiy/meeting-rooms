@@ -1,4 +1,4 @@
-@import "../../utils/mixins";
+@import "../../../service/styles/mixins";
 
 .floors {
   padding: 22px 0;
@@ -16,14 +16,14 @@
   @include oneLineEllipsis;
 
   .floors.lg & {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     padding-right: 16px;
     padding-left: 16px;
   }
 }
 
 .room:not(:last-of-type) {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 
   .floors.lg & {
     margin-bottom: 2px;

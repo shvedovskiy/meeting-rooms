@@ -1,4 +1,4 @@
-@import "../../../utils/mixins";
+@import "../../../../service/styles/mixins";
 
 .room {
   display: flex;
@@ -7,7 +7,7 @@
 .roomInfo {
   flex: 0 0 245px;
   order: -1;
-  padding: 4px 25px;
+  padding: 2px 25px;
   overflow: hidden;
 
   &.unavailable {
@@ -16,7 +16,7 @@
 
   .room.lg & {
     flex-basis: 180px;
-    padding: 12px 16px 10px;
+    padding: 10px 16px 8px;
     background-color: var(--bg-primary);
   }
 
@@ -29,7 +29,6 @@
 }
 
 .name {
-  margin-bottom: 2px;
   font-size: var(--medium-text);
   font-weight: 700;
   visibility: visible;
@@ -40,7 +39,7 @@
     display: inline-block;
     max-width: 100%;
     margin-bottom: 0;
-    padding: 6px 8px;
+    padding: 5px 8px;
     font-size: var(--small-text);
     visibility: visible;
     background-color: var(--bg-primary);
@@ -108,7 +107,7 @@ $states: "&:hover::before, &:focus::before, &:active::before" !default;
 
   #{$states} {
     position: absolute;
-    top: 43%;
+    top: 50%;
     left: 50%;
     font-size: 24px;
     font-weight: 600;

@@ -255,7 +255,7 @@
     "plugin/no-unsupported-browser-features": [
       true,
       {
-        "ignore": ["word-break", "css3-cursors", "css-appearance", "text-size-adjust", "css-filters", "css-sticky"]
+        "ignore": ["word-break", "css3-cursors", "css-appearance", "text-size-adjust", "css-filters", "css-sticky", "user-select-none"]
       }
     ],
     "rule-empty-line-before": null,

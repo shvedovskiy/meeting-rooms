@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { Button } from 'components/ui/button/button';
 import { StateValidity } from 'components/utils/use-form';
 import { FormFields } from '../service/validators';
 import { compareFormStates } from '../service/common';
 import { PageMode, PageData } from 'context/page-context';
+import sizeContext from 'context/size-context';
 import classes from './form-actions.module.scss';
 
 type Props = {
@@ -55,24 +56,32 @@ export const FormActions = ({
   validity,
   closePage,
   openModal,
-}: Props) => (
-  <>
-    <Button className={classes.action} onClick={() => closePage()}>
-      Отмена
-    </Button>
-    {mode === 'edit' && (
-      <Button className={classes.action} onClick={() => openModal()}>
-        Удалить встречу
+}: Props) => {
+  const size = useContext(sizeContext);
+  const props = {
+    size,
+    className: classes.action,
+  };
+
+  return (
+    <>
+      <Button onClick={() => closePage()} {...props}>
+        Отмена
       </Button>
-    )}
-    <Button
-      use={mode === 'add' ? 'primary' : 'default'}
-      type="submit"
-      form="eventForm"
-      className={classes.action}
-      disabled={isSubmitBlocked(mode, initialValues, values, validity)}
-    >
-      {mode === 'add' ? 'Создать встречу' : 'Сохранить'}
-    </Button>
-  </>
-);
+      {mode === 'edit' && (
+        <Button onClick={() => openModal()} {...props}>
+          Удалить встречу
+        </Button>
+      )}
+      <Button
+        use={mode === 'add' ? 'primary' : 'default'}
+        type="submit"
+        form="eventForm"
+        disabled={isSubmitBlocked(mode, initialValues, values, validity)}
+        {...props}
+      >
+        {mode === 'add' ? 'Создать встречу' : 'Сохранить'}
+      </Button>
+    </>
+  );
+};

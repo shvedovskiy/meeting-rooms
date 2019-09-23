@@ -13,7 +13,7 @@
 
   grid-template-rows: auto auto;
   // stylelint-disable-next-line plugin/no-unsupported-browser-features
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 50%);
   grid-row-gap: 4px;
 
   .formArea.lg & {
@@ -23,7 +23,7 @@
 
   label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
     overflow: hidden;
     font-weight: 600;
     text-overflow: ellipsis;
@@ -123,6 +123,8 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
+  padding-right: 16px;
+  padding-left: 16px;
   background-color: var(--bg-primary);
   border-top: 1px solid var(--border);
 }
