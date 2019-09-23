@@ -3,8 +3,8 @@ import { StateValues } from 'components/utils/use-form';
 
 import {
   splitTimeString,
-  isTimeInPast,
-  compareTimes,
+  isPastTime,
+  compareTimeStrings,
   HOURS,
 } from 'service/dates';
 import { UserData, RoomCard } from 'components/timesheet/types';
@@ -54,7 +54,7 @@ function validatePastTime(
     date !== null &&
     validateDate(date) === true &&
     isToday(date) &&
-    isTimeInPast(value)
+    isPastTime(value)
   ) {
     return time === 'start' ? errors.START_PAST : errors.END_PAST;
   }
@@ -141,7 +141,7 @@ export const validation = {
     let time: string | boolean = true;
     const endTimeValid = validateTime('end', values.endTime);
     if (endTimeValid === true) {
-      if (!compareTimes(value!, values.endTime!)) {
+      if (!compareTimeStrings(value!, values.endTime!)) {
         time = errors.END_BEFORE_START;
       }
     }
@@ -169,7 +169,7 @@ export const validation = {
     let time: string | boolean = true;
     const startTimeValid = validateTime('start', values.startTime);
     if (startTimeValid === true) {
-      if (!compareTimes(values.startTime!, value!)) {
+      if (!compareTimeStrings(values.startTime!, value!)) {
         time = errors.END_BEFORE_START;
       }
     }

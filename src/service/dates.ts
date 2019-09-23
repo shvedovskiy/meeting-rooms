@@ -1,4 +1,4 @@
-import { lightFormat, isBefore, isAfter, isEqual, parse } from 'date-fns/esm';
+import { lightFormat, isBefore, parse } from 'date-fns/esm';
 import ruLocale from 'date-fns/locale/ru';
 
 export const HOURS = [
@@ -25,7 +25,7 @@ export function roundDate(date: number) {
   return new Date(Math.ceil(date / ms) * ms);
 }
 
-export function getTimeString(date: Date) {
+export function dateToTimeString(date: Date) {
   return lightFormat(date, 'H:mm');
 }
 
@@ -41,22 +41,20 @@ export function minutesToHours(value: number) {
     .padStart(2, '0')}`;
 }
 
-export function isTimeInPast(timeStr: string, now: number = Date.now()) {
+export function isPastTime(timeStr: string, pivot: number = Date.now()) {
   return isBefore(
-    parse(timeStr + ':00', 'HH:mm:ss', now, { locale: ruLocale }),
-    now
+    parse(timeStr + ':00', 'HH:mm:ss', pivot, { locale: ruLocale }),
+    pivot
   );
 }
 
-export function compareTimes(value1: string, value2: string) {
+export function compareTimeStrings(value1: string, value2: string) {
   const dateStart = new Date(),
     dateEnd = new Date(dateStart.getTime());
   const [hours1, minutes1] = splitTimeString(value1);
   const [hours2, minutes2] = splitTimeString(value2);
   dateStart.setHours(hours1, minutes1);
   dateEnd.setHours(hours2, minutes2);
-  if (isAfter(dateStart, dateEnd) || isEqual(dateStart, dateEnd)) {
-    return false;
-  }
-  return true;
+
+  return isBefore(dateStart, dateEnd);
 }

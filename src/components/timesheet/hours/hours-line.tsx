@@ -2,7 +2,7 @@ import React, { memo, useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { isSameDay, isBefore, getHours, getMinutes } from 'date-fns/esm';
 
-import { HOURS, getTimeString } from 'service/dates';
+import { HOURS, dateToTimeString } from 'service/dates';
 import classes from './hours-line.module.scss';
 import { useCurrentTime } from './use-current-time';
 
@@ -57,7 +57,9 @@ export const HoursLine = memo(({ displayedDate }: Props) => {
         className={classes.currentTime}
         style={{ left: `${offset}%` }}
       >
-        <span className={classes.currentTimeBadge}>{getTimeString(now)}</span>
+        <span className={classes.currentTimeBadge}>
+          {dateToTimeString(now)}
+        </span>
       </div>
     );
   }
