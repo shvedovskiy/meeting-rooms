@@ -13,7 +13,7 @@ import classes from './button.module.scss';
 import { Override } from 'service/typings';
 
 export type ButtonKind = 'button' | 'submit' | 'reset';
-export type ButtonUse = 'default' | 'primary' | 'borderless' | '';
+export type ButtonUse = 'default' | 'primary' | 'borderless';
 export type ButtonType = Override<
   ButtonHTMLAttributes<HTMLButtonElement>,
   {
