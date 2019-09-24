@@ -1,7 +1,7 @@
 {
-  "name": "React App",
-  "short_name": "React App",
-  "description": "React App",
+  "name": "Переговорки",
+  "short_name": "Переговорки",
+  "description": "Planner for meetings in office building",
   "start_url": ".",
   "icons": [
     {
@@ -13,10 +13,20 @@
       "src": "icons/android-chrome-256x256.png",
       "sizes": "256x256",
       "type": "image/png"
+    },
+    {
+      "src": "icons/android-chrome-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ],
-  "theme_color": "#282c34",
-  "background_color": "#282c34",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
   "display": "standalone",
   "orientation": "portrait",
   "dir": "ltr"
