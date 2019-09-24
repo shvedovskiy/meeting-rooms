@@ -37,6 +37,7 @@
 .currentTimeBadge {
   @extend %timeBadge;
   padding: 4px 8px;
+  line-height: 1.2;
   color: var(--text-inverted);
   background-color: var(--primary-1);
   border-radius: 10px;

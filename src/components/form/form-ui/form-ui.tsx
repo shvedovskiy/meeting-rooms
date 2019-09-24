@@ -7,6 +7,7 @@ import { CalendarInput } from 'components/ui/calendar/calendar-input/calendar-in
 import { TimePicker } from 'components/ui/timepicker/time-picker';
 import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
+import { Button } from 'components/ui/button/button';
 import { Modal } from 'components/ui/modal/modal';
 import { RoomData, UserData, CreatedEvent } from 'components/timesheet/types';
 import { useForm } from 'components/utils/use-form';
@@ -179,6 +180,18 @@ export const FormUI = ({
           <div className={classes.inputError}>{formState.errors.room}</div>
         )}
       </div>,
+      mode === 'edit' && size === 'large' && (
+        <div className={classes.removeEvent}>
+          <Button
+            use="borderless"
+            size={size}
+            danger
+            onClick={() => setModalOpen(true)}
+          >
+            Удалить встречу
+          </Button>
+        </div>
+      ),
     ];
   }
 

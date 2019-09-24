@@ -9,7 +9,7 @@
   vertical-align: middle;
   user-select: none;
   border-radius: 4px;
-  transition: background-color 0.2s ease-out, color 0.2s ease-out;
+  transition: background-color 0.2s ease-out, color 0.2s ease-out, box-shadow 0.2s ease-out;
 
   &:disabled {
     color: var(--text-inactive);
@@ -60,7 +60,8 @@
 }
 
 .borderless {
-  padding: 0;
+  /* stylelint-disable-next-line declaration-no-important */
+  padding: 0 !important;
   color: var(--text-primary);
   background-color: transparent;
 
@@ -71,5 +72,18 @@
 
   &:active {
     color: var(--primary-2);
+  }
+}
+
+.danger {
+  &:hover:not(.borderless),
+  &:focus:not(.borderless) {
+    color: var(--text-invalid);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--text-invalid);
+  }
+
+  &.borderless {
+    color: var(--text-invalid);
   }
 }

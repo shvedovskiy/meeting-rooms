@@ -68,13 +68,13 @@ export const FormActions = ({
       <Button onClick={() => closePage()} {...props}>
         Отмена
       </Button>
-      {mode === 'edit' && (
-        <Button onClick={() => openModal()} {...props}>
+      {mode === 'edit' && size === 'default' && (
+        <Button danger onClick={() => openModal()} {...props}>
           Удалить встречу
         </Button>
       )}
       <Button
-        use={mode === 'add' ? 'primary' : 'default'}
+        use="primary"
         type="submit"
         form="eventForm"
         disabled={isSubmitBlocked(mode, initialValues, values, validity)}

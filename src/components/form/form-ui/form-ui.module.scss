@@ -107,11 +107,19 @@
 
 .users,
 .room {
-  padding-top: 20px;
+  padding-top: 16px;
 
   .formArea.lg & {
     border-top: 8px solid var(--border);
   }
+}
+
+.removeEvent {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  text-align: center;
+  border-top: 8px solid var(--border);
+  border-bottom: 8px solid var(--border);
 }
 
 .actions {

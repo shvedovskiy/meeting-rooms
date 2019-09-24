@@ -13,7 +13,7 @@ import classes from './button.module.scss';
 import { Override } from 'service/typings';
 
 export type ButtonKind = 'button' | 'submit' | 'reset';
-export type ButtonUse = 'default' | 'primary' | 'borderless';
+export type ButtonUse = 'default' | 'primary' | 'borderless' | '';
 export type ButtonType = Override<
   ButtonHTMLAttributes<HTMLButtonElement>,
   {
@@ -24,6 +24,7 @@ export type ButtonType = Override<
     size?: Size;
     type?: ButtonKind;
     use?: ButtonUse;
+    danger?: boolean;
   }
 >;
 
@@ -40,6 +41,7 @@ export const Button = memo((props: Props) => {
     size = 'default',
     type = 'button',
     use = 'default',
+    danger = false,
     ...rest
   } = props;
 
@@ -57,6 +59,7 @@ export const Button = memo((props: Props) => {
     type,
     className: classNames(classes.btn, classes[use], className, {
       [classes.lg]: size === 'large',
+      [classes.danger]: danger,
     }),
     ref: buttonNode,
     disabled,
