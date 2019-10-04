@@ -3,6 +3,10 @@
   flex-direction: column;
   justify-content: space-between;
   overflow-y: auto;
+
+  &.lg {
+    justify-content: flex-start;
+  }
 }
 .form {
   display: grid;
@@ -18,7 +22,7 @@
 
   .formArea.lg & {
     display: block;
-    padding-bottom: 24px;
+    padding-bottom: 0;
   }
 
   label {
@@ -50,8 +54,8 @@
 .dateTime {
   display: grid;
   grid:
-    "date time" auto
-    "date timeErrors" auto
+    'date time' auto
+    'date timeErrors' auto
     / auto min-content;
 
   .formArea.lg & {
@@ -112,27 +116,4 @@
   .formArea.lg & {
     border-top: 8px solid var(--border);
   }
-}
-
-.removeEvent {
-  padding-top: 16px;
-  padding-bottom: 16px;
-  text-align: center;
-  border-top: 8px solid var(--border);
-  border-bottom: 8px solid var(--border);
-}
-
-.actions {
-  position: sticky;
-  bottom: 0;
-  z-index: 1;
-  display: flex;
-  flex-basis: 76px;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  padding-right: 16px;
-  padding-left: 16px;
-  background-color: var(--bg-primary);
-  border-top: 1px solid var(--border);
 }

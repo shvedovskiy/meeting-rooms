@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 
 import { Button } from 'components/ui/button/button';
+import { Modal } from 'components/ui/modal/modal';
 import { StateValidity } from 'components/utils/use-form';
 import { FormFields } from '../service/validators';
 import { compareFormStates } from '../service/common';
@@ -14,7 +15,7 @@ type Props = {
   values: FormFields;
   validity: StateValidity<FormFields>;
   closePage: () => void;
-  openModal: () => void;
+  removeEvent: () => void;
 };
 
 function isSubmitBlocked(
@@ -55,8 +56,10 @@ export const FormActions = ({
   values,
   validity,
   closePage,
-  openModal,
+  removeEvent,
 }: Props) => {
+  const [modalOpen, setModalOpen] = useState(false);
+
   const size = useContext(sizeContext);
   const props = {
     size,
@@ -65,23 +68,61 @@ export const FormActions = ({
 
   return (
     <>
-      <Button onClick={() => closePage()} {...props}>
-        Отмена
-      </Button>
-      {mode === 'edit' && size === 'default' && (
-        <Button danger onClick={() => openModal()} {...props}>
-          Удалить встречу
-        </Button>
+      {mode === 'edit' && size === 'large' && (
+        <div className={classes.formButton}>
+          <div className={classes.removeEvent}>
+            <Button
+              use="borderless"
+              size={size}
+              danger
+              onClick={() => setModalOpen(true)}
+            >
+              Удалить встречу
+            </Button>
+          </div>
+        </div>
       )}
-      <Button
-        use="primary"
-        type="submit"
-        form="eventForm"
-        disabled={isSubmitBlocked(mode, initialValues, values, validity)}
-        {...props}
-      >
-        {mode === 'add' ? 'Создать встречу' : 'Сохранить'}
-      </Button>
+      <div className={classes.actions}>
+        {modalOpen && (
+          <Modal
+            icon="🙅🏻"
+            iconLabel="none"
+            title="Встреча будет удалена безвозвратно"
+            buttons={[
+              {
+                id: '1',
+                text: 'Отмена',
+                onClick() {
+                  setModalOpen(false);
+                },
+              },
+              {
+                id: '2',
+                text: 'Удалить',
+                onClick: removeEvent,
+              },
+            ]}
+            onBackdropClick={() => setModalOpen(false)}
+          />
+        )}
+        <Button onClick={() => closePage()} {...props}>
+          Отмена
+        </Button>
+        {mode === 'edit' && size === 'default' && (
+          <Button danger onClick={() => setModalOpen(true)} {...props}>
+            Удалить встречу
+          </Button>
+        )}
+        <Button
+          use="primary"
+          type="submit"
+          form="eventForm"
+          disabled={isSubmitBlocked(mode, initialValues, values, validity)}
+          {...props}
+        >
+          {mode === 'add' ? 'Создать встречу' : 'Сохранить'}
+        </Button>
+      </div>
     </>
   );
 };

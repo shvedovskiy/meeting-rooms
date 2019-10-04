@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import cn from 'classnames';
 
 import { FormActions } from '../form-actions/form-actions';
@@ -7,8 +7,6 @@ import { CalendarInput } from 'components/ui/calendar/calendar-input/calendar-in
 import { TimePicker } from 'components/ui/timepicker/time-picker';
 import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
-import { Button } from 'components/ui/button/button';
-import { Modal } from 'components/ui/modal/modal';
 import { RoomData, UserData, CreatedEvent } from 'components/timesheet/types';
 import { useForm } from 'components/utils/use-form';
 import sizeContext from 'context/size-context';
@@ -45,7 +43,6 @@ export const FormUI = ({
   onRemove,
   onSubmit,
 }: Props) => {
-  const [modalOpen, setModalOpen] = useState(false);
   const [eventRoom, recommendedRooms] = useMemo(
     () => getRecommendation(initialValues, rooms),
     [initialValues, rooms]
@@ -180,45 +177,11 @@ export const FormUI = ({
           <div className={classes.inputError}>{formState.errors.room}</div>
         )}
       </div>,
-      mode === 'edit' && size === 'large' && (
-        <div className={classes.removeEvent}>
-          <Button
-            use="borderless"
-            size={size}
-            danger
-            onClick={() => setModalOpen(true)}
-          >
-            Удалить встречу
-          </Button>
-        </div>
-      ),
     ];
   }
 
   return (
     <>
-      {modalOpen && (
-        <Modal
-          icon="🙅🏻"
-          iconLabel="none"
-          title="Встреча будет удалена безвозвратно"
-          buttons={[
-            {
-              id: '1',
-              text: 'Отмена',
-              onClick() {
-                setModalOpen(false);
-              },
-            },
-            {
-              id: '2',
-              text: 'Удалить',
-              onClick: onRemove,
-            },
-          ]}
-          onBackdropClick={() => setModalOpen(false)}
-        />
-      )}
       <div
         className={cn(classes.formArea, {
           [classes.lg]: size === 'large',
@@ -231,16 +194,14 @@ export const FormUI = ({
         >
           {renderForm()}
         </form>
-        <div className={classes.actions}>
-          <FormActions
-            mode={mode}
-            initialValues={initialValues}
-            values={formState.values}
-            validity={formState.validity}
-            closePage={onClose}
-            openModal={() => setModalOpen(true)}
-          />
-        </div>
+        <FormActions
+          mode={mode}
+          initialValues={initialValues}
+          values={formState.values}
+          validity={formState.validity}
+          closePage={onClose}
+          removeEvent={onRemove}
+        />
       </div>
     </>
   );
