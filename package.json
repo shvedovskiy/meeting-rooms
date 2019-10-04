@@ -99,6 +99,7 @@
     "stylelint-config-standard": "^18.3.0",
     "stylelint-no-unsupported-browser-features": "^3.0.2",
     "stylelint-order": "^3.1.0",
+    "stylelint-prettier": "^1.1.1",
     "stylelint-scss": "^3.10.1",
     "ts-jest": "^24.0.2",
     "ts-node": "^8.3.0",
