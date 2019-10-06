@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import cn from 'classnames';
 
 import { FormActions } from '../form-actions/form-actions';
@@ -7,11 +7,11 @@ import { CalendarInput } from 'components/ui/calendar/calendar-input/calendar-in
 import { TimePicker } from 'components/ui/timepicker/time-picker';
 import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
-import { RoomData, UserData, CreatedEvent } from 'components/timesheet/types';
-import { useForm } from 'components/utils/use-form';
+import { UserData, CreatedEvent } from 'components/timesheet/types';
+import { useForm, StateValidity } from 'components/utils/use-form';
 import sizeContext from 'context/size-context';
 import { PageMode, PageData } from 'context/page-context';
-import { getRecommendation } from '../service/common';
+import { useRecommendation } from '../service/use-recommendation';
 import { validation, FormFields } from '../service/validators';
 import classes from './form-ui.module.scss';
 
@@ -19,7 +19,6 @@ type Props = {
   mode: NonNullable<PageMode>;
   initialValues?: PageData;
   users: UserData[];
-  rooms: RoomData[];
   onClose: () => void;
   onRemove: () => void;
   onSubmit: (values: CreatedEvent) => void;
@@ -34,28 +33,52 @@ const defaultFormValues = {
   room: null,
 };
 
+function isRoomSelectorAllowed(
+  mode: NonNullable<PageMode>,
+  validity: StateValidity<FormFields>,
+  initialValues: PageData
+) {
+  const { date, startTime, endTime, time } = validity;
+  const {
+    date: initDate,
+    startTime: initStartTime,
+    endTime: initEndTime,
+  } = initialValues;
+  const selectorAllowedForAdd =
+    mode === 'add' &&
+    [date, startTime, endTime].every(Boolean) &&
+    time !== false;
+  const selectorAllowedForPartialAdd =
+    mode === 'add' &&
+    [initDate, initStartTime, initEndTime].every(Boolean) &&
+    [date, startTime, endTime, time].every(v => v !== false);
+  const selectorAllowedForEdit =
+    mode === 'edit' && ![date, startTime, endTime, time].some(v => v === false);
+  return (
+    selectorAllowedForAdd ||
+    selectorAllowedForPartialAdd ||
+    selectorAllowedForEdit
+  );
+}
+
 export const FormUI = ({
   mode,
   initialValues = {},
   users,
-  rooms,
   onClose,
   onRemove,
   onSubmit,
 }: Props) => {
-  const [eventRoom, recommendedRooms] = useMemo(
-    () => getRecommendation(initialValues, rooms),
-    [initialValues, rooms]
-  );
+  const size = useContext(sizeContext);
+  const [eventRoom, recommendedRooms] = useRecommendation(initialValues);
   const [formState, { field, form }] = useForm<FormFields>({
     ...defaultFormValues,
     ...initialValues,
     room: eventRoom,
   });
-  const size = useContext(sizeContext);
 
-  function renderForm() {
-    return [
+  function renderFormFields() {
+    const fields = [
       <div key="title">
         <label htmlFor="title">Тема</label>
         <Input
@@ -157,27 +180,34 @@ export const FormUI = ({
           <div className={classes.inputError}>{formState.errors.users}</div>
         )}
       </div>,
-      <div key="room" className={classes.room}>
-        <label htmlFor="room">
-          {formState.values.room
-            ? 'Ваша переговорка'
-            : 'Рекомендуемые переговорки'}
-        </label>
-        <OptionPicker
-          id="room"
-          size={size}
-          items={recommendedRooms}
-          {...field({
-            name: 'room',
-            validate: validation.room,
-            touchOnChange: true,
-          })}
-        />
-        {formState.errors.room && (
-          <div className={classes.inputError}>{formState.errors.room}</div>
-        )}
-      </div>,
     ];
+
+    if (isRoomSelectorAllowed(mode, formState.validity, initialValues)) {
+      fields.push(
+        <div key="room" className={classes.room}>
+          <label htmlFor="room">
+            {formState.values.room
+              ? 'Ваша переговорка'
+              : 'Рекомендуемые переговорки'}
+          </label>
+          <OptionPicker
+            id="room"
+            size={size}
+            items={recommendedRooms}
+            {...field({
+              name: 'room',
+              validate: validation.room,
+              touchOnChange: true,
+            })}
+          />
+          {formState.errors.room && (
+            <div className={classes.inputError}>{formState.errors.room}</div>
+          )}
+        </div>
+      );
+    }
+
+    return fields;
   }
 
   return (
@@ -192,7 +222,7 @@ export const FormUI = ({
           className={classes.form}
           {...form<CreatedEvent>({ name: 'form', onSubmit })}
         >
-          {renderForm()}
+          {renderFormFields()}
         </form>
         <FormActions
           mode={mode}

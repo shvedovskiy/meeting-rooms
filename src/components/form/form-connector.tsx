@@ -8,12 +8,7 @@ import { Event, CreatedEvent } from 'components/timesheet/types';
 import { Spinner } from 'components/ui/spinner/spinner';
 import { Props as ModalDef, Modal } from 'components/ui/modal/modal';
 import { PageMode, PageData } from 'context/page-context';
-import {
-  USERS_QUERY,
-  ROOMS_QUERY,
-  UsersQueryType,
-  RoomsQueryType,
-} from 'service/queries';
+import { USERS_QUERY, UsersQueryType as UsersQuery } from 'service/queries';
 import {
   CREATE_EVENT_MUTATION,
   REMOVE_EVENT_MUTATION,
@@ -21,11 +16,8 @@ import {
   UpdateEventMutationType,
   UpdateEventVariables,
 } from 'service/mutations';
-import {
-  generateCreateModal,
-  generateUpdateModal,
-  compareFormStates,
-} from './service/common';
+import { generateCreateModal, generateUpdateModal } from './service/modals';
+import { compareFormStates } from './service/compare-form-states';
 import { FormFields } from './service/validators';
 import classes from './form-connector.module.scss';
 
@@ -43,16 +35,11 @@ export const FormConnector: FC<Props> = ({
   onClose,
 }) => {
   const [modal, setModal] = useState<ModalDef | null>(null);
-  const [variables, setVariables] = useState<Partial<UpdateEventVariables>>({});
+  const [vars, setVars] = useState<Partial<UpdateEventVariables>>({});
 
-  const {
-    data: fetchData,
-    loading: fetchLoading,
-    error: fetchError,
-  } = useQuery<UsersQueryType & RoomsQueryType>(gql`
-    query UsersRooms {
+  const { data: usersData, loading, error } = useQuery<UsersQuery>(gql`
+    query {
       ${USERS_QUERY}
-      ${ROOMS_QUERY}
     }
   `);
   const [storeEvent, { loading: eventStoring }] = useMutation<
@@ -63,15 +50,15 @@ export const FormConnector: FC<Props> = ({
       : gql`
       mutation UpdateEvent(
         $id: ID!
-        ${variables.input ? '$input: UpdateEventInput' : ''}
-        ${variables.roomId ? '$roomId: ID' : ''}
-        ${variables.userIds ? '$userIds: [ID!]' : ''}
+        ${vars.input ? '$input: UpdateEventInput' : ''}
+        ${vars.roomId ? '$roomId: ID' : ''}
+        ${vars.userIds ? '$userIds: [ID!]' : ''}
       ) {
         updateEvent(
           id: $id
-          ${variables.input ? 'input: $input' : ''}
-          ${variables.roomId ? 'roomId: $roomId' : ''}
-          ${variables.userIds ? 'userIds: $userIds' : ''}) {
+          ${vars.input ? 'input: $input' : ''}
+          ${vars.roomId ? 'roomId: $roomId' : ''}
+          ${vars.userIds ? 'userIds: $userIds' : ''}) {
           id, title, date, startTime, endTime, room { id, title, floor }
         }
       }
@@ -100,22 +87,22 @@ export const FormConnector: FC<Props> = ({
   );
 
   useEffect(() => {
-    if (!fetchLoading) {
+    if (!loading) {
       onMount();
     }
-  }, [fetchLoading, onMount]);
+  }, [loading, onMount]);
 
   useEffect(() => {
-    if (Object.keys(variables).length !== 0) {
-      storeEvent({ variables });
-      setVariables({});
+    if (Object.keys(vars).length !== 0) {
+      storeEvent({ variables: vars });
+      setVars({});
     }
-  }, [storeEvent, variables]);
+  }, [storeEvent, vars]);
 
-  if (fetchLoading) {
+  if (loading) {
     return null;
   }
-  if (fetchError || !fetchData) {
+  if (error || !usersData) {
     return <Error className={classes.loadingError} />;
   }
 
@@ -151,7 +138,7 @@ export const FormConnector: FC<Props> = ({
         ...diff,
       };
     }
-    setVariables(variables);
+    setVars(variables);
   }
 
   return (
@@ -161,8 +148,7 @@ export const FormConnector: FC<Props> = ({
       <FormUI
         mode={mode}
         initialValues={initialValues}
-        users={fetchData!.users}
-        rooms={fetchData!.rooms}
+        users={usersData!.users}
         onClose={onClose}
         onRemove={() => removeEvent({ variables: { id: initialValues!.id } })}
         onSubmit={handleFormSubmit}

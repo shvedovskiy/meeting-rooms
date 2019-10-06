@@ -41,11 +41,12 @@ export type RoomCard = RoomData & {
   endTime: string;
 };
 
-export type FloorDefinition = Map<number, RoomData[]>;
+type DayTimestamp = number;
+export type FloorDefinition = Map<DayTimestamp, RoomData[]>;
 
 export type Table = Map<
-  number,
+  DayTimestamp,
   {
-    [room: string]: Event[];
+    [roomId: string]: Event[];
   }
 >;
