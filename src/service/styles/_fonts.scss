@@ -1,23 +1,26 @@
 @font-face {
-  font-family: "YS Text";
+  font-family: 'YS Text';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./fonts/text-regular.woff2") format("woff2"), url("./fonts/text-regular.woff") format("woff");
+  src: url('./fonts/text-regular.woff2') format('woff2'),
+    url('./fonts/text-regular.woff') format('woff');
 }
 
 @font-face {
-  font-family: "YS Text";
+  font-family: 'YS Text';
   font-style: normal;
   font-weight: 100;
   font-display: swap;
-  src: url("./fonts/text-light.woff2") format("woff2"), url("./fonts/text-light.woff") format("woff");
+  src: url('./fonts/text-light.woff2') format('woff2'),
+    url('./fonts/text-light.woff') format('woff');
 }
 
 @font-face {
-  font-family: "YS Text";
+  font-family: 'YS Text';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("./fonts/text-bold.woff2") format("woff2"), url("./fonts/text-bold.woff") format("woff");
+  src: url('./fonts/text-bold.woff2') format('woff2'),
+    url('./fonts/text-bold.woff') format('woff');
 }

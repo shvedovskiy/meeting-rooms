@@ -4,7 +4,7 @@
   left: var(--left-correction);
   display: block;
   height: calc(100vh - 72px - var(--height-correction));
-  content: "";
+  content: '';
   border-right: 1px solid $color;
 }
 

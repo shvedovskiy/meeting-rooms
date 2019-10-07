@@ -2,8 +2,8 @@
   --aside-desktop-width: 245px;
   display: grid;
   grid:
-    "date hours" min-content
-    "timeline timeline" auto
+    'date hours' min-content
+    'timeline timeline' auto
     / var(--aside-desktop-width) auto;
   height: 100%;
   overflow: scroll;
@@ -12,9 +12,9 @@
   &.lg {
     --aside-mobile-width: 180px;
     grid:
-      "date date" 46px
-      "hours hours" 32px
-      "timeline timeline" auto
+      'date date' 46px
+      'hours hours' 32px
+      'timeline timeline' auto
       / var(--aside-mobile-width) auto;
   }
 }

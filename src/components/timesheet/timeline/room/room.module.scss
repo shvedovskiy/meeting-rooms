@@ -1,4 +1,4 @@
-@import "../../../../service/styles/mixins";
+@import '../../../../service/styles/mixins';
 
 .room {
   display: flex;
@@ -65,7 +65,7 @@
   &::after {
     display: block;
     width: calc(100% / 32);
-    content: "";
+    content: '';
     background-color: var(--table-cell-secondary-1);
   }
 
@@ -78,7 +78,7 @@
   }
 }
 
-$states: "&:hover::before, &:focus::before, &:active::before" !default;
+$states: '&:hover::before, &:focus::before, &:active::before' !default;
 
 .slot {
   position: relative;
@@ -112,7 +112,7 @@ $states: "&:hover::before, &:focus::before, &:active::before" !default;
     font-size: 24px;
     font-weight: 600;
     color: var(--text-inverted);
-    content: "+";
+    content: '+';
     transform: translate(-50%, -50%);
   }
 

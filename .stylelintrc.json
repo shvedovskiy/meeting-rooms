@@ -255,7 +255,7 @@
     "plugin/no-unsupported-browser-features": [
       true,
       {
-        "ignore": ["word-break", "css3-cursors", "css-appearance", "text-size-adjust", "css-filters", "css-sticky", "user-select-none"]
+        "ignore": ["word-break", "css3-cursors", "css-appearance", "text-size-adjust", "css-filters", "css-sticky", "user-select-none", "wordwrap"]
       }
     ],
     "rule-empty-line-before": null,
@@ -307,11 +307,8 @@
     ],
     "selector-no-vendor-prefix": true,
     "shorthand-property-no-redundant-values": true,
-    "string-quotes": "double",
     "value-keyword-case": "lower",
-    "value-list-comma-newline-after": "never-multi-line",
     "value-list-comma-newline-before": "never-multi-line",
-    "value-list-comma-space-after": "always",
     "value-no-vendor-prefix": true
   }
 }

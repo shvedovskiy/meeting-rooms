@@ -1,5 +1,5 @@
 .timePicker {
-  --digit-width: 0.54em;
+  --digit-width: 0.54em; // maybe "ch" unit
   --colon-width: 0.217em;
   // own padding + inputs padding + digits width + dots width
   // min-width: calc(4px * 3 + var(--digit-width) * 6 + var(--colon-width) * 2);

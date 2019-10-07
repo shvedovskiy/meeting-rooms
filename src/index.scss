@@ -1,4 +1,4 @@
-@import "./service/styles/fonts";
+@import './service/styles/fonts';
 
 :root {
   --bg-primary: #fff;
@@ -40,7 +40,7 @@ html {
 
 body {
   margin: 0;
-  font-family: "YS Text", "Arial", sans-serif;
+  font-family: 'YS Text', 'Arial', sans-serif;
   font-size: var(--default-text);
   color: var(--text-primary);
   background-color: var(--bg-primary);
