@@ -1,34 +1,16 @@
-import { Event } from '../../types';
-import { splitTimeString, minutesToHours } from 'service/dates';
+import { Event, EventsMap } from '../../types';
+import { minutesToHours, RANGES_LEN } from 'service/dates';
 
 export type CommonSlot = { width: number; offset: number };
 export type Slot = Event & { width: number };
 
-const rangesLength = 60;
-
-export function prepareRanges(events: Event[] = [], firstHour: number) {
-  const eventsData = new Map();
-  const eventRanges = new Array<string>(rangesLength);
-
-  let startTimeOffset, endTimeOffset;
-  events.forEach(event => {
-    eventsData.set(event.id, event);
-    const [startHour, startMinutes] = splitTimeString(event.startTime);
-    const [endHour, endMinutes] = splitTimeString(event.endTime);
-
-    startTimeOffset = (startHour - firstHour) * 4 + startMinutes / 15;
-    endTimeOffset = (endHour - firstHour) * 4 + endMinutes / 15;
-    for (let i = startTimeOffset; i < endTimeOffset; i++) {
-      eventRanges[i] = event.id;
-    }
-  });
-
+export function prepareRanges(eventRanges: string[], eventsMap: EventsMap) {
   const slotRanges: (Slot | CommonSlot)[] = [];
   let prevEvent: boolean = null!,
     currentRange = 0,
     offset = 0;
 
-  for (let m = 0; m <= rangesLength; m++) {
+  for (let m = 0; m <= RANGES_LEN; m++) {
     const currEvent = typeof eventRanges[m] !== 'undefined';
     if (m === 0) {
       currentRange = 1;
@@ -38,7 +20,7 @@ export function prepareRanges(events: Event[] = [], firstHour: number) {
       (!prevEvent && m % 4 === 0) // the next hour reached in the free time range
     ) {
       if (prevEvent) {
-        const event: Slot = Object.assign(eventsData.get(eventRanges[m - 1]), {
+        const event: Slot = Object.assign(eventsMap.get(eventRanges[m - 1]), {
           width: currentRange,
         });
         slotRanges.push(event);

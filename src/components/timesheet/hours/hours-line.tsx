@@ -2,7 +2,7 @@ import React, { memo, useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { isSameDay, isBefore, getHours, getMinutes } from 'date-fns/esm';
 
-import { HOURS, dateToTimeString } from 'service/dates';
+import { HOURS, dateToTimeString, RANGES_LEN } from 'service/dates';
 import classes from './hours-line.module.scss';
 import { useCurrentTime } from './use-current-time';
 
@@ -10,7 +10,7 @@ type Props = {
   displayedDate: Date;
 };
 
-const TIME_PERCENTAGE_COEF = 100 / (30 + 15 * 60 + 30); // timesheet length in minutes
+const TIME_PERCENTAGE_COEF = 100 / (30 + 15 * RANGES_LEN + 30); // timesheet length in minutes
 
 export const HoursLine = memo(({ displayedDate }: Props) => {
   const now = useCurrentTime(displayedDate);

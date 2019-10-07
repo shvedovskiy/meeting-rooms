@@ -14,7 +14,8 @@ import scrollContext from 'context/scroll-context';
 import {
   EVENTS_QUERY,
   TABLE_QUERY,
-  EventsQueryType as QueryType,
+  EventsQueryType,
+  EVENTS_MAP_QUERY,
 } from 'service/queries';
 import { calculateTable } from './common';
 import classes from './timesheet.module.scss';
@@ -25,18 +26,21 @@ export const Timesheet = () => {
   const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);
   const size = useContext(sizeContext) || 'default';
 
-  const { data: eventsData, client } = useQuery<QueryType>(gql`
+  const { data: eventsData, client } = useQuery<EventsQueryType>(gql`
     query Events {
       ${EVENTS_QUERY}
     }
   `);
 
   useEffect(() => {
+    const [table, eventsMap] = calculateTable(eventsData!.events);
     client.cache.writeQuery({
       query: TABLE_QUERY,
-      data: {
-        table: calculateTable(eventsData!.events),
-      },
+      data: { table },
+    });
+    client.cache.writeQuery({
+      query: EVENTS_MAP_QUERY,
+      data: { eventsMap },
     });
   }, [client.cache, eventsData]);
 

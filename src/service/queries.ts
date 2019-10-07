@@ -1,10 +1,10 @@
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 
 import {
   UserData,
   RoomData,
-  ServerEvent,
   Event,
+  EventsMap,
 } from 'components/timesheet/types';
 
 export const USERS_QUERY = `
@@ -56,7 +56,7 @@ export const EVENTS_QUERY = `
   }
 `;
 export interface EventsQueryType {
-  events: ServerEvent[];
+  events: Event[];
 }
 
 export const TABLE_QUERY = gql`
@@ -65,11 +65,23 @@ export const TABLE_QUERY = gql`
   }
 `;
 
+export const EVENTS_MAP_QUERY = gql`
+  {
+    eventsMap @client(always: true)
+  }
+`;
+
 export const ROOM_EVENTS_QUERY = gql`
   query RoomEvents($timestamp: Number!, $id: String!) {
-    roomEvents(timestamp: $timestamp, id: $id) @client(always: true)
+    roomEvents(timestamp: $timestamp, id: $id) @client(always: true) {
+      ranges
+      events
+    }
   }
 `;
 export interface RoomEventsQueryType {
-  roomEvents: Event[];
+  roomEvents: {
+    ranges: string[];
+    events: EventsMap;
+  };
 }

@@ -28,13 +28,16 @@ type Props = {
 export const Room = ({ room, size = 'default', date }: Props) => {
   const scrolled = useContext(scrollContext);
   const openPage = useContext(pageContext);
-  const { data: eventsData = { roomEvents: [] } } = useQuery<
-    RoomEventsQueryType
-  >(ROOM_EVENTS_QUERY, {
+  const { data } = useQuery<RoomEventsQueryType>(ROOM_EVENTS_QUERY, {
     variables: { timestamp: date.getTime(), id: room.id },
   });
-  const ranges = useMemo(() => prepareRanges(eventsData.roomEvents, HOURS[0]), [
-    eventsData,
+
+  const { ranges: roomRanges, events: roomEvents } = (
+    data || { roomEvents: { ranges: [], events: new Map() } }
+  ).roomEvents;
+  const ranges = useMemo(() => prepareRanges(roomRanges, roomEvents), [
+    roomEvents,
+    roomRanges,
   ]);
 
   function openAddPage([startTime, endTime]: string[]) {
