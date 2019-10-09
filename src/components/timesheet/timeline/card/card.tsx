@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { format } from 'date-fns/esm';
 import ruLocale from 'date-fns/locale/ru';
@@ -6,7 +6,7 @@ import ruLocale from 'date-fns/locale/ru';
 import classes from './card.module.scss';
 import { Event } from '../../types';
 import { IconButton } from 'components/ui/icon-button/icon-button';
-import sizeContext from 'context/size-context';
+import { useSizeCtx } from 'context/size-context';
 import { CardParticipants } from './participants';
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 };
 
 export const Card = ({ data, room, onAction }: Props) => {
-  const size = useContext(sizeContext) || 'default';
+  const size = useSizeCtx() || 'default';
 
   function handleClick() {
     if (onAction) {

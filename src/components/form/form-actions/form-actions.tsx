@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 
 import { Button } from 'components/ui/button/button';
 import { Modal } from 'components/ui/modal/modal';
@@ -6,7 +6,7 @@ import { StateValidity } from 'components/utils/use-form';
 import { FormFields } from '../service/validators';
 import { compareFormStates } from '../service/compare-form-states';
 import { PageMode, PageData } from 'context/page-context';
-import sizeContext from 'context/size-context';
+import { useSizeCtx } from 'context/size-context';
 import classes from './form-actions.module.scss';
 
 type Props = {
@@ -60,7 +60,7 @@ export const FormActions = ({
 }: Props) => {
   const [modalOpen, setModalOpen] = useState(false);
 
-  const size = useContext(sizeContext);
+  const size = useSizeCtx();
   const props = {
     size,
     className: classes.action,

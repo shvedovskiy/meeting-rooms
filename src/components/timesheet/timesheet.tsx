@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { useThrottleCallback } from '@react-hook/throttle';
 import useEventListener from '@use-it/event-listener';
@@ -9,8 +9,8 @@ import { HoursLine } from './hours/hours-line';
 import { DateSwitch } from './date-switch/date-switch';
 import { Timeline } from './timeline/timeline';
 import { useDay } from 'components/utils/use-day';
-import sizeContext from 'context/size-context';
-import scrollContext from 'context/scroll-context';
+import { useSizeCtx } from 'context/size-context';
+import ScrollProvider from 'context/scroll-context';
 import {
   EVENTS_QUERY,
   TABLE_QUERY,
@@ -24,7 +24,7 @@ export const Timesheet = () => {
   const [dateShown, setDateShown] = useDay();
   const [scrolled, setScrolled] = useState(false);
   const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);
-  const size = useContext(sizeContext) || 'default';
+  const size = useSizeCtx() || 'default';
 
   const { data: eventsData, client } = useQuery<EventsQueryType>(gql`
     query Events {
@@ -35,11 +35,19 @@ export const Timesheet = () => {
   useEffect(() => {
     const [table, eventsMap] = calculateTable(eventsData!.events);
     client.cache.writeQuery({
-      query: TABLE_QUERY,
+      query: gql`
+        {
+          ${TABLE_QUERY}
+        }
+      `,
       data: { table },
     });
     client.cache.writeQuery({
-      query: EVENTS_MAP_QUERY,
+      query: gql`
+        {
+          ${EVENTS_MAP_QUERY}
+        }
+      `,
       data: { eventsMap },
     });
   }, [client.cache, eventsData]);
@@ -71,9 +79,9 @@ export const Timesheet = () => {
         <HoursLine displayedDate={dateShown} />
       </div>
       <div className={classes.timelineContainer}>
-        <scrollContext.Provider value={scrolled}>
+        <ScrollProvider value={scrolled}>
           <Timeline date={dateShown} />
-        </scrollContext.Provider>
+        </ScrollProvider>
         <div className={classes.asidePlaceholder}></div>
         <div className={classes.timesheetPlaceholder}></div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import cn from 'classnames';
 
 import { FormActions } from '../form-actions/form-actions';
@@ -9,7 +9,7 @@ import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
 import { UserData, CreatedEvent } from 'components/timesheet/types';
 import { useForm, StateValidity } from 'components/utils/use-form';
-import sizeContext from 'context/size-context';
+import { useSizeCtx } from 'context/size-context';
 import { PageMode, PageData } from 'context/page-context';
 import { useRecommendation } from '../service/use-recommendation';
 import { validation, FormFields } from '../service/validators';
@@ -17,11 +17,14 @@ import classes from './form-ui.module.scss';
 
 type Props = {
   mode: NonNullable<PageMode>;
-  initialValues?: PageData;
   users: UserData[];
   onClose: () => void;
   onRemove: () => void;
   onSubmit: (values: CreatedEvent) => void;
+} & typeof defaultProps;
+
+const defaultProps = {
+  initialValues: {},
 };
 
 const defaultFormValues = {
@@ -61,15 +64,10 @@ function isRoomSelectorAllowed(
   );
 }
 
-export const FormUI = ({
-  mode,
-  initialValues = {},
-  users,
-  onClose,
-  onRemove,
-  onSubmit,
-}: Props) => {
-  const size = useContext(sizeContext);
+export const FormUI = (props: Props) => {
+  const { mode, initialValues, users, onClose, onRemove, onSubmit } = props;
+
+  const size = useSizeCtx();
   const [eventRoom, recommendedRooms] = useRecommendation(initialValues);
   const [formState, { field, form }] = useForm<FormFields>({
     ...defaultFormValues,
@@ -236,3 +234,5 @@ export const FormUI = ({
     </>
   );
 };
+
+FormUI.defaultProps = defaultProps;

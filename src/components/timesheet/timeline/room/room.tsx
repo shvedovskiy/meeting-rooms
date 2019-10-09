@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import cn from 'classnames';
 
@@ -13,8 +13,8 @@ import { Tooltip } from 'components/ui/tooltip/tooltip';
 import { Card } from '../card/card';
 import { RoomData, Event } from '../../types';
 import { Size } from 'context/size-context';
-import scrollContext from 'context/scroll-context';
-import pageContext from 'context/page-context';
+import { useScrollCtx } from 'context/scroll-context';
+import { usePageCtx } from 'context/page-context';
 import { HOURS } from 'service/dates';
 import { ROOM_EVENTS_QUERY, RoomEventsQueryType } from 'service/queries';
 import classes from './room.module.scss';
@@ -26,8 +26,8 @@ type Props = {
 };
 
 export const Room = ({ room, size = 'default', date }: Props) => {
-  const scrolled = useContext(scrollContext);
-  const openPage = useContext(pageContext);
+  const scrolled = useScrollCtx();
+  const openPage = usePageCtx();
   const { data } = useQuery<RoomEventsQueryType>(ROOM_EVENTS_QUERY, {
     variables: { timestamp: date.getTime(), id: room.id },
   });

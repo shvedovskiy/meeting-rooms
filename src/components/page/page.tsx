@@ -1,11 +1,11 @@
-import React, { lazy, Suspense, useState, useContext } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import cn from 'classnames';
 
 import { Spinner } from 'components/ui/spinner/spinner';
 import { IconButton } from 'components/ui/icon-button/icon-button';
-import pageContext, { PageMode, PageData } from 'context/page-context';
-import sizeContext from 'context/size-context';
+import { usePageCtx, PageMode, PageData } from 'context/page-context';
+import { useSizeCtx } from 'context/size-context';
 import classes from './page.module.scss';
 import spinnerTransitionClasses from 'components/ui/spinner/spinner-transition.module.scss';
 
@@ -18,8 +18,8 @@ type Props = {
 
 export const Page = ({ mode, pageData: formData }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
-  const setPage = useContext(pageContext);
-  const size = useContext(sizeContext);
+  const setPage = usePageCtx();
+  const size = useSizeCtx();
 
   function onPageClosed() {
     setPage(null); // TODO use bind

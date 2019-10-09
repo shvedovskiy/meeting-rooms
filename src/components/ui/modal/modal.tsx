@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import AriaModal from 'react-aria-modal';
 import { CSSTransition } from 'react-transition-group';
 import Emoji from 'a11y-react-emoji';
@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import classes from './modal.module.scss';
 import transitionClasses from './modal-transition.module.scss';
 import { Button, ButtonType } from '../button/button';
-import SizeContext from 'context/size-context';
+import { useSizeCtx } from 'context/size-context';
 
 export type ModalButtonType = ButtonType & { id: string; text: string };
 
@@ -31,7 +31,7 @@ export const Modal = ({
   enterAnimation = true,
 }: Props) => {
   const [showModal, setShowModal] = useState(false);
-  const size = useContext(SizeContext) || 'default';
+  const size = useSizeCtx() || 'default';
 
   useEffect(() => {
     setShowModal(true);

@@ -10,8 +10,8 @@ import { Button } from 'components/ui/button/button';
 import { Page } from 'components/page/page';
 import { Error } from 'components/error/error';
 import { Timesheet } from 'components/timesheet/timesheet';
-import SizeContext from 'context/size-context';
-import PageContext, { PageMode, PageData, PageFn } from 'context/page-context';
+import SizeProvider from 'context/size-context';
+import PageProvider, { PageMode, PageData, PageFn } from 'context/page-context';
 import {
   ROOMS_QUERY,
   EVENTS_QUERY,
@@ -98,8 +98,8 @@ export const App = ({ onLoad }: Props) => {
   }
 
   return (
-    <SizeContext.Provider value={size}>
-      <PageContext.Provider value={openPage}>
+    <SizeProvider value={size}>
+      <PageProvider value={openPage}>
         <div
           className={cn(classes.app, {
             [classes.sm]: size === 'large',
@@ -108,7 +108,7 @@ export const App = ({ onLoad }: Props) => {
           {renderHeader()}
           <main className={classes.content}>{renderContent()}</main>
         </div>
-      </PageContext.Provider>
-    </SizeContext.Provider>
+      </PageProvider>
+    </SizeProvider>
   );
 };
