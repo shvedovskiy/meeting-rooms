@@ -1,23 +1,18 @@
 import { Table, Event, EventsMap } from './types';
-import { HOURS, splitTimeString, RANGES_LEN } from 'service/dates';
-
-const firstHour = HOURS[0];
+import { RANGES_LEN, timeToRange } from 'service/dates';
 
 export function calculateTable(events: Event[]) {
   const table: Table = new Map();
   const eventsMap: EventsMap = new Map();
 
-  let startTimeOffset, endTimeOffset;
+  let startOffset, endOffset;
   for (const event of events) {
     eventsMap.set(event.id, event);
 
     // Generate 15 minute event intervals:
-    const [startHour, startMinutes] = splitTimeString(event.startTime);
-    const [endHour, endMinutes] = splitTimeString(event.endTime);
-    startTimeOffset = (startHour - firstHour) * 4 + startMinutes / 15;
-    endTimeOffset = (endHour - firstHour) * 4 + endMinutes / 15;
+    [startOffset, endOffset] = timeToRange(event.startTime, event.endTime);
     const intervals: number[] = [];
-    for (let i = startTimeOffset; i < endTimeOffset; i++) {
+    for (let i = startOffset; i < endOffset; i++) {
       intervals.push(i);
     }
 

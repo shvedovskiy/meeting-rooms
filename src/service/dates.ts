@@ -35,6 +35,14 @@ export function splitTimeString(time: string) {
   return time.split(':').map(part => Number.parseInt(part, 10));
 }
 
+export function timeToRange(startTime: string, endTime: string) {
+  const [startHours, startMinutes] = splitTimeString(startTime);
+  const [endHours, endMinutes] = splitTimeString(endTime);
+  const startTimeOffset = (startHours - HOURS[0]) * 4 + startMinutes / 15;
+  const endTimeOffset = (endHours - HOURS[0]) * 4 + endMinutes / 15;
+  return [startTimeOffset, endTimeOffset];
+}
+
 export function minutesToHours(value: number) {
   const hours = Math.floor(value / 60);
   const minutes = Math.round(value % 60);
