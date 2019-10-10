@@ -3,10 +3,6 @@
   flex-direction: column;
   justify-content: space-between;
   overflow-y: auto;
-
-  &.lg {
-    justify-content: flex-start;
-  }
 }
 .form {
   display: grid;
