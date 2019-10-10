@@ -6,7 +6,7 @@ const ScrollContext = createContext<Scrolled>(false);
 
 export function useScrollCtx() {
   const context = useContext(ScrollContext);
-  if (!context) {
+  if (typeof context === 'undefined') {
     throw new Error('useScrollCtx must be inside a Provider with a value');
   }
   return context;

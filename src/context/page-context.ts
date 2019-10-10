@@ -11,7 +11,7 @@ const PageContext = createContext<PageFn>(() => {});
 
 export function usePageCtx() {
   const context = useContext(PageContext);
-  if (!context) {
+  if (typeof context === 'undefined') {
     throw new Error('usePageCtx must be inside a Provider with a value');
   }
   return context;
