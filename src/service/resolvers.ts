@@ -1,4 +1,5 @@
 import { Resolvers } from 'apollo-client';
+import gql from 'graphql-tag';
 
 import { TABLE_QUERY, EVENTS_MAP_QUERY } from './queries';
 import { EventsMap } from 'components/timesheet/types';
@@ -7,10 +8,18 @@ export const resolvers: Resolvers = {
   Query: {
     roomEvents(_root, { timestamp, id }, { cache }) {
       const { table } = cache.readQuery({
-        query: TABLE_QUERY,
+        query: gql`
+          {
+            ${TABLE_QUERY}
+          }
+        `,
       });
       const { eventsMap } = cache.readQuery({
-        query: EVENTS_MAP_QUERY,
+        query: gql`
+          {
+            ${EVENTS_MAP_QUERY}
+          }
+        `,
       });
 
       let roomEventsRanges: string[] = [];

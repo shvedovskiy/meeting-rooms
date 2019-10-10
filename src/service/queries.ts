@@ -5,6 +5,7 @@ import {
   RoomData,
   Event,
   EventsMap,
+  Table,
 } from 'components/timesheet/types';
 
 export const USERS_QUERY = `
@@ -59,17 +60,21 @@ export interface EventsQueryType {
   events: Event[];
 }
 
-export const TABLE_QUERY = gql`
-  {
-    table @client(always: true)
-  }
+export const TABLE_QUERY = `
+  table @client(always: true)
 `;
 
-export const EVENTS_MAP_QUERY = gql`
-  {
-    eventsMap @client(always: true)
-  }
+export interface TableQueryType {
+  table: Table;
+}
+
+export const EVENTS_MAP_QUERY = `
+  eventsMap @client(always: true)
 `;
+
+export interface EventsMapQueryType {
+  eventsMap: EventsMap;
+}
 
 export const ROOM_EVENTS_QUERY = gql`
   query RoomEvents($timestamp: Number!, $id: String!) {
