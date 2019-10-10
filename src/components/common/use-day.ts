@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { startOfDay } from 'date-fns/esm';
 
-export function useDay(): [Date, (date: Date) => void] {
+export function useDay() {
   const [value, setValue] = useState(startOfDay(new Date()));
 
   const setStartDayValue = useCallback(
@@ -11,5 +11,5 @@ export function useDay(): [Date, (date: Date) => void] {
     [setValue]
   );
 
-  return [value, setStartDayValue];
+  return [value, setStartDayValue] as const;
 }

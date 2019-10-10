@@ -8,7 +8,7 @@ import {
   Slot,
   CommonSlot,
   offsetToTime,
-} from './common';
+} from './room-utils';
 import { Tooltip } from 'components/ui/tooltip/tooltip';
 import { Card } from '../card/card';
 import { RoomData, Event } from '../../types';

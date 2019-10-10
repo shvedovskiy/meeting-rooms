@@ -16,9 +16,9 @@ import {
   UpdateEventMutationType,
   UpdateEventVariables,
 } from 'service/mutations';
-import { generateCreateModal, generateUpdateModal } from './service/modals';
-import { compareFormStates } from './service/compare-form-states';
-import { FormFields } from './service/validators';
+import { generateCreateModal, generateUpdateModal } from './form-common/modals';
+import { compareFormStates } from './form-common/compare-form-states';
+import { FormFields } from './form-common/validators';
 import classes from './form-connector.module.scss';
 
 type Props = {

@@ -8,7 +8,7 @@ import gql from 'graphql-tag';
 import { HoursLine } from './hours/hours-line';
 import { DateSwitch } from './date-switch/date-switch';
 import { Timeline } from './timeline/timeline';
-import { useDay } from 'components/utils/use-day';
+import { useDay } from 'components/common/use-day';
 import { useSizeCtx } from 'context/size-context';
 import ScrollProvider from 'context/scroll-context';
 import {
@@ -17,7 +17,7 @@ import {
   EventsQueryType,
   EVENTS_MAP_QUERY,
 } from 'service/queries';
-import { calculateTable } from './common';
+import { calculateTable } from './utils';
 import classes from './timesheet.module.scss';
 
 export const Timesheet = () => {

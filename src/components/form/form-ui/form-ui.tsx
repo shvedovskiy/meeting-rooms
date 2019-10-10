@@ -8,11 +8,11 @@ import { TimePicker } from 'components/ui/timepicker/time-picker';
 import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
 import { UserData, CreatedEvent } from 'components/timesheet/types';
-import { useForm, StateValidity } from 'components/utils/use-form';
+import { useForm, StateValidity } from 'components/common/use-form';
 import { useSizeCtx } from 'context/size-context';
 import { PageMode, PageData } from 'context/page-context';
-import { useRecommendation } from '../service/use-recommendation';
-import { validation, FormFields } from '../service/validators';
+import { useRecommendation } from '../form-common/use-recommendation';
+import { validation, FormFields } from '../form-common/validators';
 import classes from './form-ui.module.scss';
 
 type Props = {

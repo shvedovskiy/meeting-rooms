@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import isSameDay from 'date-fns/isSameDay';
 
-import { useInterval } from 'components/utils/use-interval';
+import { useInterval } from 'components/common/use-interval';
 
 const ONE_MINUTE = 60 * 1000; // ms
 
