@@ -41,18 +41,28 @@ export const Room = ({ room, size = 'default', date }: Props) => {
   ]);
 
   function openAddPage([startTime, endTime]: string[]) {
-    const newEventData: Partial<Event> = {
+    openPage('add', {
       date,
       startTime,
       endTime,
-      room,
-    };
-    openPage('add', newEventData);
+      room: {
+        ...room,
+        startTime,
+        endTime,
+      },
+    });
   }
 
   const openEditEventPage = useCallback(
     (eventData: Event) => {
-      openPage('edit', eventData);
+      openPage('edit', {
+        ...eventData,
+        room: {
+          ...eventData.room,
+          startTime: eventData.startTime,
+          endTime: eventData.endTime,
+        },
+      });
     },
     [openPage]
   );

@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 
 import { FormUI } from './form-ui/form-ui';
 import { Error } from 'components/error/error';
-import { Event, CreatedEvent } from 'components/timesheet/types';
+import { CreatedEvent, FormEvent } from 'components/timesheet/types';
 import { Spinner } from 'components/ui/spinner/spinner';
 import { Props as ModalDef, Modal } from 'components/ui/modal/modal';
 import { PageMode, PageData } from 'context/page-context';
@@ -126,11 +126,11 @@ export const FormConnector: FC<Props> = ({
       return;
     }
 
-    const { id } = initialValues as Event;
+    const { id } = initialValues as FormEvent;
     let variables: UpdateEventVariables = { id };
     const diff = compareFormStates(
       formValues as FormFields,
-      initialValues as Event
+      initialValues as FormEvent
     );
     if (['input', 'roomId', 'userIds'].some(i => diff.hasOwnProperty(i))) {
       variables = {

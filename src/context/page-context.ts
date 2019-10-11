@@ -1,9 +1,9 @@
 import { createContext, useContext } from 'react';
 
-import { Event } from 'components/timesheet/types';
+import { FormEvent } from 'components/timesheet/types';
 
 export type PageMode = 'add' | 'edit' | null;
-export type PageData = Event | Partial<Event>;
+export type PageData = Partial<FormEvent>;
 
 export type PageFn = (mode: PageMode, data?: PageData) => void;
 

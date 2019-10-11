@@ -29,6 +29,10 @@ export interface ServerEvent extends Omit<Event, 'date'> {
 
 export type CreatedEvent = Omit<Event, 'id'>;
 
+export interface FormEvent extends Omit<Event, 'room'> {
+  room: RoomCard;
+}
+
 export interface EventInput {
   title: string;
   date: Date;
