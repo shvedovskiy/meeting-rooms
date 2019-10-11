@@ -25,6 +25,7 @@ export const Option = (props: Props) => {
   const className = classNames(classes.option, {
     [classes.selected]: selected,
     [classes.lg]: size === 'large',
+    [classes.inactive]: !item,
   });
 
   if (!item) {

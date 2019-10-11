@@ -13,12 +13,12 @@
   border-radius: 4px;
   transition: background-color 0.2s ease-out;
 
-  &:hover,
-  &:focus {
+  &:not(.inactive):hover,
+  &:not(.inactive):focus {
     background-color: var(--secondary-2);
   }
 
-  &:active {
+  &:not(.inactive):active {
     background-color: var(--secondary-3);
 
     @media (hover: none) and (pointer: coarse) {
