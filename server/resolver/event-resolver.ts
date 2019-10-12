@@ -1,6 +1,7 @@
 import { Resolver, Query, Args, Mutation, Arg } from 'type-graphql';
-import { Repository } from 'typeorm';
+import { Repository, MoreThan } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
+import { startOfDay, subDays } from 'date-fns';
 
 import { User } from '../entity/user';
 import { Room } from '../entity/room';
@@ -24,6 +25,14 @@ export class EventResolver {
 
   @Query(returns => [Event])
   events(): Promise<Event[]> {
+    const today = subDays(startOfDay(Date.now()), 1).toISOString();
+    return this.eventRepository.find({
+      date: MoreThan(today),
+    });
+  }
+
+  @Query(returns => [Event])
+  allEvents(): Promise<Event[]> {
     return this.eventRepository.find();
   }
 

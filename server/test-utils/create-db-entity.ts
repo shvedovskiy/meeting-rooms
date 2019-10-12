@@ -51,12 +51,17 @@ export async function createRoom(quantity = 1): Promise<Room | Room[]> {
   }
 }
 
-export async function createEvent(roomId: string, users: User[] = []) {
+export async function createEvent(
+  roomId: string,
+  users: User[] = [],
+  eventData?: Partial<Event>
+) {
   const event = Event.create({
     title: faker.random.word(),
     date: startOfDay(faker.date.future()),
     startTime: '14:00',
     endTime: '16:15',
+    ...eventData,
   });
 
   event.roomId = roomId;

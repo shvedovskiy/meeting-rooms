@@ -301,45 +301,45 @@ describe('Event Mutation', () => {
       });
     });
 
-    it('does not create an event with duplicate title', async () => {
-      const commonTitle = faker.random.word();
-      const firstEventData = {
-        title: commonTitle,
-        date: startOfDay(faker.date.future()),
-        startTime: '08:00',
-        endTime: '09:15',
-      };
-      const secondEventData = {
-        title: commonTitle,
-        date: startOfDay(faker.date.future()),
-        startTime: '16:50',
-        endTime: '19:00',
-      };
+    // it('does not create an event with duplicate title', async () => {
+    //   const commonTitle = faker.random.word();
+    //   const firstEventData = {
+    //     title: commonTitle,
+    //     date: startOfDay(faker.date.future()),
+    //     startTime: '08:00',
+    //     endTime: '09:15',
+    //   };
+    //   const secondEventData = {
+    //     title: commonTitle,
+    //     date: startOfDay(faker.date.future()),
+    //     startTime: '16:50',
+    //     endTime: '19:00',
+    //   };
 
-      await graphQLCall({
-        source: createEventQuery,
-        variableValues: {
-          input: firstEventData,
-          roomId: dbRoom.id,
-          userIds: dbUsers.map(user => user.id),
-        },
-      });
-      const response = await graphQLCall({
-        source: createEventQuery,
-        variableValues: {
-          input: secondEventData,
-          roomId: dbRoom.id,
-          userIds: dbUsers.map(user => user.id),
-        },
-      });
-      const dbEvents = await Event.find();
+    //   await graphQLCall({
+    //     source: createEventQuery,
+    //     variableValues: {
+    //       input: firstEventData,
+    //       roomId: dbRoom.id,
+    //       userIds: dbUsers.map(user => user.id),
+    //     },
+    //   });
+    //   const response = await graphQLCall({
+    //     source: createEventQuery,
+    //     variableValues: {
+    //       input: secondEventData,
+    //       roomId: dbRoom.id,
+    //       userIds: dbUsers.map(user => user.id),
+    //     },
+    //   });
+    //   const dbEvents = await Event.find();
 
-      expect(dbEvents).toHaveLength(1);
-      expect(dbEvents[0].title).toBe(firstEventData.title);
-      expect(response.data).toEqual(null);
-      expect(response.errors).toBeDefined();
-      expect(response.errors).not.toHaveLength(0);
-    });
+    //   expect(dbEvents).toHaveLength(1);
+    //   expect(dbEvents[0].title).toBe(firstEventData.title);
+    //   expect(response.data).toEqual(null);
+    //   expect(response.errors).toBeDefined();
+    //   expect(response.errors).not.toHaveLength(0);
+    // });
   });
 
   describe('updateEvent()::$input', () => {

@@ -24,7 +24,6 @@ export class Event extends BaseEntity {
   @Field()
   @Column('varchar', {
     length: 255,
-    unique: true,
   })
   title: string;
 

@@ -1,4 +1,6 @@
 import { Connection } from 'typeorm';
+import { startOfDay } from 'date-fns';
+import faker from 'faker';
 
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
@@ -103,6 +105,35 @@ describe('Event Query', () => {
       expect(response!.data!.events[1].users).toIncludeSameMembers(
         dbUsers.slice(3, 6)
       );
+    });
+
+    it('does dot return past events', async () => {
+      const eventsIdsQuery = `
+        query Events {
+          events {
+            id
+          }
+        }
+      `;
+      const dbRooms = await createRoom(2);
+      const dbUsers = await createUser(6);
+      const futureEvent = await createEvent(dbRooms[0].id, [
+        dbUsers[0],
+        dbUsers[1],
+        dbUsers[2],
+      ]);
+      await createEvent(dbRooms[1].id, [dbUsers[3], dbUsers[4], dbUsers[5]], {
+        date: startOfDay(faker.date.past()),
+      });
+
+      const response = await graphQLCall({
+        source: eventsIdsQuery,
+      });
+      expect(response).toMatchObject({
+        data: {
+          events: [{ id: futureEvent.id }],
+        },
+      });
     });
 
     it('returns empty list if there are no events', async () => {
