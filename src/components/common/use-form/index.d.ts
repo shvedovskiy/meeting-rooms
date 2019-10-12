@@ -1,8 +1,15 @@
+import { FocusEventHandler } from 'react';
+
 type StateShape<T> = { [key in keyof T]: any };
 
 interface UseForm {
   <T extends StateShape<T>, E = StateErrors<T, string>>(
-    initialState?: Partial<T> | null
+    initialState?: Partial<T> | null,
+    formOptions?: {
+      onChange?: (newValues: Partial<T>, state: StateValues<T>) => Partial<T>;
+      onBlur?: FocusEventHandler<HTMLElement>;
+      onTouched?: FocusEventHandler<HTMLElement>;
+    }
   ): [FormState<T, E>, Inputs<T>];
 }
 

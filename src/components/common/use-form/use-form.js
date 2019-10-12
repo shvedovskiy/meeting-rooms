@@ -6,10 +6,11 @@ const ON_BLUR_HANDLER = 1;
 const ON_SUBMIT_HANDLER = 2;
 
 const defaultFormOptions = {
-  onChange() {},
+  onChange(v) {
+    return v;
+  },
   onBlur() {},
   onTouched() {},
-  onClear() {},
 };
 
 const defaultInputOptions = {
@@ -128,10 +129,13 @@ export function useForm(initialState, options) {
           touch(e);
         }
 
-        const partialNewState = { [name]: value };
+        let partialNewState = { [name]: value };
         const newValues = { ...formState.current.values, ...partialNewState };
 
-        formOptions.onChange(e, formState.current.values, newValues);
+        partialNewState = formOptions.onChange(
+          partialNewState,
+          formState.current.values
+        );
 
         if (!inputOptions.validateOnBlur) {
           makeValidation(value, newValues);
