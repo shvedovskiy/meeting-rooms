@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Option } from './option/option';
 import { Size } from 'context/size-context';
@@ -16,6 +16,12 @@ type Props = {
 export const OptionPicker = (props: Props) => {
   const { id, items = [], size = 'default', value = null, onChange } = props;
   const [selected, setSelected] = useState<RoomCard | null>(value);
+
+  useEffect(() => {
+    if (!value) {
+      setSelected(null);
+    }
+  }, [value]);
 
   function handleSelect(item: RoomCard | null) {
     setSelected(item);
