@@ -16,7 +16,6 @@ export const USERS_QUERY = `
     avatarUrl
   }
 `;
-
 export interface UsersQueryType {
   users: UserData[];
 }
@@ -63,7 +62,6 @@ export interface EventsQueryType {
 export const TABLE_QUERY = `
   table @client(always: true)
 `;
-
 export interface TableQueryType {
   table: Table;
 }
@@ -71,7 +69,6 @@ export interface TableQueryType {
 export const EVENTS_MAP_QUERY = `
   eventsMap @client(always: true)
 `;
-
 export interface EventsMapQueryType {
   eventsMap: EventsMap;
 }

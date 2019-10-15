@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import cn from 'classnames';
 
 import { FormActions } from '../form-actions/form-actions';
@@ -8,11 +8,17 @@ import { TimePicker } from 'components/ui/timepicker/time-picker';
 import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
 import { UserData, CreatedEvent } from 'components/timesheet/types';
-import { useForm, StateValidity } from 'components/common/use-form';
+import { useForm } from 'components/common/use-form';
 import { useSizeCtx } from 'context/size-context';
 import { PageMode, PageData } from 'context/page-context';
-import { useRecommendation } from '../form-common/use-recommendation';
+import { useRecommendation } from './use-recommendation';
 import { validation, FormFields } from '../form-common/validators';
+import {
+  defaultFormValues,
+  recommendationNeeded,
+  roomsDisplayed,
+  handleFormChange,
+} from './utils';
 import classes from './form-ui.module.scss';
 
 type Props = {
@@ -21,59 +27,31 @@ type Props = {
   onClose: () => void;
   onRemove: () => void;
   onSubmit: (values: CreatedEvent) => void;
-} & typeof defaultProps;
-
-const defaultProps = {
-  initialValues: {},
+  initialValues?: PageData;
 };
 
-const defaultFormValues = {
-  title: '',
-  startTime: '',
-  endTime: '',
-  date: null,
-  users: null,
-  room: null,
-};
-
-function isRoomSelectorAllowed(
-  mode: NonNullable<PageMode>,
-  validity: StateValidity<FormFields>,
-  initialValues: PageData
-) {
-  const { date, startTime, endTime, time } = validity;
-  const {
-    date: initDate,
-    startTime: initStartTime,
-    endTime: initEndTime,
-  } = initialValues;
-  const selectorAllowedForAdd =
-    mode === 'add' &&
-    [date, startTime, endTime].every(Boolean) &&
-    time !== false;
-  const selectorAllowedForPartialAdd =
-    mode === 'add' &&
-    [initDate, initStartTime, initEndTime].every(Boolean) &&
-    [date, startTime, endTime, time].every(v => v !== false);
-  const selectorAllowedForEdit =
-    mode === 'edit' && ![date, startTime, endTime, time].some(v => v === false);
-  return (
-    selectorAllowedForAdd ||
-    selectorAllowedForPartialAdd ||
-    selectorAllowedForEdit
-  );
-}
-
-export const FormUI = (props: Props) => {
-  const { mode, initialValues, users, onClose, onRemove, onSubmit } = props;
-
+export const FormUI = ({
+  mode,
+  initialValues = {},
+  users,
+  onClose,
+  onRemove,
+  onSubmit,
+}: Props) => {
   const size = useSizeCtx();
-  const [eventRoom, recommendedRooms] = useRecommendation(initialValues);
-  const [formState, { field, form }] = useForm<FormFields>({
-    ...defaultFormValues,
-    ...initialValues,
-    room: eventRoom,
-  });
+  const movedRooms = useRef<string[]>([]);
+  const [{ values, validity, errors }, { field, form }] = useForm<FormFields>(
+    {
+      ...defaultFormValues,
+      ...initialValues,
+    },
+    { onChange: handleFormChange }
+  );
+  const recommendedRooms = useRecommendation(
+    values,
+    recommendationNeeded(validity, values.room, initialValues),
+    movedRooms
+  );
 
   function renderFormFields() {
     const fields = [
@@ -87,10 +65,10 @@ export const FormUI = (props: Props) => {
             name: 'title',
             validate: validation.title,
           })}
-          error={formState.validity.title === false}
+          error={validity.title === false}
         />
-        {formState.errors.title && (
-          <div className={classes.inputError}>{formState.errors.title}</div>
+        {errors.title && (
+          <div className={classes.inputError}>{errors.title}</div>
         )}
       </div>,
       <div key="datetime" className={classes.dateTime}>
@@ -106,10 +84,10 @@ export const FormUI = (props: Props) => {
               validate: validation.date,
               touchOnChange: true,
             })}
-            error={formState.validity.date === false}
+            error={validity.date === false}
           />
-          {formState.errors.date && (
-            <div className={classes.inputError}>{formState.errors.date}</div>
+          {errors.date && (
+            <div className={classes.inputError}>{errors.date}</div>
           )}
         </div>
         <div className={classes.timeContainer}>
@@ -122,15 +100,10 @@ export const FormUI = (props: Props) => {
                 validate: validation.startTime,
                 touchOnChange: true,
               })}
-              error={
-                formState.validity.startTime === false ||
-                formState.validity.time === false
-              }
+              error={validity.startTime === false || validity.time === false}
             />
-            {formState.errors.startTime && (
-              <div className={classes.inputError}>
-                {formState.errors.startTime}
-              </div>
+            {errors.startTime && (
+              <div className={classes.inputError}>{errors.startTime}</div>
             )}
           </div>
           <span>&mdash;</span>
@@ -143,21 +116,16 @@ export const FormUI = (props: Props) => {
                 validate: validation.endTime,
                 touchOnChange: true,
               })}
-              error={
-                formState.validity.endTime === false ||
-                formState.validity.time === false
-              }
+              error={validity.endTime === false || validity.time === false}
             />
-            {formState.errors.endTime && (
-              <div className={classes.inputError}>
-                {formState.errors.endTime}
-              </div>
+            {errors.endTime && (
+              <div className={classes.inputError}>{errors.endTime}</div>
             )}
           </div>
         </div>
-        {formState.errors.time && (
+        {errors.time && (
           <div className={cn(classes.inputError, classes.timeErrors)}>
-            {formState.errors.time}
+            {errors.time}
           </div>
         )}
       </div>,
@@ -172,21 +140,19 @@ export const FormUI = (props: Props) => {
             name: 'users',
             validate: validation.users,
           })}
-          error={formState.validity.users === false}
+          error={validity.users === false}
         />
-        {formState.errors.users && (
-          <div className={classes.inputError}>{formState.errors.users}</div>
+        {errors.users && (
+          <div className={classes.inputError}>{errors.users}</div>
         )}
       </div>,
     ];
 
-    if (isRoomSelectorAllowed(mode, formState.validity, initialValues)) {
+    if (roomsDisplayed(validity, values.room, initialValues)) {
       fields.push(
         <div key="room" className={classes.room}>
           <label htmlFor="room">
-            {formState.values.room
-              ? 'Ваша переговорка'
-              : 'Рекомендуемые переговорки'}
+            {values.room ? 'Ваша переговорка' : 'Рекомендуемые переговорки'}
           </label>
           <OptionPicker
             id="room"
@@ -198,8 +164,8 @@ export const FormUI = (props: Props) => {
               touchOnChange: true,
             })}
           />
-          {formState.errors.room && (
-            <div className={classes.inputError}>{formState.errors.room}</div>
+          {errors.room && (
+            <div className={classes.inputError}>{errors.room}</div>
           )}
         </div>
       );
@@ -225,8 +191,8 @@ export const FormUI = (props: Props) => {
         <FormActions
           mode={mode}
           initialValues={initialValues}
-          values={formState.values}
-          validity={formState.validity}
+          values={values}
+          validity={validity}
           closePage={onClose}
           removeEvent={onRemove}
         />
@@ -234,5 +200,3 @@ export const FormUI = (props: Props) => {
     </>
   );
 };
-
-FormUI.defaultProps = defaultProps;
