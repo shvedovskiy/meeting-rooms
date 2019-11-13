@@ -1,6 +1,8 @@
 @import './service/styles/fonts';
 
 :root {
+  font-size: 0.8125em;
+
   --bg-primary: #fff;
   --bg-secondary: #f6f7f9;
   --text-primary: #000;
@@ -8,10 +10,10 @@
   --text-secondary: #858e98;
   --text-invalid: #db4949;
   --text-inactive: rgba(0, 0, 0, 0.2);
-  --large-text: 2rem;
-  --medium-text: 1.5rem;
-  --default-text: 1.3rem;
-  --small-text: 1.1rem;
+  --large-text: 1.5384615385rem;
+  --medium-text: 1.1538461538rem;
+  --default-text: 1rem;
+  --small-text: 0.8461538462rem;
   --primary-1: #007dff;
   --primary-2: #1d54fe;
   --primary-3: #1d00fe;
@@ -34,16 +36,12 @@
   cursor: not-allowed;
 }
 
-html {
-  font-size: 62.5%;
-}
-
 body {
-  margin: 0;
   font-family: 'YS Text', 'Arial', sans-serif;
-  font-size: var(--default-text);
   color: var(--text-primary);
   background-color: var(--bg-primary);
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
   -webkit-text-size-adjust: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -106,10 +104,15 @@ ul {
   list-style: none;
 }
 
+img {
+  display: block;
+  max-width: 100%;
+}
+
 /* stylelint-disable-next-line selector-max-id */
 #root {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 }
 
 /* stylelint-disable declaration-no-important */
@@ -123,5 +126,14 @@ ul {
   white-space: nowrap !important;
   pointer-events: none !important;
   border: 0 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
 }
 /* stylelint-enable declaration-no-important */

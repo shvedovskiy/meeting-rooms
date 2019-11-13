@@ -4,8 +4,8 @@
   padding: 22px 0;
 }
 
-.floor:not(:last-of-type) {
-  margin-bottom: 20px;
+.floor + .floor {
+  margin-top: 20px;
 }
 
 .floorName {

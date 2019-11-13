@@ -27,23 +27,25 @@
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="theme-color" content="#ffffff" />
     <style>
-      html {
+      :root {
         box-sizing: border-box;
       }
 
       *,
-      *::before,
-      *::after {
+      ::before,
+      ::after {
         box-sizing: inherit;
       }
 
       html,
       body {
-        width: 100%;
-        height: 100%;
         margin: 0;
         padding: 0;
         overflow: hidden;
+      }
+
+      body {
+        min-height: 100vh;
       }
 
       .loader {

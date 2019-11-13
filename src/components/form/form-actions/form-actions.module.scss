@@ -13,8 +13,8 @@
   border-top: 1px solid var(--border);
 }
 
-.action:not(:last-of-type) {
-  margin-right: 16px;
+.action + .action {
+  margin-left: 16px;
 }
 
 .formButton {

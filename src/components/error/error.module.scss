@@ -9,7 +9,7 @@
   font-size: 45px;
 }
 
-.text:not(:first-of-type) {
+.text + .text {
   margin-top: 20px;
 }
 
