@@ -18,6 +18,7 @@ import {
   recommendationNeeded,
   roomsDisplayed,
   handleFormChange,
+  MovedRoomsEvents,
 } from './utils';
 import classes from './form-ui.module.scss';
 
@@ -39,7 +40,7 @@ export const FormUI = ({
   onSubmit,
 }: Props) => {
   const size = useSizeCtx();
-  const movedRooms = useRef<string[]>([]);
+  const movedEvents = useRef<MovedRoomsEvents>(new Map());
   const [{ values, validity, errors }, { field, form }] = useForm<FormFields>(
     {
       ...defaultFormValues,
@@ -50,7 +51,7 @@ export const FormUI = ({
   const recommendedRooms = useRecommendation(
     values,
     recommendationNeeded(validity, values.room, initialValues),
-    movedRooms
+    movedEvents
   );
 
   function renderFormFields() {
