@@ -93,6 +93,13 @@ function validateTime(time: 'start' | 'end', value: string | null) {
   return true;
 }
 
+function validateUsers(value: UserData[] | null) {
+  if (!value || value.length === 0) {
+    return errors.EMPTY_USERS;
+  }
+  return true;
+}
+
 export const validation = {
   title(value: string) {
     if (value.trim().length === 0) {
@@ -179,20 +186,27 @@ export const validation = {
     };
   },
   users(value: UserData[] | null, values: StateValues<FormFields>) {
-    if (!value || value.length === 0) {
-      return errors.EMPTY_USERS;
+    const valid = validateUsers(value);
+    if (valid !== true) {
+      return valid;
     }
     if (values.room) {
       const maxCapacity = values.room.maxCapacity;
-      if (maxCapacity !== null && value.length > maxCapacity) {
+      if (maxCapacity !== null && value!.length > maxCapacity) {
         return errors.TOO_MANY_USERS;
       }
     }
     return true;
   },
-  room(value: RoomCard | null) {
+  room(value: RoomCard | null, values: StateValues<FormFields>) {
     if (!value) {
-      return errors.EMPTY_ROOM;
+      const res: { room: string; users?: boolean } = {
+        room: errors.EMPTY_ROOM,
+      };
+      if (validateUsers(values.users) === true) {
+        res.users = true;
+      }
+      return res;
     }
     return true;
   },
