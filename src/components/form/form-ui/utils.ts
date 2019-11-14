@@ -74,6 +74,13 @@ export function handleFormChange(
       room: null,
     };
   }
+  if (changed.room) {
+    return {
+      ...changed,
+      startTime: changed.room.startTime,
+      endTime: changed.room.endTime,
+    };
+  }
   return changed;
 }
 
