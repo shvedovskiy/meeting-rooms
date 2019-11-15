@@ -1,4 +1,4 @@
-import React, { useEffect, FC, useState } from 'react';
+import React, { useEffect, FC, useState, MutableRefObject } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
@@ -81,10 +81,10 @@ export const FormConnector: FC<Props> = ({
       },
     }
   );
-  const [removeEvent, { loading: eventRemoving }] = useMutation(
-    REMOVE_EVENT_MUTATION,
-    { onCompleted: () => onClose() }
-  );
+  const [
+    removeEvent,
+    { loading: eventRemoving },
+  ] = useMutation(REMOVE_EVENT_MUTATION, { onCompleted: () => onClose() });
 
   useEffect(() => {
     if (!loading) {
@@ -106,7 +106,10 @@ export const FormConnector: FC<Props> = ({
     return <Error className={classes.loadingError} />;
   }
 
-  function handleFormSubmit(formValues: CreatedEvent) {
+  function handleFormSubmit(
+    formValues: CreatedEvent,
+    movedEvents: MutableRefObject<UpdateEventVariables[]>
+  ) {
     const { title, date, startTime, endTime, users, room } = formValues;
     const event = {
       title,
@@ -137,6 +140,11 @@ export const FormConnector: FC<Props> = ({
         ...variables,
         ...diff,
       };
+    }
+    for (const eventData of movedEvents.current) {
+      updateEvent({
+        variables: eventData,
+      });
     }
     setVars(variables);
   }

@@ -104,7 +104,7 @@ function distanceToNewRoom(
 
 export function measureDistanceToNewRoom(
   roomDef: RoomCard,
-  moved: Map<string, UpdateEventVariables[]>,
+  moved: MovedRoomsEvents,
   allEvents: Map<string, Event>,
   eventUsersFloors: number[]
 ) {
@@ -123,7 +123,7 @@ export function measureDistanceToNewRoom(
 
 export function measureDistanceToAnyRoom(
   roomDef: RoomCard,
-  moved: Map<string, UpdateEventVariables[]>,
+  moved: MovedRoomsEvents,
   allEvents: Map<string, Event>,
   eventUsersFloors: number[]
 ) {

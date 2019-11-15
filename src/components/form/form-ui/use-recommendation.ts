@@ -178,7 +178,7 @@ function findAnotherTimeSlot(rooms: RoomData[]): RoomCard[] {
 export function useRecommendation(
   eventValues: StateValues<FormFields>,
   recommendationNeeded: boolean,
-  movedEvents: MutableRefObject<MovedRoomsEvents>
+  movedEvents: MutableRefObject<UpdateEventVariables[]>
 ) {
   const { data } = useQuery<
     RoomsQueryType & EventsMapQueryType & TableQueryType
@@ -252,7 +252,7 @@ export function useRecommendation(
       allEvents,
       movedRoomsComp
     );
-    movedEvents.current = movedEvs;
+    movedEvents.current = Array.from(movedEvs.values()).flat();
 
     const anyRoomComp = (a: RoomCard, b: RoomCard) =>
       measureDistanceToAnyRoom(a, movedEvs, allEvents, eventUsersFloors) -

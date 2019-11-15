@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, MutableRefObject } from 'react';
 import cn from 'classnames';
 
 import { FormActions } from '../form-actions/form-actions';
@@ -13,12 +13,12 @@ import { useSizeCtx } from 'context/size-context';
 import { PageMode, PageData } from 'context/page-context';
 import { useRecommendation } from './use-recommendation';
 import { validation, FormFields } from '../form-common/validators';
+import { UpdateEventVariables } from 'service/mutations';
 import {
   defaultFormValues,
   recommendationNeeded,
   roomsDisplayed,
   handleFormChange,
-  MovedRoomsEvents,
 } from './utils';
 import classes from './form-ui.module.scss';
 
@@ -27,7 +27,10 @@ type Props = {
   users: UserData[];
   onClose: () => void;
   onRemove: () => void;
-  onSubmit: (values: CreatedEvent) => void;
+  onSubmit: (
+    values: CreatedEvent,
+    movedEvents: MutableRefObject<UpdateEventVariables[]>
+  ) => void;
   initialValues?: PageData;
 };
 
@@ -37,10 +40,10 @@ export const FormUI = ({
   users,
   onClose,
   onRemove,
-  onSubmit,
+  onSubmit: submitForm,
 }: Props) => {
   const size = useSizeCtx();
-  const movedEvents = useRef<MovedRoomsEvents>(new Map());
+  const movedEvents = useRef<UpdateEventVariables[]>([]);
   const [{ values, validity, errors }, { field, form }] = useForm<FormFields>(
     {
       ...defaultFormValues,
@@ -185,7 +188,12 @@ export const FormUI = ({
         <form
           id="eventForm"
           className={classes.form}
-          {...form<CreatedEvent>({ name: 'form', onSubmit })}
+          {...form<CreatedEvent>({
+            name: 'form',
+            onSubmit(formValues: CreatedEvent) {
+              submitForm(formValues, movedEvents);
+            },
+          })}
         >
           {renderFormFields()}
         </form>
