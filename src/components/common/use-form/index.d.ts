@@ -9,6 +9,7 @@ interface UseForm {
       onChange?: (newValues: Partial<T>, state: StateValues<T>) => Partial<T>;
       onBlur?: FocusEventHandler<HTMLElement>;
       onTouched?: FocusEventHandler<HTMLElement>;
+      submitValidator?: (formValues: StateValues<T>) => StateErrors<T>;
     }
   ): [FormState<T, E>, Inputs<T>];
 }

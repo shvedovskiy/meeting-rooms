@@ -1,6 +1,7 @@
 import { isToday, isFuture } from 'date-fns/esm';
-import { StateValues } from 'components/common/use-form';
+import { Mutable } from 'utility-types';
 
+import { StateValues, StateErrors } from 'components/common/use-form';
 import {
   splitTimeString,
   isPastTime,
@@ -27,7 +28,7 @@ const errors = {
   EMPTY_USERS: 'Необходимо добавить участников',
   EMPTY_ROOM: 'Необходимо выбрать переговорку',
   DATE_PAST: 'Прошедшая дата не может быть выбрана',
-  INVALID_TIME: 'Некорректное время',
+  INCORRECT_TIME: 'Некорректное время',
   START_PAST: 'Время начала не может быть в прошлом',
   END_PAST: 'Время окончания не может быть в прошлом',
   OFF_TIME: 'Нерабочее время',
@@ -35,50 +36,42 @@ const errors = {
   TOO_MANY_USERS: 'Слишком много участников для выбранной переговорки',
 };
 
-function validateDate(value: Date | null) {
-  if (!value) {
-    return errors.EMPTY_DATE;
-  }
-  if (!isToday(value) && !isFuture(value)) {
-    return errors.DATE_PAST;
-  }
-  return true;
+// DATE:
+function dateIsEmpty(date: Date | null): date is null {
+  return date == null;
 }
 
-function validatePastTime(
-  time: 'start' | 'end',
-  value: string,
-  date: Date | null
-) {
-  if (
-    date !== null &&
-    validateDate(date) === true &&
-    isToday(date) &&
-    isPastTime(value)
-  ) {
-    return time === 'start' ? errors.START_PAST : errors.END_PAST;
-  }
-  return true;
+function dateInPast(date: Date) {
+  return !isToday(date) && !isFuture(date);
 }
 
-function validateTime(time: 'start' | 'end', value: string | null) {
-  if (value === null) {
-    return errors.INVALID_TIME;
+// TIME:
+function timeIsIncorrect(time: string | null): time is null {
+  if (time == null) {
+    return true;
   }
-  if (value.trim().length === 0) {
-    return time === 'start' ? errors.EMPTY_START : errors.EMPTY_END;
+  if (!timeIsEmpty(time)) {
+    const [, minutes] = splitTimeString(time);
+    if (minutes % 15 !== 0) {
+      return true;
+    }
   }
-  const [hours, minutes] = splitTimeString(value);
-  if (minutes % 15 !== 0) {
-    return errors.INVALID_TIME;
-  }
+  return false;
+}
+
+function timeIsEmpty(time: string) {
+  return time.trim().length === 0;
+}
+
+function timeIsOff(time: string) {
+  const [hours, minutes] = splitTimeString(time);
   if (time === 'start') {
     if (
       hours < HOURS[0] ||
       (hours === HOURS[HOURS.length - 2] && minutes > 45) ||
       hours >= HOURS[HOURS.length - 1]
     ) {
-      return errors.OFF_TIME;
+      return true;
     }
   } else {
     if (
@@ -87,127 +80,151 @@ function validateTime(time: 'start' | 'end', value: string | null) {
       (hours === HOURS[HOURS.length - 1] && minutes > 0) ||
       hours > HOURS[HOURS.length - 1]
     ) {
-      return errors.OFF_TIME;
+      return true;
     }
   }
-  return true;
+  return false;
 }
 
-function validateUsers(value: UserData[] | null) {
-  if (!value || value.length === 0) {
-    return errors.EMPTY_USERS;
-  }
-  return true;
+function timeIsInPast(time: string, date: Date | null) {
+  return !dateIsEmpty(date) && isToday(date) && isPastTime(time);
 }
 
+function timeIsValid(value: string | null) {
+  return !timeIsIncorrect(value) && !timeIsEmpty(value) && !timeIsOff(value);
+}
+
+// USERS:
+function usersAreEmpty(users: UserData[] | null): users is null {
+  return users == null || users.length === 0;
+}
+
+// ROOM:
+function roomIsEmpty(room: RoomCard | null): room is null {
+  return room == null;
+}
+
+// VALIDATORS:
 export const validation = {
-  title(value: string) {
-    if (value.trim().length === 0) {
-      return errors.EMPTY_TITLE;
+  date(date: Date | null, values: StateValues<FormFields>) {
+    if (dateIsEmpty(date)) {
+      return true;
     }
-    return true;
+    if (dateInPast(date)) {
+      return errors.DATE_PAST;
+    }
+    const valid = { date: true };
+    if (timeIsValid(values.startTime)) {
+      Object.assign(valid, {
+        startTime: timeIsInPast(values.startTime, date)
+          ? errors.START_PAST
+          : true,
+      });
+    }
+    if (timeIsValid(values.endTime)) {
+      Object.assign(valid, {
+        endTime: timeIsInPast(values.endTime, date) ? errors.END_PAST : true,
+      });
+    }
+    return valid;
   },
-  date(value: Date | null, values: StateValues<FormFields>) {
-    const valid = validateDate(value);
-    if (valid !== true) {
-      return valid;
+  startTime(startTime: string | null, values: StateValues<FormFields>) {
+    const valid = { time: true };
+    if (timeIsIncorrect(startTime)) {
+      return Object.assign(valid, { startTime: errors.INCORRECT_TIME });
     }
-    const result: {
-      date: true;
-      startTime?: string | boolean;
-      endTime?: string | boolean;
-    } = { date: true };
-    let startTimeValidity: string | true;
-    let endTimeValidity: string | true;
-    if (validateTime('start', values.startTime) === true) {
-      startTimeValidity = validatePastTime('start', values.startTime!, value);
-      result.startTime = startTimeValidity !== true ? startTimeValidity : true;
+    if (timeIsEmpty(startTime)) {
+      return Object.assign(valid, { startTime: true });
     }
-    if (validateTime('end', values.endTime) === true) {
-      endTimeValidity = validatePastTime('end', values.endTime!, value);
-      result.endTime = endTimeValidity !== true ? endTimeValidity : true;
-    }
-
-    return result;
-  },
-  startTime(value: string, values: StateValues<FormFields>) {
-    let valid = validateTime('start', value);
-    if (valid !== true) {
-      return {
-        startTime: valid,
-        time: true,
-      };
+    if (timeIsOff(startTime)) {
+      return Object.assign(valid, { startTime: errors.OFF_TIME });
     }
 
     let startTimeResult: string | true = true;
-    valid = validatePastTime('start', value!, values.date);
-    if (valid !== true) {
-      startTimeResult = valid;
+    if (timeIsInPast(startTime, values.date)) {
+      startTimeResult = errors.START_PAST;
     }
 
     let time: string | boolean = true;
-    const endTimeValid = validateTime('end', values.endTime);
-    if (endTimeValid === true) {
-      if (!compareTimeStrings(value!, values.endTime!)) {
-        time = errors.END_BEFORE_START;
-      }
+    if (
+      timeIsValid(values.endTime) &&
+      !compareTimeStrings(startTime, values.endTime)
+    ) {
+      time = errors.END_BEFORE_START;
     }
     return {
       startTime: startTimeResult,
       time,
     };
   },
-  endTime(value: string, values: StateValues<FormFields>) {
-    let valid = validateTime('end', value);
-    if (valid !== true) {
-      return {
-        endTime: valid,
-        time: true,
-      };
+  endTime(endTime: string | null, values: StateValues<FormFields>) {
+    const valid = { time: true };
+    if (timeIsIncorrect(endTime)) {
+      return Object.assign(valid, { endTime: errors.INCORRECT_TIME });
     }
-    valid = validatePastTime('end', value!, values.date);
-    if (valid !== true) {
-      return {
-        endTime: valid,
-        time: true,
-      };
+    if (timeIsEmpty(endTime)) {
+      return Object.assign(valid, { endTime: true });
+    }
+    if (timeIsOff(endTime)) {
+      return Object.assign(valid, { endTime: errors.OFF_TIME });
+    }
+
+    let endTimeResult: string | true = true;
+    if (timeIsInPast(endTime, values.date)) {
+      endTimeResult = errors.END_PAST;
     }
 
     let time: string | boolean = true;
-    const startTimeValid = validateTime('start', values.startTime);
-    if (startTimeValid === true) {
-      if (!compareTimeStrings(values.startTime!, value!)) {
-        time = errors.END_BEFORE_START;
-      }
+    if (
+      timeIsValid(values.startTime) &&
+      !compareTimeStrings(values.startTime, endTime)
+    ) {
+      time = errors.END_BEFORE_START;
     }
     return {
-      endTime: true,
+      endTime: endTimeResult,
       time,
     };
   },
-  users(value: UserData[] | null, values: StateValues<FormFields>) {
-    const valid = validateUsers(value);
-    if (valid !== true) {
-      return valid;
+  users(users: UserData[] | null, values: StateValues<FormFields>) {
+    if (usersAreEmpty(users) || roomIsEmpty(values.room)) {
+      return true;
     }
-    if (values.room) {
-      const maxCapacity = values.room.maxCapacity;
-      if (maxCapacity !== null && value!.length > maxCapacity) {
-        return errors.TOO_MANY_USERS;
-      }
+    const maxCapacity = values.room.maxCapacity;
+    if (maxCapacity !== null && users.length > maxCapacity) {
+      return errors.TOO_MANY_USERS;
     }
     return true;
   },
   room(value: RoomCard | null, values: StateValues<FormFields>) {
-    if (!value) {
-      const res: { room: string; users?: boolean } = {
-        room: errors.EMPTY_ROOM,
-      };
-      if (validateUsers(values.users) === true) {
-        res.users = true;
-      }
-      return res;
+    const valid = { room: true };
+    if (roomIsEmpty(value) && !usersAreEmpty(values.users)) {
+      Object.assign(valid, { users: true });
     }
-    return true;
+    return valid;
   },
 };
+
+export function validateOnSubmit(values: StateValues<FormFields>) {
+  const validationErrors: Mutable<StateErrors<FormFields>> = {};
+  if (values.hasOwnProperty('title') && values.title.trim().length === 0) {
+    validationErrors.title = errors.EMPTY_TITLE;
+  }
+  if (values.hasOwnProperty('date') && dateIsEmpty(values.date)) {
+    validationErrors.date = errors.EMPTY_DATE;
+  }
+  if (values.hasOwnProperty('startTime') && timeIsEmpty(values.startTime)) {
+    validationErrors.startTime = errors.EMPTY_START;
+  }
+  if (values.hasOwnProperty('endTime') && timeIsEmpty(values.endTime)) {
+    validationErrors.endTime = errors.EMPTY_END;
+  }
+  if (values.hasOwnProperty('users') && usersAreEmpty(values.users)) {
+    validationErrors.users = errors.EMPTY_USERS;
+  }
+  if (values.hasOwnProperty('room') && roomIsEmpty(values.room)) {
+    validationErrors.room = errors.EMPTY_ROOM;
+  }
+
+  return validationErrors;
+}

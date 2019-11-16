@@ -20,7 +20,7 @@ export const defaultFormValues = {
 
 export function roomsDisplayed(
   validity: StateValidity<FormFields>,
-  roomValue: RoomCard | null,
+  values: StateValues<FormFields>,
   initialValues: PageData
 ) {
   const {
@@ -38,16 +38,22 @@ export function roomsDisplayed(
 
   const validities = [startTimeValid, endTimeValid, dateValid];
   // Room is not selected:
-  if (!roomValue) {
+  if (!values.room) {
     validities.push(usersValid);
   }
 
   // Edit/partial add mode:
   if (initialValues.room) {
     if (validities.every(v => typeof v === 'undefined')) {
-      return roomValue !== null;
+      return values.room !== null;
     }
-    return validities.concat([timeValid]).every(v => v !== false);
+    const allValidities = validities.concat([timeValid]);
+    return (
+      allValidities.every(v => v !== false) &&
+      [values.date, values.startTime, values.endTime, values.users].every(
+        Boolean
+      )
+    );
   }
   // Plain add mode:
   return validities.every(Boolean) && timeValid !== false;
@@ -55,10 +61,10 @@ export function roomsDisplayed(
 
 export function recommendationNeeded(
   validity: StateValidity<FormFields>,
-  roomValue: RoomCard | null,
+  values: StateValues<FormFields>,
   initialValues: PageData
 ) {
-  return !roomValue && roomsDisplayed(validity, roomValue, initialValues);
+  return !values.room && roomsDisplayed(validity, values, initialValues);
 }
 
 export function handleFormChange(

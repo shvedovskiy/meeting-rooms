@@ -6,24 +6,21 @@ const ON_BLUR_HANDLER = 1;
 const ON_SUBMIT_HANDLER = 2;
 
 const defaultFormOptions = {
-  onChange(v) {
-    return v;
-  },
-  onBlur() {},
-  onTouched() {},
+  onChange: value => value,
+  onBlur: () => {},
+  onTouched: () => {},
+  submitValidator: () => {},
 };
 
 const defaultInputOptions = {
-  onChange(v) {
-    return v;
-  },
-  onBlur() {},
+  onChange: value => value,
+  onBlur: () => {},
   validate: null,
   validateOnBlur: false,
   touchOnChange: false,
 };
 
-function validate(fieldName, fieldValue, formValues, validator) {
+function validateField(fieldName, fieldValue, formValues, validator) {
   if (typeof validator === 'function') {
     const result = validator(fieldValue, formValues);
     if (result === true) {
@@ -76,7 +73,7 @@ export function useForm(initialState, options) {
       value = formState.current.values[name],
       values = formState.current.values
     ) {
-      const [validities, errors] = validate(
+      const [validities, errors] = validateField(
         name,
         value,
         values,
@@ -162,44 +159,58 @@ export function useForm(initialState, options) {
     };
   };
 
-  const formProps = ({ name, onSubmit = () => {} }) => {
+  const formProps = ({ name, onSubmit: submitCallback = () => {} }) => {
     const key = `${name}.form`;
 
-    function makeValidation(name, validator) {
-      const [validities, errors] = validate(
-        name,
-        formState.current.values[name],
-        formState.current.values,
-        validator
+    function makeSubmitValidation() {
+      const errors = formOptions.submitValidator(formState.current.values);
+      if (Object.keys(errors).length) {
+        const validities = {};
+        for (const errorField of Object.keys(errors)) {
+          validities[errorField] = false;
+        }
+        formState.setValidity(validities);
+        formState.setError(errors);
+        return false;
+      }
+      return true;
+    }
+
+    function makeValidation() {
+      const validities = {};
+      const errors = {};
+      Object.entries(formState.current.validators || {}).forEach(
+        ([fieldName, fieldValidator]) => {
+          const [fieldValidity, fieldError] = validateField(
+            fieldName,
+            formState.current.values[fieldName],
+            formState.current.values,
+            fieldValidator
+          );
+          Object.assign(validities, fieldValidity);
+          Object.assign(errors, fieldError);
+        }
       );
-      formState.setValidity(validities);
-      formState.setError(errors);
+      if (Object.keys(errors).length) {
+        formState.setValidity(validities);
+        formState.setError(errors);
+        return false;
+      }
+      return true;
     }
 
     return {
       onSubmit: callbacks.getOrSet(ON_SUBMIT_HANDLER + key, e => {
         e.preventDefault();
-
-        Object.entries(formState.current.validators || {}).forEach(
-          ([fieldName, validator]) => {
-            makeValidation(fieldName, validator);
-          }
-        );
-        if (
-          Object.values(formState.current.validity || []).every(
-            v => v && v !== false
-          )
-        ) {
-          onSubmit(formState.current.values, e);
+        if (makeSubmitValidation() && makeValidation()) {
+          submitCallback(formState.current.values);
         }
       }),
     };
   };
 
   return [
-    {
-      ...formState.current,
-    },
+    { ...formState.current },
     {
       field: fieldProps,
       form: formProps,

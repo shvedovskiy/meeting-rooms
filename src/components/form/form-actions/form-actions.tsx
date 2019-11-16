@@ -24,19 +24,11 @@ function isSubmitBlocked(
   values: FormFields,
   validity: StateValidity<FormFields>
 ) {
-  const fieldsValidities = Object.values(validity);
-  switch (formType) {
-    case 'add':
-      return (
-        // Number of fields
-        Object.values(values).filter(Boolean).length < 6 ||
-        fieldsValidities.some(v => v === false)
-      );
-
-    case 'edit':
-      if (fieldsValidities.some(v => v === false)) {
-        return true;
-      }
+  const hasInvalidFields = Object.values(validity).some(v => v === false);
+  if (formType === 'add') {
+    return hasInvalidFields;
+  } else {
+    if (!hasInvalidFields) {
       const { input, roomId, userIds } = compareFormStates(
         values,
         initialValues
@@ -44,9 +36,8 @@ function isSubmitBlocked(
       if ([input, roomId, userIds].some(Boolean)) {
         return false;
       }
-      return true;
-    default:
-      return false;
+    }
+    return true;
   }
 }
 

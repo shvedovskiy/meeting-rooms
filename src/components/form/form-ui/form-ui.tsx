@@ -12,7 +12,11 @@ import { useForm } from 'components/common/use-form';
 import { useSizeCtx } from 'context/size-context';
 import { PageMode, PageData } from 'context/page-context';
 import { useRecommendation } from './use-recommendation';
-import { validation, FormFields } from '../form-common/validators';
+import {
+  validation,
+  validateOnSubmit,
+  FormFields,
+} from '../form-common/validators';
 import { UpdateEventVariables } from 'service/mutations';
 import {
   defaultFormValues,
@@ -49,11 +53,14 @@ export const FormUI = ({
       ...defaultFormValues,
       ...initialValues,
     },
-    { onChange: handleFormChange }
+    {
+      onChange: handleFormChange,
+      submitValidator: validateOnSubmit,
+    }
   );
   const recommendedRooms = useRecommendation(
     values,
-    recommendationNeeded(validity, values.room, initialValues),
+    recommendationNeeded(validity, values, initialValues),
     movedEvents
   );
 
@@ -65,10 +72,7 @@ export const FormUI = ({
           id="title"
           size={size}
           placeholder="О чём будете говорить?"
-          {...field({
-            name: 'title',
-            validate: validation.title,
-          })}
+          {...field({ name: 'title' })}
           error={validity.title === false}
         />
         {errors.title && (
@@ -152,7 +156,7 @@ export const FormUI = ({
       </div>,
     ];
 
-    if (roomsDisplayed(validity, values.room, initialValues)) {
+    if (roomsDisplayed(validity, values, initialValues)) {
       fields.push(
         <div key="room" className={classes.room}>
           <label htmlFor="room">
