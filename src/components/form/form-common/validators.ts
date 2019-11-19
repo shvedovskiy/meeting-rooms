@@ -28,7 +28,6 @@ const errors = {
   EMPTY_USERS: 'Необходимо добавить участников',
   EMPTY_ROOM: 'Необходимо выбрать переговорку',
   DATE_PAST: 'Прошедшая дата не может быть выбрана',
-  INCORRECT_TIME: 'Некорректное время',
   START_PAST: 'Время начала не может быть в прошлом',
   END_PAST: 'Время окончания не может быть в прошлом',
   OFF_TIME: 'Нерабочее время',
@@ -128,63 +127,19 @@ export const validation = {
     }
     return valid;
   },
-  startTime(startTime: string | null, values: StateValues<FormFields>) {
-    const valid = { time: true };
+  startTime(startTime: string | null) {
+    const valid = { time: true, startTime: true };
     if (timeIsIncorrect(startTime)) {
-      return Object.assign(valid, { startTime: errors.INCORRECT_TIME });
+      return Object.assign(valid, { startTime: false });
     }
-    if (timeIsEmpty(startTime)) {
-      return Object.assign(valid, { startTime: true });
-    }
-    if (timeIsOff(startTime)) {
-      return Object.assign(valid, { startTime: errors.OFF_TIME });
-    }
-
-    let startTimeResult: string | true = true;
-    if (timeIsInPast(startTime, values.date)) {
-      startTimeResult = errors.START_PAST;
-    }
-
-    let time: string | boolean = true;
-    if (
-      timeIsValid(values.endTime) &&
-      !compareTimeStrings(startTime, values.endTime)
-    ) {
-      time = errors.END_BEFORE_START;
-    }
-    return {
-      startTime: startTimeResult,
-      time,
-    };
+    return valid;
   },
-  endTime(endTime: string | null, values: StateValues<FormFields>) {
-    const valid = { time: true };
+  endTime(endTime: string | null) {
+    const valid = { time: true, endTime: true };
     if (timeIsIncorrect(endTime)) {
-      return Object.assign(valid, { endTime: errors.INCORRECT_TIME });
+      return Object.assign(valid, { endTime: false });
     }
-    if (timeIsEmpty(endTime)) {
-      return Object.assign(valid, { endTime: true });
-    }
-    if (timeIsOff(endTime)) {
-      return Object.assign(valid, { endTime: errors.OFF_TIME });
-    }
-
-    let endTimeResult: string | true = true;
-    if (timeIsInPast(endTime, values.date)) {
-      endTimeResult = errors.END_PAST;
-    }
-
-    let time: string | boolean = true;
-    if (
-      timeIsValid(values.startTime) &&
-      !compareTimeStrings(values.startTime, endTime)
-    ) {
-      time = errors.END_BEFORE_START;
-    }
-    return {
-      endTime: endTimeResult,
-      time,
-    };
+    return valid;
   },
   users(users: UserData[] | null, values: StateValues<FormFields>) {
     if (usersAreEmpty(users) || roomIsEmpty(values.room)) {
@@ -202,6 +157,63 @@ export const validation = {
       Object.assign(valid, { users: true });
     }
     return valid;
+  },
+};
+
+export const blurValidation = {
+  startTime(startTime: string | null, values: StateValues<FormFields>) {
+    if (timeIsIncorrect(startTime)) {
+      return false;
+    }
+    if (timeIsEmpty(startTime)) {
+      return true;
+    }
+    if (timeIsOff(startTime)) {
+      return { time: true, startTime: errors.OFF_TIME };
+    }
+
+    let startTimeResult: string | true = true;
+    let time: string | boolean = true;
+    if (timeIsInPast(startTime, values.date)) {
+      startTimeResult = errors.START_PAST;
+    }
+    if (
+      timeIsValid(values.endTime) &&
+      !compareTimeStrings(startTime, values.endTime)
+    ) {
+      time = errors.END_BEFORE_START;
+    }
+    return {
+      startTime: startTimeResult,
+      time,
+    };
+  },
+  endTime(endTime: string | null, values: StateValues<FormFields>) {
+    if (timeIsIncorrect(endTime)) {
+      return false;
+    }
+    if (timeIsEmpty(endTime)) {
+      return true;
+    }
+    if (timeIsOff(endTime)) {
+      return { time: true, endTime: errors.OFF_TIME };
+    }
+
+    let endTimeResult: string | true = true;
+    let time: string | boolean = true;
+    if (timeIsInPast(endTime, values.date)) {
+      endTimeResult = errors.START_PAST;
+    }
+    if (
+      timeIsValid(values.endTime) &&
+      !compareTimeStrings(values.startTime, endTime)
+    ) {
+      time = errors.END_BEFORE_START;
+    }
+    return {
+      endTime: endTimeResult,
+      time,
+    };
   },
 };
 

@@ -1,8 +1,7 @@
 import React, {
   FormEventHandler,
   KeyboardEventHandler,
-  KeyboardEvent,
-  ChangeEvent,
+  FocusEventHandler,
 } from 'react';
 import classNames from 'classnames';
 import updateInputWidth from 'update-input-width';
@@ -12,11 +11,12 @@ import classes from './time-picker.module.scss';
 type Props = {
   itemRef: (ref: HTMLInputElement | null, name: string) => void;
   max: number;
-  min: number;
+  min?: number;
   name: string;
-  onChange?: FormEventHandler;
-  onKeyDown?: KeyboardEventHandler;
-  onKeyUp?: KeyboardEventHandler;
+  onChange: FormEventHandler<HTMLInputElement>;
+  onKeyDown: KeyboardEventHandler<HTMLInputElement>;
+  onKeyUp: KeyboardEventHandler<HTMLInputElement>;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
   showLeadingZeros?: boolean;
   step?: number;
   value: number | null;
@@ -33,11 +33,12 @@ export const TimeInput = (props: Props) => {
   const {
     itemRef,
     max,
-    min,
+    min = 0,
     name,
     onChange,
     onKeyDown,
     onKeyUp,
+    onBlur,
     showLeadingZeros = false,
     step,
     value,
@@ -45,18 +46,10 @@ export const TimeInput = (props: Props) => {
   const hasLeadingZero =
     showLeadingZeros === true && value !== null && value < 10;
 
-  function handleKeyUp(event: KeyboardEvent<HTMLInputElement>) {
+  const handleKeyUp: KeyboardEventHandler<HTMLInputElement> = event => {
     updateInputWidth(event.target);
-    if (onKeyUp) {
-      onKeyUp(event);
-    }
-  }
-
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    if (onChange) {
-      onChange(event);
-    }
-  }
+    onKeyUp(event);
+  };
 
   return (
     <>
@@ -69,10 +62,13 @@ export const TimeInput = (props: Props) => {
         max={max}
         min={min}
         name={name}
-        onChange={handleChange}
+        onChange={() => {}}
         onFocus={event => select(event.target)}
         onKeyDown={onKeyDown}
         onKeyUp={handleKeyUp}
+        onInput={onChange}
+        onBlur={onBlur}
+        placeholder="--"
         ref={ref => {
           if (ref) {
             updateInputWidth(ref);
@@ -83,7 +79,6 @@ export const TimeInput = (props: Props) => {
         }}
         step={step}
         type="number"
-        placeholder="--"
         value={value === null ? '' : value}
       />
     </>

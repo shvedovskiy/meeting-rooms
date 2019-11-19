@@ -21,7 +21,7 @@
     border-color: var(--border-1);
   }
 
-  &.error:not(:focus-within) {
+  &.error {
     border-color: var(--text-invalid);
   }
 }

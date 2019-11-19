@@ -1,10 +1,9 @@
 import React, {
   PureComponent,
   FocusEventHandler,
-  MouseEvent,
-  KeyboardEvent,
-  FocusEvent,
-  ChangeEvent,
+  ChangeEventHandler,
+  KeyboardEventHandler,
+  MouseEventHandler,
 } from 'react';
 import classNames from 'classnames';
 
@@ -74,14 +73,29 @@ export class TimePicker extends PureComponent<Props, State> {
     minute: null,
   };
 
-  onClick = (event: MouseEvent<HTMLDivElement>) => {
+  onClick: MouseEventHandler<HTMLDivElement> = event => {
     if (event.target === event.currentTarget) {
       const firstInput = (event.target as HTMLDivElement).children[1];
       focus(firstInput as HTMLInputElement);
     }
   };
 
-  onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+  onBlur: FocusEventHandler<HTMLInputElement> = event => {
+    if (this.props.onBlur) {
+      event.persist();
+      setTimeout(() => {
+        if (
+          [this.hourInput, this.minuteInput].every(
+            input => document.activeElement !== input
+          )
+        ) {
+          this.props.onBlur!(event);
+        }
+      }, 0);
+    }
+  };
+
+  onKeyDown: KeyboardEventHandler<HTMLInputElement> = event => {
     switch (event.key) {
       case 'ArrowLeft':
       case 'ArrowRight':
@@ -100,9 +114,8 @@ export class TimePicker extends PureComponent<Props, State> {
     }
   };
 
-  onKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
-    const isNumberKey = !Number.isNaN(Number.parseInt(event.key, 10));
-    if (!isNumberKey) {
+  onKeyUp: KeyboardEventHandler<HTMLInputElement> = event => {
+    if (!Number.isInteger(Number(event.key))) {
       return;
     }
     const input = event.target as HTMLInputElement;
@@ -115,8 +128,8 @@ export class TimePicker extends PureComponent<Props, State> {
     }
   };
 
-  onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target as HTMLInputElement;
+  onChange: ChangeEventHandler<HTMLInputElement> = event => {
+    const { name, value } = event.target;
     if (name === 'hour') {
       this.setState(
         {
@@ -134,53 +147,41 @@ export class TimePicker extends PureComponent<Props, State> {
     }
   };
 
-  onChangeNative = (event: ChangeEvent<HTMLInputElement>) => {
+  onChangeNative: ChangeEventHandler<HTMLInputElement> = event => {
     const { onChange } = this.props;
-    const { value } = event.target as HTMLInputElement;
+    const { value } = event.target;
     if (onChange) {
       onChange(value === null ? null : value);
     }
   };
 
   onChangeExternal = () => {
-    const { onChange } = this.props;
-    if (!onChange) {
+    if (!this.props.onChange) {
       return;
     }
-    const formElements = [this.hourInput, this.minuteInput].filter(Boolean);
+    const formElements = [this.hourInput, this.minuteInput];
     const values: { [name: string]: string } = {};
 
     formElements.forEach(f => {
       values[f!.name] = f!.value;
     });
 
-    if (formElements.every(f => f!.value === '')) {
-      onChange('');
-    } else if (
-      formElements.some(f => f!.value === '' || f!.checkValidity() === false)
-    ) {
-      onChange(null);
-    } else {
-      const value = `${values.hour.padStart(2, '0')}:${values.minute.padStart(
-        2,
-        '0'
-      )}`;
-      onChange(value);
+    let changeValue: string | null = null;
+    if (formElements.every(el => el != null && el.checkValidity() === true)) {
+      const emptyValues = formElements.reduce(
+        (sum, el) => sum + Number(el != null && el.value === ''),
+        0
+      );
+      if (emptyValues === formElements.length) {
+        changeValue = '';
+      } else if (emptyValues === 0) {
+        changeValue = `${values.hour.padStart(2, '0')}:${values.minute.padStart(
+          2,
+          '0'
+        )}`;
+      }
     }
-  };
-
-  onFocus = (event: FocusEvent<HTMLDivElement>) => {
-    const { onFocus } = this.props;
-    if (onFocus) {
-      onFocus(event);
-    }
-  };
-
-  onBlur = (event: FocusEvent<HTMLDivElement>) => {
-    const { onBlur } = this.props;
-    if (onBlur) {
-      onBlur(event);
-    }
+    this.props.onChange(changeValue);
   };
 
   renderHour = () => {
@@ -189,7 +190,6 @@ export class TimePicker extends PureComponent<Props, State> {
       <TimeInput
         key="hour"
         max={23}
-        min={0}
         name="hour"
         value={hour}
         itemRef={(ref: HTMLInputElement | null) => {
@@ -198,6 +198,7 @@ export class TimePicker extends PureComponent<Props, State> {
         onChange={this.onChange}
         onKeyDown={this.onKeyDown}
         onKeyUp={this.onKeyUp}
+        onBlur={this.onBlur}
       />
     );
   };
@@ -208,7 +209,6 @@ export class TimePicker extends PureComponent<Props, State> {
       <TimeInput
         key="minute"
         max={59}
-        min={0}
         name="minute"
         step={15}
         showLeadingZeros
@@ -219,6 +219,7 @@ export class TimePicker extends PureComponent<Props, State> {
         onChange={this.onChange}
         onKeyDown={this.onKeyDown}
         onKeyUp={this.onKeyUp}
+        onBlur={this.onBlur}
       />
     );
   };
@@ -232,8 +233,7 @@ export class TimePicker extends PureComponent<Props, State> {
           [classes.error]: error,
         })}
         onClick={this.onClick}
-        onFocus={this.onFocus}
-        onBlur={this.onBlur}
+        onFocus={this.props.onFocus}
         role="presentation"
       >
         <input

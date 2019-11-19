@@ -1,5 +1,5 @@
 import { useCache } from './use-cache';
-import { useState } from './use-form-state';
+import { useFormState } from './use-form-state';
 
 const ON_CHANGE_HANDLER = 0;
 const ON_BLUR_HANDLER = 1;
@@ -12,11 +12,12 @@ const defaultFormOptions = {
   submitValidator: () => {},
 };
 
-const defaultInputOptions = {
+const defaultFieldOptions = {
   onChange: value => value,
   onBlur: () => {},
   validate: null,
-  validateOnBlur: false,
+  validateOnBlur: null,
+  // validateOnBlur: false,
   touchOnChange: false,
 };
 
@@ -32,8 +33,8 @@ function validateField(fieldName, fieldValue, formValues, validator) {
     const validities = {};
     const errors = {};
     Object.entries(result).forEach(([name, fieldResult]) => {
-      if (fieldResult === true) {
-        validities[name] = true;
+      if (typeof fieldResult === 'boolean') {
+        validities[name] = fieldResult;
         errors[name] = null;
       } else if (typeof fieldResult === 'string') {
         validities[name] = false;
@@ -45,23 +46,23 @@ function validateField(fieldName, fieldValue, formValues, validator) {
   return [{ [fieldName]: true }, { [fieldName]: null }];
 }
 
-export function useForm(initialState, options) {
+export function useForm(initialFormState, options) {
   const formOptions = { ...defaultFormOptions, ...options };
 
-  const formState = useState(initialState);
+  const formState = useFormState(initialFormState);
   const { set: setDirty, has: isDirty } = useCache();
   const callbacks = useCache();
 
   const fieldProps = ({ name, ...options }) => {
-    const inputOptions = {
-      ...defaultInputOptions,
+    const fieldOptions = {
+      ...defaultFieldOptions,
       ...options,
     };
 
-    const hasValueInState = formState.current.values[name] !== undefined;
+    const hasValueInState = formState.current.values.hasOwnProperty(name);
     const hasValidatorInState =
       !formState.current.validators ||
-      formState.current.validators[name] !== undefined;
+      formState.current.validators[name] != null;
 
     const key = `${name}`;
 
@@ -69,15 +70,12 @@ export function useForm(initialState, options) {
       formState.setValues({ [name]: '' });
     }
 
-    function makeValidation(
-      value = formState.current.values[name],
-      values = formState.current.values
-    ) {
+    function makeFieldValidation(value, formValues, validator) {
       const [validities, errors] = validateField(
         name,
         value,
-        values,
-        inputOptions.validate
+        formValues,
+        validator
       );
       formState.setValidity(validities);
       formState.setError(errors);
@@ -98,10 +96,10 @@ export function useForm(initialState, options) {
         }
 
         if (
-          typeof inputOptions.validate === 'function' &&
+          typeof fieldOptions.validate === 'function' &&
           !hasValidatorInState
         ) {
-          formState.setValidator({ [name]: inputOptions.validate });
+          formState.setValidator({ [name]: fieldOptions.validate });
         }
 
         // auto populating default values of touched
@@ -110,40 +108,39 @@ export function useForm(initialState, options) {
         }
         return hasValueInState ? formState.current.values[name] : '';
       },
-      onChange: callbacks.getOrSet(ON_BLUR_HANDLER + key, e => {
+      onChange: callbacks.getOrSet(ON_CHANGE_HANDLER + key, e => {
+        const formValues = formState.current.values;
         setDirty(name, true);
-        let value = inputOptions.onChange(e);
+        let value = fieldOptions.onChange(e);
         if (value === undefined) {
           // setting value to its current state if onChange does not return
           // value to prevent React from complaining about the input switching
           // from controlled to uncontrolled
-          value = formState.current.values[name];
+          value = formValues[name];
         }
 
         // Mark raw fields as touched on change, since we might not get an
         // `onBlur` event from them.
-        if (inputOptions.touchOnChange) {
+        if (fieldOptions.touchOnChange) {
           touch(e);
         }
 
         let partialNewState = { [name]: value };
-        const newValues = { ...formState.current.values, ...partialNewState };
+        const newFormValues = {
+          ...formValues,
+          ...partialNewState,
+        };
 
-        partialNewState = formOptions.onChange(
-          partialNewState,
-          formState.current.values
-        );
+        partialNewState = formOptions.onChange(partialNewState, formValues);
 
-        if (!inputOptions.validateOnBlur) {
-          makeValidation(value, newValues);
+        if (fieldOptions.validate) {
+          makeFieldValidation(value, newFormValues, fieldOptions.validate);
         }
-
         formState.setValues(partialNewState);
       }),
-      onBlur: callbacks.getOrSet(ON_CHANGE_HANDLER + key, e => {
+      onBlur: callbacks.getOrSet(ON_BLUR_HANDLER + key, e => {
         touch(e);
-
-        inputOptions.onBlur(e);
+        fieldOptions.onBlur(e);
         formOptions.onBlur(e);
 
         /**
@@ -151,9 +148,15 @@ export function useForm(initialState, options) {
          * A) when it's either touched for the first time
          * B) when it's marked as dirty due to a value change
          */
-        if (!formState.current.touched[name] || isDirty(name)) {
-          makeValidation();
-          setDirty(name, false);
+        if (fieldOptions.validateOnBlur) {
+          if (!formState.current.touched[name] || isDirty(name)) {
+            makeFieldValidation(
+              formState.current.values[name],
+              formState.current.values,
+              fieldOptions.validateOnBlur
+            );
+            setDirty(name, false);
+          }
         }
       }),
     };

@@ -26,7 +26,7 @@ interface FormState<T, E = StateErrors<T, string>> {
 
 type Validator<T, Name extends keyof T = keyof T> = (
   value: StateValues<T>[Name],
-  values: StateValues<T>
+  formValues: StateValues<T>
 ) => any;
 
 type StateValues<T> = {
@@ -47,9 +47,9 @@ interface Inputs<T, Name extends keyof T = keyof T> {
 
 interface FieldOptions<T, Name extends keyof T, RawValue> {
   name: Name;
-  validateOnBlur?: boolean;
   touchOnChange?: boolean;
   validate?: Validator<T, Name>;
+  validateOnBlur?: Validator<T, Name>;
   onChange?(rawValue: RawValue): StateValues<T>[Name];
   onBlur?(...args: any[]): void;
 }

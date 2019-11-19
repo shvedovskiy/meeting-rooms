@@ -6,7 +6,7 @@ function stateReducer(state, newState) {
     : { ...state, ...newState };
 }
 
-export function useState(initialState) {
+export function useFormState(initialState) {
   const state = useRef();
   const [values, setValues] = useReducer(stateReducer, initialState || {});
   const [touched, setTouched] = useReducer(stateReducer, {});

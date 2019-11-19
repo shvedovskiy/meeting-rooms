@@ -14,6 +14,7 @@ import { PageMode, PageData } from 'context/page-context';
 import { useRecommendation } from './use-recommendation';
 import {
   validation,
+  blurValidation,
   validateOnSubmit,
   FormFields,
 } from '../form-common/validators';
@@ -106,6 +107,7 @@ export const FormUI = ({
               {...field({
                 name: 'startTime',
                 validate: validation.startTime,
+                validateOnBlur: blurValidation.startTime,
                 touchOnChange: true,
               })}
               error={validity.startTime === false || validity.time === false}
@@ -122,6 +124,7 @@ export const FormUI = ({
               {...field({
                 name: 'endTime',
                 validate: validation.endTime,
+                validateOnBlur: blurValidation.endTime,
                 touchOnChange: true,
               })}
               error={validity.endTime === false || validity.time === false}
