@@ -73,7 +73,7 @@ export const FormUI = ({
           id="title"
           size={size}
           placeholder="О чём будете говорить?"
-          {...field({ name: 'title' })}
+          {...field({ name: 'title', validate: () => true })}
           error={validity.title === false}
         />
         {errors.title && (

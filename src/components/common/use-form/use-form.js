@@ -17,7 +17,6 @@ const defaultFieldOptions = {
   onBlur: () => {},
   validate: null,
   validateOnBlur: null,
-  // validateOnBlur: false,
   touchOnChange: false,
 };
 
@@ -191,7 +190,12 @@ export function useForm(initialFormState, options) {
             fieldValidator
           );
           Object.assign(validities, fieldValidity);
-          Object.assign(errors, fieldError);
+          if (
+            Object.keys(fieldError).length &&
+            Object.values(fieldError).every(v => v != null)
+          ) {
+            Object.assign(errors, fieldError);
+          }
         }
       );
       if (Object.keys(errors).length) {
