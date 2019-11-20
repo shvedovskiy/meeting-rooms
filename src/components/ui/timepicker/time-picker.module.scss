@@ -1,8 +1,4 @@
 .timePicker {
-  --digit-width: 0.54em; // maybe "ch" unit
-  --colon-width: 0.217em;
-  // own padding + inputs padding + digits width + dots width
-  // min-width: calc(4px * 3 + var(--digit-width) * 6 + var(--colon-width) * 2);
   box-sizing: content-box;
   display: flex;
   align-items: baseline;
@@ -27,34 +23,28 @@
 }
 
 .input {
-  // min-width: var(--digit-width);
   height: 100%;
-  padding: 0 1px;
-  font: inherit;
+  text-overflow: ellipsis;
   background: none;
-  border: 0;
-  -moz-appearance: textfield;
+  appearance: textfield;
 
   &:focus {
     outline: none;
   }
 
-  &:invalid {
-    background: fade(#f00, 10%);
-  }
-
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     margin: 0;
-    -webkit-appearance: none;
+    appearance: none;
   }
 
-  &--hasLeadingZero {
-    margin-left: calc(var(--digit-width) * -1);
-    padding-left: calc(1px + var(--digit-width));
+  &-hasLeadingZero {
+    margin-left: -1ch;
+    padding-left: 1ch;
   }
 }
 
 .divider {
+  padding: 0 1px;
   white-space: pre;
 }

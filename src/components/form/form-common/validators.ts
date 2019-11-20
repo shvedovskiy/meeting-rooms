@@ -59,7 +59,7 @@ function timeIsIncorrect(time: string | null): time is null {
 }
 
 function timeIsEmpty(time: string) {
-  return time.trim().length === 0;
+  return time.trim().length === 0 || splitTimeString(time).some(Number.isNaN);
 }
 
 function timeIsOff(time: string) {

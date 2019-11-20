@@ -57,8 +57,8 @@ export class TimePicker extends PureComponent<Props, State> {
     if (nextValue !== null && hoursAreDifferent(nextValue, prevState.value)) {
       if (typeof nextValue === 'string' && nextValue.length > 0) {
         const [hour, minute] = splitTimeString(nextValue);
-        nextState.hour = hour;
-        nextState.minute = minute;
+        nextState.hour = Number.isNaN(hour) ? null : hour;
+        nextState.minute = Number.isNaN(minute) ? null : minute;
       } else {
         nextState.hour = null;
         nextState.minute = null;
@@ -147,14 +147,6 @@ export class TimePicker extends PureComponent<Props, State> {
     }
   };
 
-  onChangeNative: ChangeEventHandler<HTMLInputElement> = event => {
-    const { onChange } = this.props;
-    const { value } = event.target;
-    if (onChange) {
-      onChange(value === null ? null : value);
-    }
-  };
-
   onChangeExternal = () => {
     if (!this.props.onChange) {
       return;
@@ -168,17 +160,12 @@ export class TimePicker extends PureComponent<Props, State> {
 
     let changeValue: string | null = null;
     if (formElements.every(el => el != null && el.checkValidity() === true)) {
-      const emptyValues = formElements.reduce(
-        (sum, el) => sum + Number(el != null && el.value === ''),
-        0
-      );
-      if (emptyValues === formElements.length) {
+      if (formElements.every(el => el != null && el.value === '')) {
         changeValue = '';
-      } else if (emptyValues === 0) {
-        changeValue = `${values.hour.padStart(2, '0')}:${values.minute.padStart(
-          2,
-          '0'
-        )}`;
+      } else {
+        changeValue = `${values.hour ? values.hour.padStart(2, '0') : ''}:${
+          values.minute ? values.minute.padStart(2, '0') : ''
+        }`;
       }
     }
     this.props.onChange(changeValue);
@@ -225,7 +212,7 @@ export class TimePicker extends PureComponent<Props, State> {
   };
 
   render() {
-    const { size = 'default', error, value = '' } = this.props;
+    const { size = 'default', error } = this.props;
     return (
       <div
         className={classNames(classes.timePicker, {
@@ -236,15 +223,6 @@ export class TimePicker extends PureComponent<Props, State> {
         onFocus={this.props.onFocus}
         role="presentation"
       >
-        <input
-          className="visually-hidden"
-          tabIndex={-1}
-          onChange={this.onChangeNative}
-          onFocus={e => e.stopPropagation()}
-          step={60}
-          type="time"
-          value={value || ''}
-        />
         {this.renderHour()}
         <span className={classes.divider}>:</span>
         {this.renderMinute()}

@@ -57,7 +57,7 @@ export const TimeInput = (props: Props) => {
       <input
         autoComplete="off"
         className={classNames(classes.input, {
-          [classes['input--hasLeadingZero']]: hasLeadingZero,
+          [classes['input-hasLeadingZero']]: hasLeadingZero,
         })}
         max={max}
         min={min}
