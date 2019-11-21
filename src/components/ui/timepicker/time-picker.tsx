@@ -5,7 +5,7 @@ import React, {
   KeyboardEventHandler,
   MouseEventHandler,
 } from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 import { TimeInput } from './time-input';
 import { splitTimeString } from 'service/dates';
@@ -50,6 +50,10 @@ type State = {
 export class TimePicker extends PureComponent<Props, State> {
   private hourInput: HTMLInputElement | null = null;
   private minuteInput: HTMLInputElement | null = null;
+  state = {
+    hour: null,
+    minute: null,
+  };
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     const nextState: Partial<State> = {};
@@ -68,11 +72,6 @@ export class TimePicker extends PureComponent<Props, State> {
     return nextState;
   }
 
-  state = {
-    hour: null,
-    minute: null,
-  };
-
   onClick: MouseEventHandler<HTMLDivElement> = event => {
     if (event.target === event.currentTarget) {
       const firstInput = (event.target as HTMLDivElement).children[1];
@@ -84,11 +83,8 @@ export class TimePicker extends PureComponent<Props, State> {
     if (this.props.onBlur) {
       event.persist();
       setTimeout(() => {
-        if (
-          [this.hourInput, this.minuteInput].every(
-            input => document.activeElement !== input
-          )
-        ) {
+        const inputs = [this.hourInput, this.minuteInput];
+        if (inputs.every(i => document.activeElement !== i)) {
           this.props.onBlur!(event);
         }
       }, 0);
@@ -111,6 +107,7 @@ export class TimePicker extends PureComponent<Props, State> {
         break;
       }
       default:
+        break;
     }
   };
 
@@ -121,7 +118,10 @@ export class TimePicker extends PureComponent<Props, State> {
     const input = event.target as HTMLInputElement;
     const max = Number.parseInt(input.getAttribute('max')!, 10);
 
-    if (Number.parseInt(input.value, 10) * 10 > max) {
+    if (
+      Number.parseInt(input.value, 10) * 10 > max ||
+      input.value.length >= 2
+    ) {
       const property = 'nextElementSibling';
       const nextInput = findInput(input, property);
       focus(nextInput);
@@ -215,7 +215,7 @@ export class TimePicker extends PureComponent<Props, State> {
     const { size = 'default', error } = this.props;
     return (
       <div
-        className={classNames(classes.timePicker, {
+        className={cn(classes.timePicker, {
           [classes.lg]: size !== 'default',
           [classes.error]: error,
         })}
