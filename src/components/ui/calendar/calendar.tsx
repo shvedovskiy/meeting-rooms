@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DayPicker, { DayModifiers, ClassNames } from 'react-day-picker';
+import DayPicker, { DayModifiers } from 'react-day-picker';
 import { startOfDay } from 'date-fns/esm';
 
 import classes from './calendar.module.scss';
@@ -26,8 +26,7 @@ export const Calendar = (props: Props) => {
   return (
     <DayPicker
       className={className}
-      // @ts-ignore
-      classNames={classes as ClassNames}
+      classNames={classes}
       firstDayOfWeek={1}
       fromMonth={now}
       labels={LABELS}

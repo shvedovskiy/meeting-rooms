@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DayModifiers, ClassNames, InputClassNames } from 'react-day-picker';
+import { DayModifiers } from 'react-day-picker';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import {
   format as dateFnsFormat,
@@ -50,8 +50,7 @@ export const CalendarInput = (props: Props) => {
   }
 
   const dayPickerProps = {
-    // @ts-ignore
-    classNames: classes as ClassNames,
+    classNames: classes,
     firstDayOfWeek: 1,
     fromMonth: now,
     labels: LABELS,
@@ -69,8 +68,7 @@ export const CalendarInput = (props: Props) => {
 
   return (
     <DayPickerInput
-      // @ts-ignore
-      classNames={inputClasses as InputClassNames}
+      classNames={inputClasses}
       component={Input}
       dayPickerProps={dayPickerProps}
       inputProps={{
