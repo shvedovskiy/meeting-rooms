@@ -1,24 +1,25 @@
 import { FocusEventHandler } from 'react';
 
 type StateShape<T> = { [key in keyof T]: any };
+type StateErrors<E> = { [key in keyof E]?: string };
 
 interface UseForm {
-  <T extends StateShape<T>, E = StateErrors<T, string>>(
+  <T extends StateShape<T>, E extends StateErrors<E>>(
     initialState?: Partial<T> | null,
     formOptions?: {
       onChange?: (newValues: Partial<T>, state: StateValues<T>) => Partial<T>;
       onBlur?: FocusEventHandler<HTMLElement>;
       onTouched?: FocusEventHandler<HTMLElement>;
-      submitValidator?: (formValues: StateValues<T>) => StateErrors<T>;
+      submitValidator?: (formValues: StateValues<T>) => Partial<E>;
     }
   ): [FormState<T, E>, Inputs<T>];
 }
 
 export const useForm: UseForm;
 
-interface FormState<T, E = StateErrors<T, string>> {
+interface FormState<T, E> {
   values: StateValues<T>;
-  validity: StateValidity<T>;
+  validity: StateValidity<E>;
   touched: StateValidity<T>;
   validators: StateValidators<T>;
   errors: E;
@@ -33,9 +34,6 @@ type StateValues<T> = {
   readonly [A in keyof T]: T[A] extends number ? string : T[A];
 };
 type StateValidity<T> = { readonly [A in keyof T]: boolean | undefined };
-type StateErrors<T, E = string> = {
-  readonly [A in keyof T]?: E | string | null;
-};
 type StateValidators<T> = { readonly [A in keyof T]?: Validator<T> };
 
 interface Inputs<T, Name extends keyof T = keyof T> {

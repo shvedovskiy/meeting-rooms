@@ -17,6 +17,7 @@ import {
   blurValidation,
   validateOnSubmit,
   FormFields,
+  FormErrors,
 } from '../form-common/validators';
 import { UpdateEventVariables } from 'service/mutations';
 import {
@@ -49,7 +50,10 @@ export const FormUI = ({
 }: Props) => {
   const size = useSizeCtx();
   const movedEvents = useRef<UpdateEventVariables[]>([]);
-  const [{ values, validity, errors }, { field, form }] = useForm<FormFields>(
+  const [{ values, validity, errors }, { field, form }] = useForm<
+    FormFields,
+    FormErrors
+  >(
     {
       ...defaultFormValues,
       ...initialValues,
@@ -73,7 +77,10 @@ export const FormUI = ({
           id="title"
           size={size}
           placeholder="О чём будете говорить?"
-          {...field({ name: 'title', validate: () => true })}
+          {...field({
+            name: 'title',
+            validate: validation.title,
+          })}
           error={validity.title === false}
         />
         {errors.title && (
@@ -202,6 +209,13 @@ export const FormUI = ({
             },
           })}
         >
+          <div className={classes.formError}>
+            {errors.form && (
+              <strong className={classes.formErrorMessage}>
+                {errors.form}
+              </strong>
+            )}
+          </div>
           {renderFormFields()}
         </form>
         <FormActions

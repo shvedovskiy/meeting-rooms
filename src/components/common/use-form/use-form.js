@@ -45,6 +45,24 @@ function validateField(fieldName, fieldValue, formValues, validator) {
   return [{ [fieldName]: true }, { [fieldName]: null }];
 }
 
+function validateForm(formValues, validator) {
+  const result = validator(formValues);
+  const validities = {};
+  const errors = {};
+  if (typeof result !== 'boolean') {
+    Object.entries(result).forEach(([name, fieldResult]) => {
+      if (typeof fieldResult === 'boolean') {
+        validities[name] = fieldResult;
+        errors[name] = null;
+      } else if (typeof fieldResult === 'string') {
+        validities[name] = false;
+        errors[name] = fieldResult;
+      }
+    });
+  }
+  return [validities, errors];
+}
+
 export function useForm(initialFormState, options) {
   const formOptions = { ...defaultFormOptions, ...options };
 
@@ -131,10 +149,7 @@ export function useForm(initialFormState, options) {
         };
 
         partialNewState = formOptions.onChange(partialNewState, formValues);
-
-        if (fieldOptions.validate) {
-          makeFieldValidation(value, newFormValues, fieldOptions.validate);
-        }
+        makeFieldValidation(value, newFormValues, fieldOptions.validate);
         formState.setValues(partialNewState);
       }),
       onBlur: callbacks.getOrSet(ON_BLUR_HANDLER + key, e => {
@@ -165,12 +180,11 @@ export function useForm(initialFormState, options) {
     const key = `${name}.form`;
 
     function makeSubmitValidation() {
-      const errors = formOptions.submitValidator(formState.current.values);
+      const [validities, errors] = validateForm(
+        formState.current.values,
+        formOptions.submitValidator
+      );
       if (Object.keys(errors).length) {
-        const validities = {};
-        for (const errorField of Object.keys(errors)) {
-          validities[errorField] = false;
-        }
         formState.setValidity(validities);
         formState.setError(errors);
         return false;
@@ -183,18 +197,18 @@ export function useForm(initialFormState, options) {
       const errors = {};
       Object.entries(formState.current.validators || {}).forEach(
         ([fieldName, fieldValidator]) => {
-          const [fieldValidity, fieldError] = validateField(
+          const [validity, error] = validateField(
             fieldName,
             formState.current.values[fieldName],
             formState.current.values,
             fieldValidator
           );
-          Object.assign(validities, fieldValidity);
+          Object.assign(validities, validity);
           if (
-            Object.keys(fieldError).length &&
-            Object.values(fieldError).every(v => v != null)
+            Object.keys(error).length &&
+            Object.values(error).every(v => v != null)
           ) {
-            Object.assign(errors, fieldError);
+            Object.assign(errors, error);
           }
         }
       );

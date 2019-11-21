@@ -10,8 +10,7 @@
   max-width: 900px;
   margin: 0 auto;
   padding-bottom: 30px;
-
-  grid-template-rows: auto auto;
+  grid-template-rows: repeat(3, auto);
   // stylelint-disable-next-line plugin/no-unsupported-browser-features
   grid-template-columns: repeat(2, 50%);
   grid-row-gap: 4px;
@@ -40,11 +39,24 @@
   }
 }
 
-.inputError {
-  margin-top: 4px;
+.inputError,
+.formErrorMessage {
   font-weight: 600;
   color: var(--text-invalid);
   word-break: break-word;
+}
+
+.inputError {
+  margin-top: 4px;
+}
+
+.formError {
+  grid-column: 1 / span 2;
+
+  &Message {
+    display: block;
+    margin-bottom: 15px;
+  }
 }
 
 .dateTime {

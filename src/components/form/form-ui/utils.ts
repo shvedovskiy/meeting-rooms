@@ -1,5 +1,5 @@
 import { PageData } from 'context/page-context';
-import { FormFields } from '../form-common/validators';
+import { FormFields, FormErrors } from '../form-common/validators';
 import { StateValidity, StateValues } from 'components/common/use-form';
 import { RoomCard, Event, RoomData } from 'components/timesheet/types';
 import { UpdateEventVariables } from 'service/mutations';
@@ -19,7 +19,7 @@ export const defaultFormValues = {
 };
 
 export function roomsDisplayed(
-  validity: StateValidity<FormFields>,
+  validity: StateValidity<FormErrors>,
   values: StateValues<FormFields>,
   initialValues: PageData
 ) {
@@ -60,7 +60,7 @@ export function roomsDisplayed(
 }
 
 export function recommendationNeeded(
-  validity: StateValidity<FormFields>,
+  validity: StateValidity<FormErrors>,
   values: StateValues<FormFields>,
   initialValues: PageData
 ) {

@@ -1,7 +1,6 @@
 import { isToday, isFuture } from 'date-fns/esm';
-import { Mutable } from 'utility-types';
 
-import { StateValues, StateErrors } from 'components/common/use-form';
+import { StateValues } from 'components/common/use-form';
 import {
   splitTimeString,
   isPastTime,
@@ -15,12 +14,23 @@ export interface FormFields {
   date: Date | null;
   startTime: string;
   endTime: string;
-  time: string | null;
   users: UserData[] | null;
   room: RoomCard | null;
 }
 
+export type FormErrors = {
+  form: string;
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  time: string;
+  users: string;
+  room: string;
+};
+
 const errors = {
+  EMPTY_FIELDS: 'Необходимо заполнить все поля',
   EMPTY_TITLE: 'Необходимо ввести название встречи',
   EMPTY_DATE: 'Необходимо указать дату встречи',
   EMPTY_START: 'Необходимо указать время начала',
@@ -105,14 +115,17 @@ function roomIsEmpty(room: RoomCard | null): room is null {
 
 // VALIDATORS:
 export const validation = {
+  title() {
+    return { title: true, form: true };
+  },
   date(date: Date | null, values: StateValues<FormFields>) {
+    const valid = { form: true, date: true };
     if (dateIsEmpty(date)) {
-      return true;
+      return Object.assign(valid, { date: true });
     }
     if (dateInPast(date)) {
-      return errors.DATE_PAST;
+      return Object.assign(valid, { date: errors.DATE_PAST });
     }
-    const valid = { date: true };
     if (timeIsValid(values.startTime)) {
       Object.assign(valid, {
         startTime: timeIsInPast(values.startTime, date)
@@ -128,31 +141,32 @@ export const validation = {
     return valid;
   },
   startTime(startTime: string | null) {
-    const valid = { time: true, startTime: true };
+    const valid = { startTime: true, time: true, form: true };
     if (timeIsIncorrect(startTime)) {
       return Object.assign(valid, { startTime: false });
     }
     return valid;
   },
   endTime(endTime: string | null) {
-    const valid = { time: true, endTime: true };
+    const valid = { endTime: true, time: true, form: true };
     if (timeIsIncorrect(endTime)) {
       return Object.assign(valid, { endTime: false });
     }
     return valid;
   },
   users(users: UserData[] | null, values: StateValues<FormFields>) {
+    const valid = { form: true, users: true };
     if (usersAreEmpty(users) || roomIsEmpty(values.room)) {
-      return true;
+      return valid;
     }
     const maxCapacity = values.room.maxCapacity;
     if (maxCapacity !== null && users.length > maxCapacity) {
-      return errors.TOO_MANY_USERS;
+      Object.assign(valid, { users: errors.TOO_MANY_USERS });
     }
-    return true;
+    return valid;
   },
   room(value: RoomCard | null, values: StateValues<FormFields>) {
-    const valid = { room: true };
+    const valid = { room: true, form: true };
     if (roomIsEmpty(value) && !usersAreEmpty(values.users)) {
       Object.assign(valid, { users: true });
     }
@@ -218,25 +232,27 @@ export const blurValidation = {
 };
 
 export function validateOnSubmit(values: StateValues<FormFields>) {
-  const validationErrors: Mutable<StateErrors<FormFields>> = {};
+  const valid = {};
   if (values.hasOwnProperty('title') && values.title.trim().length === 0) {
-    validationErrors.title = errors.EMPTY_TITLE;
+    Object.assign(valid, { title: false });
   }
   if (values.hasOwnProperty('date') && dateIsEmpty(values.date)) {
-    validationErrors.date = errors.EMPTY_DATE;
+    Object.assign(valid, { date: false });
   }
   if (values.hasOwnProperty('startTime') && timeIsEmpty(values.startTime)) {
-    validationErrors.startTime = errors.EMPTY_START;
+    Object.assign(valid, { startTime: false });
   }
   if (values.hasOwnProperty('endTime') && timeIsEmpty(values.endTime)) {
-    validationErrors.endTime = errors.EMPTY_END;
+    Object.assign(valid, { endTime: false });
   }
   if (values.hasOwnProperty('users') && usersAreEmpty(values.users)) {
-    validationErrors.users = errors.EMPTY_USERS;
+    Object.assign(valid, { users: false });
   }
   if (values.hasOwnProperty('room') && roomIsEmpty(values.room)) {
-    validationErrors.room = errors.EMPTY_ROOM;
+    Object.assign(valid, { room: false });
   }
-
-  return validationErrors;
+  if (Object.keys(valid).length > 0) {
+    Object.assign(valid, { form: errors.EMPTY_FIELDS });
+  }
+  return valid;
 }
