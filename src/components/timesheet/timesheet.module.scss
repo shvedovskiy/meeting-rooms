@@ -6,7 +6,7 @@
     'timeline timeline' auto
     / var(--aside-desktop-width) auto;
   height: 100%;
-  overflow: scroll;
+  overflow: auto;
   -webkit-overflow-scrolling: touch;
 
   &.lg {

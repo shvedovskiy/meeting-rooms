@@ -38,6 +38,10 @@
     appearance: none;
   }
 
+  &::placeholder {
+    color: var(--text-secondary);
+  }
+
   &-hasLeadingZero {
     margin-left: -1ch;
     padding-left: 1ch;

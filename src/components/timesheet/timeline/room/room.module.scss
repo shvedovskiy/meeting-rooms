@@ -96,6 +96,12 @@ $states: '&:hover::before, &:focus::before, &:active::before' !default;
     border-radius: 2px;
   }
 
+  &:hover,
+  &:focus,
+  &:active {
+    z-index: 2;
+  }
+
   &:active {
     background-color: var(--table-cell-primary-3);
     border-radius: 2px;
@@ -107,13 +113,13 @@ $states: '&:hover::before, &:focus::before, &:active::before' !default;
 
   #{$states} {
     position: absolute;
-    top: 50%;
+    top: 0;
     left: 50%;
     font-size: 24px;
     font-weight: 600;
     color: var(--text-inverted);
     content: '+';
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
   }
 
   &.busy {
