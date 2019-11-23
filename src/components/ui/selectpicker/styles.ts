@@ -10,10 +10,10 @@ export const customStyles = {
         ? 'var(--default-text)'
         : 'var(--medium-text)',
     border: `2px solid var(${
-      state.isFocused
-        ? '--border-1'
-        : state.selectProps.error
+      state.selectProps.error
         ? '--text-invalid'
+        : state.isFocused
+        ? '--border-1'
         : '--border'
     })`,
     boxShadow: 'none',
@@ -21,10 +21,10 @@ export const customStyles = {
     cursor: 'text',
     '&:hover': {
       border: `2px solid var(${
-        state.isFocused
-          ? '--border-1'
-          : state.selectProps.error
+        state.selectProps.error
           ? '--text-invalid'
+          : state.isFocused
+          ? '--border-1'
           : '--border'
       })`,
     },
