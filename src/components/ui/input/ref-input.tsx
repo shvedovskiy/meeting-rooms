@@ -1,15 +1,17 @@
 import React, {
   forwardRef,
   ReactNode,
-  ChangeEvent,
-  FocusEvent,
   MouseEvent,
   KeyboardEvent,
+  ChangeEventHandler,
+  FocusEventHandler,
+  KeyboardEventHandler,
 } from 'react';
 import classNames from 'classnames';
 
 import { Size } from 'context/size-context';
 import classes from './input.module.scss';
+import { MouseEventHandler } from 'react-select';
 
 type Props = {
   value?: string;
@@ -19,11 +21,11 @@ type Props = {
   onSideIconClick?: (
     event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
   ) => void;
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  onClick?: (event: MouseEvent<HTMLInputElement>) => void;
-  onFocus?: (event: FocusEvent<HTMLInputElement>) => void;
-  onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
-  onKeyUp?: (event: KeyboardEvent<HTMLInputElement>) => void;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onClick?: MouseEventHandler;
+  onFocus?: FocusEventHandler<HTMLInputElement>;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
+  onKeyUp?: KeyboardEventHandler<HTMLInputElement>;
 };
 
 export const Input = forwardRef<HTMLInputElement, Props>((props, ref) => {
@@ -48,31 +50,11 @@ export const Input = forwardRef<HTMLInputElement, Props>((props, ref) => {
       [classes.lg]: size === 'large',
       [classes.error]: error,
     }),
-    onClick(event: MouseEvent<HTMLInputElement>) {
-      if (onClick) {
-        onClick(event);
-      }
-    },
-    onChange(event: ChangeEvent<HTMLInputElement>) {
-      if (onChange) {
-        onChange(event);
-      }
-    },
-    onFocus(event: FocusEvent<HTMLInputElement>) {
-      if (onFocus) {
-        onFocus(event);
-      }
-    },
-    onBlur(event: FocusEvent<HTMLInputElement>) {
-      if (onBlur) {
-        onBlur(event);
-      }
-    },
-    onKeyUp(event: KeyboardEvent<HTMLInputElement>) {
-      if (onKeyUp) {
-        onKeyUp(event);
-      }
-    },
+    onClick,
+    onChange,
+    onFocus,
+    onBlur,
+    onKeyUp,
   };
 
   function renderSideIcon() {

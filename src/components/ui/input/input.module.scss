@@ -34,7 +34,7 @@
     }
   }
 
-  &.error:not(:focus) {
+  &.error {
     border-color: var(--text-invalid);
   }
 }

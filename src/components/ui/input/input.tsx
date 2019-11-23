@@ -91,11 +91,7 @@ export const Input = (props: Props) => {
     ref: inputNode,
     value,
     onChange: handleChange,
-    onBlur: () => {
-      if (onBlur) {
-        onBlur();
-      }
-    },
+    onBlur,
   };
   const closeIconProps = {
     'aria-label': 'Очистить поле',
