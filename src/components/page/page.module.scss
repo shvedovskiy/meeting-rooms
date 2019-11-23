@@ -28,9 +28,7 @@
   margin-bottom: 18px;
   padding: 0 16px;
 
-  &::after {
-    @include clearfix;
-  }
+  @include clearfix;
 }
 
 .title {

@@ -5,7 +5,13 @@
 }
 
 @mixin clearfix {
-  display: block;
-  clear: both;
-  content: '';
+  &::before,
+  &::after {
+    display: table;
+    content: '';
+  }
+
+  &::after {
+    clear: both;
+  }
 }
