@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import { startOfDay } from 'date-fns/esm';
 
+import { Weekday } from './weekday';
+import { MONTHS, LABELS } from './utils';
 import classes from './calendar.module.scss';
-import { MONTHS, LABELS, Weekday } from './common';
 
 type Props = {
   className?: string;

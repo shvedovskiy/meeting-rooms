@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
-import { DayModifiers } from 'react-day-picker';
+import React, { useState, createRef } from 'react';
+import { DayModifiers, DateUtils, DayPickerProps } from 'react-day-picker';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
-import {
-  format as dateFnsFormat,
-  parse as dateFnsParse,
-  isValid,
-  startOfDay,
-} from 'date-fns/esm';
-import ruLocale from 'date-fns/locale/ru';
+import { startOfDay } from 'date-fns/esm';
 
 import { Input } from 'components/ui/input/ref-input';
 import { Icon } from 'components/ui/icon/icon';
 import { Size } from 'context/size-context';
-import { MONTHS, LABELS, Weekday } from '../common';
+import { Weekday } from '../weekday';
+import {
+  MONTHS,
+  LABELS,
+  FORMAT,
+  isDateIncomplete,
+  parseDate as parse,
+  formatDate as format,
+} from '../utils';
 import classes from '../calendar.module.scss';
 import inputClasses from './calendar-input.module.scss';
 
@@ -21,35 +23,41 @@ type Props = {
   id?: string;
   value?: Date | null;
   error?: boolean;
-  onChange: (newDate: Date | null) => void;
+  onChange: (newDate: Date | null | undefined) => void;
+  onBlur: () => void;
 };
 
-function formatDate(date: Date, format: string) {
-  return dateFnsFormat(date, format, { locale: ruLocale });
-}
-
 function parseDate(str: string, format: string) {
-  const parsed = dateFnsParse(str, format, Date.now(), { locale: ruLocale });
-  if (isValid(parsed)) {
+  const parsed = parse(str, format);
+  if (DateUtils.isDate(parsed)) {
     return parsed;
   }
 }
 
 export const CalendarInput = (props: Props) => {
   const now = new Date();
-  const { size = 'default', id, value, error, onChange } = props;
-  const [selected, setSelected] = useState(now);
+  const input = createRef<DayPickerInput>();
+  const { size = 'default', id, value, error, onChange, onBlur } = props;
+  const [selected, setSelected] = useState<Date | null>(now);
 
-  function handleDayChange(date: Date | null, modifiers: DayModifiers) {
+  function handleDayChange(date: Date | null = null, modifiers: DayModifiers) {
     if (!modifiers.disabled && !modifiers.selected) {
-      if (date) {
-        setSelected(date);
+      setSelected(date);
+
+      let result: Date | null | undefined = null;
+      if (date == null) {
+        const inputValue = input.current!.getInput().value as string;
+        if (isDateIncomplete(inputValue)) {
+          result = undefined;
+        }
+      } else {
+        result = startOfDay(date);
       }
-      onChange(date !== null ? startOfDay(date) : null);
+      onChange(result);
     }
   }
 
-  const dayPickerProps = {
+  const dayPickerProps: DayPickerProps = {
     classNames: classes,
     firstDayOfWeek: 1,
     fromMonth: now,
@@ -59,12 +67,14 @@ export const CalendarInput = (props: Props) => {
       [classes.disabled]: {
         before: now,
       },
-      [classes.selected]: selected,
     },
     months: MONTHS,
     showOutsideDays: true,
     weekdayElement: Weekday,
   };
+  if (selected) {
+    dayPickerProps.modifiers![classes.selected] = selected;
+  }
 
   return (
     <DayPickerInput
@@ -76,11 +86,13 @@ export const CalendarInput = (props: Props) => {
         id,
         error,
         sideIcon: <Icon name="calendar" size="large" />,
+        onBlur,
       }}
-      format={'d MMMM, y'}
-      formatDate={formatDate}
+      format={FORMAT}
+      formatDate={format}
       parseDate={parseDate}
       placeholder={''}
+      ref={input}
       onDayChange={handleDayChange}
       value={value || undefined}
     />

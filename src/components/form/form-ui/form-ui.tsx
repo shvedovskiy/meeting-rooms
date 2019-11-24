@@ -83,9 +83,7 @@ export const FormUI = ({
           })}
           error={validity.title === false}
         />
-        {errors.title && (
-          <div className={classes.inputError}>{errors.title}</div>
-        )}
+        {errors.title && <p className={classes.inputError}>{errors.title}</p>}
       </div>,
       <div key="datetime" className={classes.dateTime}>
         <div className={classes.date}>
@@ -98,13 +96,12 @@ export const FormUI = ({
             {...field({
               name: 'date',
               validate: validation.date,
+              validateOnBlur: blurValidation.date,
               touchOnChange: true,
             })}
             error={validity.date === false}
           />
-          {errors.date && (
-            <div className={classes.inputError}>{errors.date}</div>
-          )}
+          {errors.date && <p className={classes.inputError}>{errors.date}</p>}
         </div>
         <div className={classes.timeContainer}>
           <div className={classes.time}>
@@ -120,7 +117,7 @@ export const FormUI = ({
               error={validity.startTime === false || validity.time === false}
             />
             {errors.startTime && (
-              <div className={classes.inputError}>{errors.startTime}</div>
+              <p className={classes.inputError}>{errors.startTime}</p>
             )}
           </div>
           <span>&mdash;</span>
@@ -137,14 +134,14 @@ export const FormUI = ({
               error={validity.endTime === false || validity.time === false}
             />
             {errors.endTime && (
-              <div className={classes.inputError}>{errors.endTime}</div>
+              <p className={classes.inputError}>{errors.endTime}</p>
             )}
           </div>
         </div>
         {errors.time && (
-          <div className={cn(classes.inputError, classes.timeErrors)}>
+          <p className={cn(classes.inputError, classes.timeErrors)}>
             {errors.time}
-          </div>
+          </p>
         )}
       </div>,
       <div key="users" className={classes.users}>
@@ -160,9 +157,7 @@ export const FormUI = ({
           })}
           error={validity.users === false}
         />
-        {errors.users && (
-          <div className={classes.inputError}>{errors.users}</div>
-        )}
+        {errors.users && <p className={classes.inputError}>{errors.users}</p>}
       </div>,
     ];
 
@@ -182,9 +177,7 @@ export const FormUI = ({
               touchOnChange: true,
             })}
           />
-          {errors.room && (
-            <div className={classes.inputError}>{errors.room}</div>
-          )}
+          {errors.room && <p className={classes.inputError}>{errors.room}</p>}
         </div>
       );
     }
@@ -211,9 +204,7 @@ export const FormUI = ({
         >
           <div className={classes.formError}>
             {errors.form && (
-              <strong className={classes.formErrorMessage}>
-                {errors.form}
-              </strong>
+              <p className={classes.formErrorMessage}>{errors.form}</p>
             )}
           </div>
           {renderFormFields()}

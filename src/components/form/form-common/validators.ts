@@ -11,7 +11,7 @@ import { UserData, RoomCard } from 'components/timesheet/types';
 
 export interface FormFields {
   title: string;
-  date: Date | null;
+  date: Date | null | undefined;
   startTime: string;
   endTime: string;
   users: UserData[] | null;
@@ -31,12 +31,6 @@ export type FormErrors = {
 
 const errors = {
   EMPTY_FIELDS: 'Необходимо заполнить все поля',
-  EMPTY_TITLE: 'Необходимо ввести название встречи',
-  EMPTY_DATE: 'Необходимо указать дату встречи',
-  EMPTY_START: 'Необходимо указать время начала',
-  EMPTY_END: 'Необходимо указать время окончания',
-  EMPTY_USERS: 'Необходимо добавить участников',
-  EMPTY_ROOM: 'Необходимо выбрать переговорку',
   DATE_PAST: 'Прошедшая дата не может быть выбрана',
   START_PAST: 'Время начала не может быть в прошлом',
   END_PAST: 'Время окончания не может быть в прошлом',
@@ -46,12 +40,23 @@ const errors = {
 };
 
 // DATE:
-function dateIsEmpty(date: Date | null): date is null {
-  return date == null;
+function dateIsEmpty(date: Date | null | undefined): date is undefined {
+  return date === undefined;
+}
+
+function dateIsIncorrect(date: Date | null | undefined): date is null {
+  if (!dateIsEmpty(date)) {
+    return date === null;
+  }
+  return false;
 }
 
 function dateInPast(date: Date) {
   return !isToday(date) && !isFuture(date);
+}
+
+function dateIsValid(date: Date | null | undefined): date is Date {
+  return !dateIsEmpty(date) && !dateIsIncorrect(date);
 }
 
 // TIME:
@@ -95,8 +100,8 @@ function timeIsOff(time: string) {
   return false;
 }
 
-function timeIsInPast(time: string, date: Date | null) {
-  return !dateIsEmpty(date) && isToday(date) && isPastTime(time);
+function timeIsInPast(time: string, date: Date | null | undefined) {
+  return dateIsValid(date) && isToday(date) && isPastTime(time);
 }
 
 function timeIsValid(value: string | null) {
@@ -118,25 +123,10 @@ export const validation = {
   title() {
     return { title: true, form: true };
   },
-  date(date: Date | null, values: StateValues<FormFields>) {
+  date(date: Date | null | undefined) {
     const valid = { form: true, date: true };
-    if (dateIsEmpty(date)) {
-      return Object.assign(valid, { date: true });
-    }
-    if (dateInPast(date)) {
-      return Object.assign(valid, { date: errors.DATE_PAST });
-    }
-    if (timeIsValid(values.startTime)) {
-      Object.assign(valid, {
-        startTime: timeIsInPast(values.startTime, date)
-          ? errors.START_PAST
-          : true,
-      });
-    }
-    if (timeIsValid(values.endTime)) {
-      Object.assign(valid, {
-        endTime: timeIsInPast(values.endTime, date) ? errors.END_PAST : true,
-      });
+    if (dateIsIncorrect(date)) {
+      return Object.assign(valid, { date: false });
     }
     return valid;
   },
@@ -228,6 +218,32 @@ export const blurValidation = {
       endTime: endTimeResult,
       time,
     };
+  },
+  date(date: Date | null | undefined, values: StateValues<FormFields>) {
+    if (dateIsEmpty(date)) {
+      return true;
+    }
+    if (dateIsIncorrect(date)) {
+      return false;
+    }
+
+    const valid = { date: true };
+    if (dateInPast(date)) {
+      return Object.assign(valid, { date: errors.DATE_PAST });
+    }
+    if (timeIsValid(values.startTime)) {
+      Object.assign(valid, {
+        startTime: timeIsInPast(values.startTime, date)
+          ? errors.START_PAST
+          : true,
+      });
+    }
+    if (timeIsValid(values.endTime)) {
+      Object.assign(valid, {
+        endTime: timeIsInPast(values.endTime, date) ? errors.END_PAST : true,
+      });
+    }
+    return valid;
   },
 };
 

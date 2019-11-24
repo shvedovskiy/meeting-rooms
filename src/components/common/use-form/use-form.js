@@ -128,13 +128,13 @@ export function useForm(initialFormState, options) {
       onChange: callbacks.getOrSet(ON_CHANGE_HANDLER + key, e => {
         const formValues = formState.current.values;
         setDirty(name, true);
-        let value = fieldOptions.onChange(e);
-        if (value === undefined) {
-          // setting value to its current state if onChange does not return
-          // value to prevent React from complaining about the input switching
-          // from controlled to uncontrolled
-          value = formValues[name];
-        }
+        const value = fieldOptions.onChange(e);
+        // if (value === undefined) {
+        //   // setting value to its current state if onChange does not return
+        //   // value to prevent React from complaining about the input switching
+        //   // from controlled to uncontrolled
+        //   value = formValues[name];
+        // }
 
         // Mark raw fields as touched on change, since we might not get an
         // `onBlur` event from them.
