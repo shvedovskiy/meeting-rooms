@@ -8,11 +8,7 @@ import { Event } from '../entity/event';
 import { seedDatabase } from './seed-database';
 import { DATABASE_NAME } from './config';
 
-export async function connectToDatabase(
-  production = false,
-  drop = false,
-  seed = false
-) {
+export async function connectToDatabase(prod = false, drop = false) {
   useContainer(Container);
 
   const connection = await createConnection({
@@ -20,12 +16,12 @@ export async function connectToDatabase(
     type: 'sqlite',
     database: DATABASE_NAME,
     entities: [User, Room, Event],
-    logging: production,
-    synchronize: !production,
+    logging: !prod,
+    synchronize: drop,
     dropSchema: drop,
   });
 
-  if (seed) {
+  if (!prod) {
     await seedDatabase();
   }
 

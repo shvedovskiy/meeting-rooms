@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 
-import { isProdEnv } from './service/config';
+import { isProdEnv, REFRESH_DB } from './service/config';
 import { connectToDatabase } from './service/create-connection';
 
-connectToDatabase(isProdEnv, true, true)
+connectToDatabase(isProdEnv, REFRESH_DB)
   .then(() => {
     process.exit();
   })
