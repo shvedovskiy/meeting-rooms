@@ -16,9 +16,8 @@ server/assets/avatars/
 
 # misc
 .DS_Store
-.env
-.env.*
-!.env.example
+.env.local
+.env.*.local
 *.sqlite3
 
 npm-debug.log*
