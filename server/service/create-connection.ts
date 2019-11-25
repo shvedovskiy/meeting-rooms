@@ -8,7 +8,11 @@ import { Event } from '../entity/event';
 import { seedDatabase } from './seed-database';
 import { DATABASE_NAME } from './config';
 
-export async function connectToDatabase(prod = false, drop = false) {
+export async function connectToDatabase(
+  prod = false,
+  drop = false,
+  seed = false
+) {
   useContainer(Container);
 
   const connection = await createConnection({
@@ -21,7 +25,7 @@ export async function connectToDatabase(prod = false, drop = false) {
     dropSchema: drop,
   });
 
-  if (!prod) {
+  if (seed) {
     await seedDatabase();
   }
 
