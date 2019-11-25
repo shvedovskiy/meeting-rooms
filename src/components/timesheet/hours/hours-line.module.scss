@@ -3,7 +3,7 @@
   top: 100%;
   left: var(--left-correction);
   display: block;
-  height: calc(100vh - 72px - var(--height-correction));
+  height: calc(100vh - var(--header-height) - var(--height-correction));
   content: '';
   border-right: 1px solid $color;
 }
@@ -31,6 +31,10 @@
     --left-correction: 0;
     --height-correction: 23px;
     @include timeStrip(var(--primary-1));
+
+    .hoursLine.lg & {
+      --height-correction: 62px;
+    }
   }
 }
 
@@ -52,6 +56,10 @@
     --left-correction: 50%;
     --height-correction: 46px;
     @include timeStrip(rgba(19, 100, 205, 0.1));
+
+    .hoursLine.lg & {
+      --height-correction: 77px;
+    }
   }
 
   &.overpast {

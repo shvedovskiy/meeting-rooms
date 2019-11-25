@@ -14,7 +14,8 @@
   margin-left: 5px;
   overflow: hidden;
   font-size: var(--medium-text);
-  overflow-wrap: break-word;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   .dateSwitch.lg & {
     @include oneLineEllipsis;

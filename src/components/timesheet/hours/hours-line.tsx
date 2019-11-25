@@ -1,10 +1,11 @@
 import React, { memo, useState, useEffect } from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import { isSameDay, isBefore, getHours, getMinutes } from 'date-fns/esm';
 
 import { HOURS, dateToTimeString, RANGES_LEN } from 'service/dates';
-import classes from './hours-line.module.scss';
 import { useCurrentTime } from './use-current-time';
+import { useSizeCtx } from 'context/size-context';
+import classes from './hours-line.module.scss';
 
 type Props = {
   displayedDate: Date;
@@ -13,6 +14,7 @@ type Props = {
 const TIME_PERCENTAGE_COEF = 100 / (30 + 15 * RANGES_LEN + 30); // timesheet length in minutes
 
 export const HoursLine = memo(({ displayedDate }: Props) => {
+  const size = useSizeCtx();
   const now = useCurrentTime(displayedDate);
   const [offset, setOffset] = useState(0);
 
@@ -36,7 +38,7 @@ export const HoursLine = memo(({ displayedDate }: Props) => {
   function renderHourBadge(hour: number, index: number) {
     const renderedDate = new Date(displayedDate.getTime());
     renderedDate.setHours(hour, 0, 0, 0);
-    const className = classNames(classes.hour, {
+    const className = cn(classes.hour, {
       [classes.overpast]: isBefore(renderedDate, now),
     });
     return (
@@ -65,7 +67,11 @@ export const HoursLine = memo(({ displayedDate }: Props) => {
   }
 
   return (
-    <div className={classes.hoursLine}>
+    <div
+      className={cn(classes.hoursLine, {
+        [classes.lg]: size === 'large',
+      })}
+    >
       {renderCurrentTime()}
       {HOURS.map(renderHourBadge)}
     </div>
