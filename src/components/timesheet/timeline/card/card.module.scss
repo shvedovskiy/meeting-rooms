@@ -11,7 +11,7 @@
 }
 
 .header {
-  @include clearfix();
+  @include clearfix;
 
   .cardContainer.cardContainer.lg & {
     margin-bottom: 8px;

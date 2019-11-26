@@ -9,9 +9,9 @@
   padding-right: 28px;
   padding-left: 10px;
   font-size: var(--default-text);
+  text-overflow: ellipsis;
   border: 2px solid var(--border);
   border-radius: 4px;
-  -webkit-appearance: none;
   appearance: none;
 
   &:focus {

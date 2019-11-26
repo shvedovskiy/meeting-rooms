@@ -1,3 +1,5 @@
+@import '../../../service/styles/mixins';
+
 .formArea {
   display: flex;
   flex-direction: column;
@@ -44,6 +46,8 @@
   font-weight: 600;
   color: var(--text-invalid);
   word-break: break-word;
+
+  @include hyphenate;
 }
 
 .inputError {
