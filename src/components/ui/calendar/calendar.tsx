@@ -39,6 +39,7 @@ export const Calendar = (props: Props) => {
         [classes.selected]: selected,
       }}
       months={MONTHS}
+      month={selected}
       onDayClick={handleDayClick}
       showOutsideDays
       weekdayElement={Weekday}
