@@ -68,6 +68,7 @@ export const CalendarInput = (props: Props) => {
         before: now,
       },
     },
+    month: selected || now,
     months: MONTHS,
     showOutsideDays: true,
     weekdayElement: Weekday,
