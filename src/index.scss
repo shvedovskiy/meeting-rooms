@@ -117,7 +117,7 @@ img {
 /* stylelint-disable-next-line selector-max-id */
 #root {
   width: 100vw;
-  height: 100vh;
+  height: var(--vh100);
 }
 
 /* stylelint-disable declaration-no-important */

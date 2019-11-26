@@ -26,8 +26,8 @@
     "lint:stylelint": "stylelint \"src/**/*.css\" \"public/**/*.html\"",
     "lint": "run-s lint:*",
     "server:dev": "cross-env NODE_ENV=development ts-node-dev --respawn --debug --project server/tsconfig.json server/index.ts",
-    "server:build": "cross-env NODE_ENV=production REFRESH_DB=true tsc -p server && node ./dist/db-setup.js",
-    "server:run": "node dist/index.js",
+    "server:build": "cross-env NODE_ENV=production tsc -p server && node ./dist/db-setup.js",
+    "server:run": "cross-env NODE_ENV=production node dist/index.js",
     "db-setup": "cross-env REFRESH_DB=true ts-node --project ./server/tsconfig.json ./server/db-setup.ts",
     "server:test": "cross-env NODE_ENV=test jest --config=./server/jest.config.js --forceExit --detectOpenHandles"
   },

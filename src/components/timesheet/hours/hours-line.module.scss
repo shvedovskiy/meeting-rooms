@@ -3,7 +3,7 @@
   top: 100%;
   left: var(--left-correction);
   display: block;
-  height: calc(100vh - var(--header-height) - var(--height-correction));
+  height: calc(var(--vh100) - var(--header-height) - var(--height-correction));
   content: '';
   border-right: 1px solid $color;
 }

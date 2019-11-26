@@ -26,8 +26,35 @@
     <meta name="msapplication-tooltip" content="%REACT_APP_NAME%" />
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="theme-color" content="#ffffff" />
+    <script>
+      // Proper VH unit value on mobile browsers:
+      // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+      (function(event, customEvent) {
+        var isRunning = false;
+        var callback = function() {
+          if (isRunning) {
+            return;
+          }
+          isRunning = true;
+          requestAnimationFrame(function() {
+            window.dispatchEvent(new CustomEvent(customEvent));
+            isRunning = false;
+          });
+        };
+        window.addEventListener(event, callback);
+      })("resize", "optimizedResize");
+
+      function calculateVh() {
+        document.documentElement.style.setProperty("--vh100", window.innerHeight + "px");
+      }
+
+      window.addEventListener("optimizedResize", calculateVh);
+      window.addEventListener("orientationchange", calculateVh);
+      calculateVh();
+    </script>
     <style>
       :root {
+        --vh100: 100vh;
         box-sizing: border-box;
       }
 
@@ -45,7 +72,7 @@
       }
 
       body {
-        min-height: 100vh;
+        min-height: var(--vh100);
       }
 
       .loader {
@@ -54,7 +81,7 @@
         left: 0;
         z-index: 1050;
         width: 100vw;
-        height: 100vh;
+        height: var(--vh100);
         overflow: hidden auto;
         text-align: center;
         background: #fff;
