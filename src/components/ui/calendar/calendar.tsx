@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef, FocusEventHandler } from 'react';
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import { startOfDay } from 'date-fns/esm';
 
@@ -9,12 +9,13 @@ import classes from './calendar.module.scss';
 type Props = {
   className?: string;
   initialDate?: Date;
+  onBlur?: FocusEventHandler;
   onChange: (newDate: Date) => void;
 };
 
-export const Calendar = (props: Props) => {
+export const Calendar = forwardRef<DayPicker, Props>((props, outerRef) => {
   const now = new Date();
-  const { className, initialDate = now, onChange } = props;
+  const { className, initialDate = now, onBlur, onChange } = props;
   const [selected, setSelected] = useState(initialDate);
 
   function handleDayClick(date: Date, modifiers: DayModifiers) {
@@ -40,9 +41,11 @@ export const Calendar = (props: Props) => {
       }}
       month={selected}
       months={MONTHS}
+      ref={outerRef}
+      onBlur={onBlur}
       onDayClick={handleDayClick}
       showOutsideDays
       weekdayElement={Weekday}
     />
   );
-};
+});
