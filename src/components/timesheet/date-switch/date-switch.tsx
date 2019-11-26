@@ -1,25 +1,25 @@
 import React, { useCallback, useState } from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import { format, isToday, addDays, subDays } from 'date-fns/esm';
 import ruLocale from 'date-fns/locale/ru';
 
+import { Calendar } from 'components/ui/calendar/calendar';
 import { IconButton } from 'components/ui/icon-button/icon-button';
-import classes from './date-switch.module.scss';
 import { Button } from 'components/ui/button/button';
 import { Size } from 'context/size-context';
-import { Calendar } from 'components/ui/calendar/calendar';
+import classes from './date-switch.module.scss';
 
 type Props = {
   date: Date;
   size?: Size;
-  onChange: (date: Date) => void;
+  onChange?: (date: Date) => void;
 };
 
 export const DateSwitch = (props: Props) => {
   const { date, size = 'default', onChange } = props;
   const [calendarVisible, setCalendarVisible] = useState(false);
 
-  const handleDateChange = useCallback(
+  const handleDayChange = useCallback(
     (nextDirection: boolean) => {
       if (onChange) {
         const newDate = nextDirection ? addDays(date, 1) : subDays(date, 1);
@@ -28,17 +28,29 @@ export const DateSwitch = (props: Props) => {
     },
     [date, onChange]
   );
+
   const handleCalendarToggle = useCallback(() => {
     setCalendarVisible(v => !v);
   }, []);
 
-  const dateString =
-    format(date, 'd MMM', { locale: ruLocale }).slice(0, -1) +
-    (isToday(date) ? '\u00A0·\u00A0Сегодня' : '');
+  const handleDateSelect = useCallback(
+    (date: Date) => {
+      handleCalendarToggle();
+      if (onChange) {
+        onChange(date);
+      }
+    },
+    [handleCalendarToggle, onChange]
+  );
+
+  const dateString = isToday(date)
+    ? format(date, 'd MMM', { locale: ruLocale }).slice(0, -1) +
+      '\u00A0·\u00A0Сегодня'
+    : format(date, 'd MMMM', { locale: ruLocale });
   return (
     <>
       <div
-        className={classNames(classes.dateSwitch, {
+        className={cn(classes.dateSwitch, {
           [classes.lg]: size === 'large',
         })}
       >
@@ -49,7 +61,7 @@ export const DateSwitch = (props: Props) => {
           disabled={isToday(date)}
           ariaLabel="Предыдущий день"
           onClickArgs={[false]}
-          onClick={handleDateChange}
+          onClick={handleDayChange}
         />
         <Button
           use="borderless"
@@ -61,10 +73,10 @@ export const DateSwitch = (props: Props) => {
         <IconButton
           icon="chevron"
           size={size}
-          className={classNames(classes.switchBtn, classes.next)}
+          className={cn(classes.switchBtn, classes.next)}
           ariaLabel="Следующий день"
           onClickArgs={[true]}
-          onClick={handleDateChange}
+          onClick={handleDayChange}
         />
       </div>
       <div className={classes.calendarContainer}>
@@ -72,7 +84,7 @@ export const DateSwitch = (props: Props) => {
           <Calendar
             className={classes.calendar}
             initialDate={date}
-            onChange={onChange}
+            onChange={handleDateSelect}
           />
         )}
       </div>
