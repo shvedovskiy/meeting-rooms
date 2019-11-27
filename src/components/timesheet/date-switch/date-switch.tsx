@@ -1,6 +1,5 @@
-import React, { useCallback, useState, useEffect, createRef } from 'react';
+import React, { useCallback, useState } from 'react';
 import cn from 'classnames';
-import DayPicker from 'react-day-picker';
 import { format, isToday, addDays, subDays } from 'date-fns/esm';
 import ruLocale from 'date-fns/locale/ru';
 
@@ -17,22 +16,8 @@ type Props = {
 };
 
 export const DateSwitch = (props: Props) => {
-  const calendarRef = createRef<DayPicker>();
   const { date, size = 'default', onChange } = props;
   const [calendarVisible, setCalendarVisible] = useState(false);
-
-  useEffect(() => {
-    function checkOutsideClick(event: MouseEvent) {
-      if (
-        calendarRef.current &&
-        !calendarRef.current.dayPicker.contains(event.target as Element)
-      ) {
-        setCalendarVisible(false);
-      }
-    }
-    window.addEventListener('click', checkOutsideClick);
-    return () => window.removeEventListener('click', checkOutsideClick);
-  }, [calendarRef]);
 
   const handleDayChange = useCallback(
     (nextDirection: boolean) => {
@@ -101,7 +86,6 @@ export const DateSwitch = (props: Props) => {
             initialDate={date}
             onBlur={() => setCalendarVisible(false)}
             onChange={handleDateSelect}
-            ref={calendarRef}
           />
         )}
       </div>
