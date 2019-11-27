@@ -1,8 +1,9 @@
-import React, { useState, createRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { DayModifiers, DateUtils, DayPickerProps } from 'react-day-picker';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { startOfDay } from 'date-fns/esm';
 
+import { OverlayComponent } from './overlay';
 import { Input } from 'components/ui/input/ref-input';
 import { Icon } from 'components/ui/icon/icon';
 import { Size } from 'context/size-context';
@@ -15,8 +16,8 @@ import {
   parseDate as parse,
   formatDate as format,
 } from '../utils';
-import classes from '../calendar.module.scss';
 import inputClasses from './calendar-input.module.scss';
+import calendarClasses from '../calendar.module.scss';
 
 type Props = {
   size?: Size;
@@ -36,7 +37,7 @@ function parseDate(str: string, format: string) {
 
 export const CalendarInput = (props: Props) => {
   const now = new Date();
-  const input = createRef<DayPickerInput>();
+  const input = useRef<DayPickerInput>(null);
   const { size = 'default', id, value, error, onChange, onBlur } = props;
   const [selected, setSelected] = useState<Date | null>(now);
 
@@ -58,13 +59,13 @@ export const CalendarInput = (props: Props) => {
   }
 
   const dayPickerProps: DayPickerProps = {
-    classNames: classes,
+    classNames: calendarClasses,
     firstDayOfWeek: 1,
     fromMonth: now,
     labels: LABELS,
     locale: 'ru',
     modifiers: {
-      [classes.disabled]: {
+      [calendarClasses.disabled]: {
         before: now,
       },
     },
@@ -74,7 +75,7 @@ export const CalendarInput = (props: Props) => {
     weekdayElement: Weekday,
   };
   if (selected) {
-    dayPickerProps.modifiers![classes.selected] = selected;
+    dayPickerProps.modifiers![calendarClasses.selected] = selected;
   }
 
   return (
@@ -95,6 +96,7 @@ export const CalendarInput = (props: Props) => {
       placeholder={''}
       ref={input}
       onDayChange={handleDayChange}
+      overlayComponent={OverlayComponent}
       value={value || undefined}
     />
   );
