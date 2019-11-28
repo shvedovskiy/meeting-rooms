@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 import { Icon } from 'components/ui/icon/icon';
 import classes from './option.module.scss';
@@ -22,7 +22,7 @@ export const Option = (props: Props) => {
     onSelect,
     onDeselect,
   } = props;
-  const className = classNames(classes.option, {
+  const className = cn(classes.option, {
     [classes.selected]: selected,
     [classes.lg]: size === 'large',
     [classes.inactive]: !item,

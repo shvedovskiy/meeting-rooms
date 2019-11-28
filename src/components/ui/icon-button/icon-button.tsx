@@ -1,5 +1,5 @@
 import React, { memo, useRef, useEffect } from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 import { Size } from 'context/size-context';
 import classes from './icon-button.module.scss';
@@ -43,7 +43,7 @@ export const IconButton = memo((props: Props) => {
   const buttonProps = {
     'aria-label': ariaLabel,
     title: ariaLabel,
-    className: classNames(classes.btn, className, {
+    className: cn(classes.btn, className, {
       [classes.lg]: size === 'large',
       [classes.disabled]: disabled,
     }),

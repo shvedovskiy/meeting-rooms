@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import { OptionProps } from 'react-select/src/components/Option';
 
 import { UserData } from 'components/timesheet/types';
@@ -9,7 +9,7 @@ import { Avatar } from 'components/ui/avatar/avatar';
 export const Option = (props: OptionProps<UserData>) => {
   const { className, isSelected, isFocused, innerRef, innerProps } = props;
   const data = props.data as UserData;
-  const elementClasses = classNames(classes.selectOption, className, {
+  const elementClasses = cn(classes.selectOption, className, {
     [classes.focused]: isFocused,
   });
 

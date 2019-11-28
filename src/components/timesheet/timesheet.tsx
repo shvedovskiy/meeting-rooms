@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { useThrottleCallback } from '@react-hook/throttle';
 import useEventListener from '@use-it/event-listener';
-import classNames from 'classnames';
+import cn from 'classnames';
 import gql from 'graphql-tag';
 
 import { HoursLine } from './hours/hours-line';
@@ -67,7 +67,7 @@ export const Timesheet = () => {
 
   return (
     <div
-      className={classNames(classes.timesheet, {
+      className={cn(classes.timesheet, {
         [classes.lg]: size === 'large',
       })}
       ref={el => setContainerEl(el)}

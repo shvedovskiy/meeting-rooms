@@ -6,7 +6,7 @@ import React, {
   MouseEventHandler,
   ButtonHTMLAttributes,
 } from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 import { Size } from 'context/size-context';
 import classes from './button.module.scss';
@@ -57,7 +57,7 @@ export const Button = memo((props: Props) => {
 
   const buttonProps = {
     type,
-    className: classNames(classes.btn, classes[use], className, {
+    className: cn(classes.btn, classes[use], className, {
       [classes.lg]: size === 'large',
       [classes.danger]: danger,
     }),

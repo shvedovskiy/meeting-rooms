@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 import classes from './card.module.scss';
 import { Event } from '../../types';
@@ -33,7 +33,7 @@ export const Card = ({ data, room, onAction }: Props) => {
 
   return (
     <div
-      className={classNames(classes.cardContainer, {
+      className={cn(classes.cardContainer, {
         [classes.lg]: size === 'large',
       })}
     >

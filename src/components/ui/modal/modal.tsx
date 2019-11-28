@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AriaModal from 'react-aria-modal';
 import { CSSTransition } from 'react-transition-group';
 import Emoji from 'a11y-react-emoji';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 import classes from './modal.module.scss';
 import transitionClasses from './modal-transition.module.scss';
@@ -67,7 +67,7 @@ export const Modal = ({
       <AriaModal
         alert={true}
         aria-modal={true}
-        dialogClass={classNames(classes.modal, {
+        dialogClass={cn(classes.modal, {
           [classes.lg]: size === 'large',
         })}
         dialogStyle={{ textAlign: 'center', verticalAlign: 'initial' }}

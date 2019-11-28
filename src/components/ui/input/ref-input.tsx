@@ -7,7 +7,7 @@ import React, {
   FocusEventHandler,
   KeyboardEventHandler,
 } from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 import { Size } from 'context/size-context';
 import classes from './input.module.scss';
@@ -46,7 +46,7 @@ export const Input = forwardRef<HTMLInputElement, Props>((props, ref) => {
     ...rest,
     type: 'text',
     ref,
-    className: classNames(classes.input, {
+    className: cn(classes.input, {
       [classes.lg]: size === 'large',
       [classes.error]: error,
     }),

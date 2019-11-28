@@ -7,7 +7,7 @@ import React, {
   KeyboardEvent,
   InputHTMLAttributes,
 } from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 import { Override } from 'service/typings';
 import { Icon } from 'components/ui/icon/icon';
@@ -84,7 +84,7 @@ export const Input = (props: Props) => {
   const inputProps = {
     ...rest,
     type: 'text',
-    className: classNames(classes.input, {
+    className: cn(classes.input, {
       [classes.lg]: size === 'large',
       [classes.error]: error,
     }),
