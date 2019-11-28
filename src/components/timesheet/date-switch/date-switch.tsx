@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import cn from 'classnames';
-import { format, isToday, addDays, subDays } from 'date-fns/esm';
-import ruLocale from 'date-fns/locale/ru';
+import { isToday, addDays, subDays } from 'date-fns/esm';
 
 import { Calendar } from 'components/ui/calendar/calendar';
 import { IconButton } from 'components/ui/icon-button/icon-button';
 import { Button } from 'components/ui/button/button';
 import { Size } from 'context/size-context';
 import classes from './date-switch.module.scss';
+import { format } from 'service/dates';
 
 type Props = {
   date: Date;
@@ -44,9 +44,8 @@ export const DateSwitch = (props: Props) => {
   );
 
   const dateString = isToday(date)
-    ? format(date, 'd MMM', { locale: ruLocale }).slice(0, -1) +
-      '\u00A0·\u00A0Сегодня'
-    : format(date, 'd MMMM', { locale: ruLocale });
+    ? format(date, 'd MMM').slice(0, -1) + '\u00A0·\u00A0Сегодня'
+    : format(date);
   return (
     <>
       <div

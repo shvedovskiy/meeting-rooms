@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-import { ServerEvent, EventInput } from 'components/timesheet/types';
+import { EventInput, Event } from 'components/timesheet/types';
 
 export interface CreateEventVariables {
   input: EventInput;
@@ -30,14 +30,22 @@ export const CREATE_EVENT_MUTATION = gql`
       room {
         id
         title
+        minCapacity
+        maxCapacity
         floor
+      }
+      users {
+        id
+        login
+        homeFloor
+        avatarUrl
       }
     }
   }
 `;
 
 export interface CreateEventMutationType {
-  createEvent: ServerEvent;
+  createEvent: Event;
 }
 
 export const UPDATE_EVENT_MUTATION = gql`
@@ -56,14 +64,22 @@ export const UPDATE_EVENT_MUTATION = gql`
       room {
         id
         title
+        minCapacity
+        maxCapacity
         floor
+      }
+      users {
+        id
+        login
+        homeFloor
+        avatarUrl
       }
     }
   }
 `;
 
 export interface UpdateEventMutationType {
-  updateEvent: ServerEvent;
+  updateEvent: Event;
 }
 
 export const REMOVE_EVENT_MUTATION = gql`

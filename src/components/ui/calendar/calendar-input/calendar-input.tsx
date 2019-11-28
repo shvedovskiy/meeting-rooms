@@ -8,14 +8,8 @@ import { Input } from 'components/ui/input/ref-input';
 import { Icon } from 'components/ui/icon/icon';
 import { Size } from 'context/size-context';
 import { Weekday } from '../weekday';
-import {
-  MONTHS,
-  LABELS,
-  FORMAT,
-  isDateIncomplete,
-  parseDate as parse,
-  formatDate as format,
-} from '../utils';
+import { MONTHS, LABELS, FORMAT, isDateIncomplete } from '../utils';
+import { format, parse } from 'service/dates';
 import inputClasses from './calendar-input.module.scss';
 import calendarClasses from '../calendar.module.scss';
 

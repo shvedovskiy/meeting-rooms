@@ -1,6 +1,3 @@
-import { format as dateFnsFormat, parse as dateFnsParse } from 'date-fns/esm';
-import ruLocale from 'date-fns/locale/ru';
-
 export const FORMAT = 'd MMMM, y';
 
 export const MONTHS = [
@@ -48,14 +45,6 @@ export const WEEKDAYS_LONG = [
   'Пятница',
   'Суббота',
 ];
-
-export function formatDate(date: Date, format: string = FORMAT) {
-  return dateFnsFormat(date, format, { locale: ruLocale });
-}
-
-export function parseDate(str: string, format: string = FORMAT) {
-  return dateFnsParse(str, format, Date.now(), { locale: ruLocale });
-}
 
 export function isDateIncomplete(date: string) {
   if (date.trim().length === 0) {

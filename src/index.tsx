@@ -33,6 +33,16 @@ const serverEventTransformer = new ApolloLink((operation, forward) =>
           date: parseISO(serverEvent.date),
         })
       );
+    } else {
+      const method = [
+        { name: 'CreateEvent', prop: 'createEvent' },
+        { name: 'UpdateEvent', prop: 'updateEvent' },
+      ].find(op => op.name === operation.operationName);
+      if (method && response.data) {
+        response.data[method.prop].date = parseISO(
+          (response.data[method.prop] as ServerEvent).date
+        );
+      }
     }
     return response;
   })

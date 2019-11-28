@@ -1,13 +1,12 @@
 import React from 'react';
 import classNames from 'classnames';
-import { format } from 'date-fns/esm';
-import ruLocale from 'date-fns/locale/ru';
 
 import classes from './card.module.scss';
 import { Event } from '../../types';
 import { IconButton } from 'components/ui/icon-button/icon-button';
 import { useSizeCtx } from 'context/size-context';
 import { CardParticipants } from './participants';
+import { format } from 'service/dates';
 
 type Props = {
   data: Event;
@@ -26,9 +25,9 @@ export const Card = ({ data, room, onAction }: Props) => {
 
   function renderInfo() {
     const { date, startTime, endTime } = data;
-    const info = `${format(date, 'd MMMM', {
-      locale: ruLocale,
-    })}, ${startTime}\u2013${endTime}\u00A0·\u00A0${room}`;
+    const info = `${format(
+      date
+    )}, ${startTime}\u2013${endTime}\u00A0·\u00A0${room}`;
     return <p>{info}</p>;
   }
 

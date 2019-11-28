@@ -1,4 +1,9 @@
-import { lightFormat, isBefore, parse } from 'date-fns/esm';
+import {
+  format as dateFnsFormat,
+  parse as dateFnsParse,
+  lightFormat,
+  isBefore,
+} from 'date-fns/esm';
 import ruLocale from 'date-fns/locale/ru';
 
 export const HOURS = [
@@ -21,6 +26,18 @@ export const HOURS = [
 ];
 
 export const RANGES_LEN = 60;
+
+export function format(date: Date, format = 'd MMMM') {
+  return dateFnsFormat(date, format, { locale: ruLocale });
+}
+
+export function parse(
+  date: string,
+  format: string,
+  fallback: number | Date = Date.now()
+) {
+  return dateFnsParse(date, format, fallback, { locale: ruLocale });
+}
 
 export function roundDate(date: number) {
   const ms = 1000 * 60 * 5;
@@ -52,10 +69,7 @@ export function minutesToHours(value: number) {
 }
 
 export function isPastTime(timeStr: string, pivot: number = Date.now()) {
-  return isBefore(
-    parse(timeStr + ':00', 'HH:mm:ss', pivot, { locale: ruLocale }),
-    pivot
-  );
+  return isBefore(parse(timeStr + ':00', 'HH:mm:ss', pivot), pivot);
 }
 
 export function compareTimeStrings(value1: string, value2: string) {
