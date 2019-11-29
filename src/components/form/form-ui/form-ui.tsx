@@ -15,14 +15,14 @@ import { useRecommendation } from './use-recommendation';
 import {
   validation,
   blurValidation,
-  validateOnSubmit,
+  emptyValidation,
   FormFields,
   FormErrors,
 } from '../form-common/validators';
 import {
   defaultFormValues,
   recommendationNeeded,
-  roomsDisplayed,
+  roomsShouldDisplay,
   handleFormChange,
   MovedEvent,
 } from './utils';
@@ -60,7 +60,7 @@ export const FormUI = ({
     },
     {
       onChange: handleFormChange,
-      submitValidator: validateOnSubmit,
+      submitValidator: emptyValidation,
     }
   );
   const recommendedRooms = useRecommendation(
@@ -161,7 +161,7 @@ export const FormUI = ({
       </div>,
     ];
 
-    if (roomsDisplayed(validity, values, initialValues)) {
+    if (roomsShouldDisplay(validity, values, initialValues)) {
       fields.push(
         <div key="room" className={classes.room}>
           <label htmlFor="room">

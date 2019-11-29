@@ -1,6 +1,6 @@
 import { isToday, isFuture } from 'date-fns/esm';
 
-import { StateValues } from 'components/common/use-form';
+import { StateValues, StateErrors } from 'components/common/use-form';
 import {
   splitTimeString,
   isPastTime,
@@ -123,10 +123,16 @@ export const validation = {
   title() {
     return { title: true, form: true };
   },
-  date(date: Date | null | undefined) {
+  date(date: Date | null | undefined, values: StateValues<FormFields>) {
     const valid = { form: true, date: true };
     if (dateIsIncorrect(date)) {
       return Object.assign(valid, { date: false });
+    }
+    if (timeIsValid(values.startTime)) {
+      Object.assign(valid, { startTime: true });
+    }
+    if (timeIsValid(values.endTime)) {
+      Object.assign(valid, { endTime: true });
     }
     return valid;
   },
@@ -247,8 +253,8 @@ export const blurValidation = {
   },
 };
 
-export function validateOnSubmit(values: StateValues<FormFields>) {
-  const valid = {};
+export function emptyValidation(values: StateValues<FormFields>) {
+  const valid: Partial<StateErrors<FormErrors>> = {};
   if (values.hasOwnProperty('title') && values.title.trim().length === 0) {
     Object.assign(valid, { title: false });
   }

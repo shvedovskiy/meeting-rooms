@@ -23,8 +23,8 @@ const defaultFieldOptions = {
 function validateField(fieldName, fieldValue, formValues, validator) {
   if (typeof validator === 'function') {
     const result = validator(fieldValue, formValues);
-    if (result === true) {
-      return [{ [fieldName]: true }, { [fieldName]: null }];
+    if (typeof result === 'boolean') {
+      return [{ [fieldName]: result }, { [fieldName]: null }];
     }
     if (typeof result === 'string') {
       return [{ [fieldName]: false }, { [fieldName]: result }];

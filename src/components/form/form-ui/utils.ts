@@ -1,5 +1,10 @@
 import { PageData } from 'context/page-context';
-import { FormFields, FormErrors } from '../form-common/validators';
+import {
+  FormFields,
+  FormErrors,
+  blurValidation,
+  emptyValidation,
+} from '../form-common/validators';
 import { StateValidity, StateValues } from 'components/common/use-form';
 import { RoomCard, Event, RoomData } from 'components/timesheet/types';
 import { UpdateEventVariables } from 'service/apollo/mutations';
@@ -19,10 +24,10 @@ export const defaultFormValues = {
   room: null,
 };
 
-export function roomsDisplayed(
-  validity: StateValidity<FormErrors>,
-  values: StateValues<FormFields>,
-  initialValues: PageData
+export function roomsShouldDisplay(
+  formValidity: StateValidity<FormErrors>,
+  formValues: StateValues<FormFields>,
+  initialFormValues: PageData
 ) {
   const {
     startTime: startTimeValid,
@@ -30,50 +35,98 @@ export function roomsDisplayed(
     time: timeValid,
     date: dateValid,
     users: usersValid,
-  } = validity;
+  } = formValidity;
+  const {
+    startTime: startTimeValue,
+    endTime: endTimeValue,
+    date: dateValue,
+    users: usersValue,
+    room: roomValue,
+  } = formValues;
 
   // Initial state:
-  if (Object.values(validity).every(v => typeof v === 'undefined')) {
-    return initialValues.hasOwnProperty('room');
+  if (Object.values(formValidity).every(v => typeof v === 'undefined')) {
+    return initialFormValues.hasOwnProperty('room');
   }
 
-  const validities = [startTimeValid, endTimeValid, dateValid];
+  const validitiesToCheck = [startTimeValid, endTimeValid, dateValid];
   // Room is not selected:
-  if (!values.room) {
-    validities.push(usersValid);
+  if (!roomValue) {
+    validitiesToCheck.push(usersValid);
   }
 
   // Edit/partial add mode:
-  if (initialValues.room) {
-    if (validities.every(v => typeof v === 'undefined')) {
-      return values.room !== null;
+  if (initialFormValues.room) {
+    if (validitiesToCheck.every(v => typeof v === 'undefined')) {
+      return formValues.room !== null;
     }
-    const allValidities = validities.concat([timeValid]);
+    validitiesToCheck.push(timeValid);
     return (
-      allValidities.every(v => v !== false) &&
-      [values.date, values.startTime, values.endTime, values.users].every(
-        Boolean
-      )
+      validitiesToCheck.every(v => v !== false) &&
+      [dateValue, startTimeValue, endTimeValue, usersValue].every(Boolean)
     );
   }
   // Plain add mode:
-  return validities.every(Boolean) && timeValid !== false;
+  return validitiesToCheck.every(Boolean) && timeValid !== false;
 }
 
+const checkValidationResult = (
+  result: boolean | string | { [field: string]: boolean | string }
+): boolean => {
+  if (typeof result === 'boolean') {
+    return result;
+  }
+  if (typeof result === 'string') {
+    return false;
+  }
+  for (const res of Object.values(result)) {
+    if (typeof res === 'boolean' && res === false) {
+      return false;
+    }
+    if (typeof res === 'string') {
+      return false;
+    }
+  }
+  return true;
+};
+
 export function recommendationNeeded(
-  validity: StateValidity<FormErrors>,
-  values: StateValues<FormFields>,
+  formValidity: StateValidity<FormErrors>,
+  formValues: StateValues<FormFields>,
   initialValues: PageData
 ) {
-  return !values.room && roomsDisplayed(validity, values, initialValues);
+  const { startTime, endTime, date, room } = formValues;
+  if (room || !roomsShouldDisplay(formValidity, formValues, initialValues)) {
+    return false;
+  }
+  const emptyValidationResult = emptyValidation(formValues);
+  if (
+    ['date', 'startTime', 'endTime'].some(f =>
+      emptyValidationResult.hasOwnProperty(f)
+    )
+  ) {
+    return false;
+  }
+  const blurValidationResults = [
+    blurValidation.date(date, formValues),
+    blurValidation.startTime(startTime, formValues),
+    blurValidation.endTime(endTime, formValues),
+  ];
+  for (const res of blurValidationResults) {
+    if (!checkValidationResult(res)) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 export function handleFormChange(
   changed: Partial<FormFields>,
-  state: StateValues<FormFields>
+  formState: StateValues<FormFields>
 ) {
   if (
-    state.room &&
+    formState.room &&
     ['startTime', 'endTime', 'date'].some(f => changed.hasOwnProperty(f))
   ) {
     return {
