@@ -17,7 +17,7 @@ import {
   EVENTS_QUERY,
   RoomsQueryType,
   EventsQueryType,
-} from 'service/queries';
+} from 'service/apollo/queries';
 import classes from './app.module.scss';
 import pageTransitionClasses from 'components/page/page-transition.module.scss';
 

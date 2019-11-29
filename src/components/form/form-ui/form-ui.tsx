@@ -19,12 +19,12 @@ import {
   FormFields,
   FormErrors,
 } from '../form-common/validators';
-import { UpdateEventVariables } from 'service/mutations';
 import {
   defaultFormValues,
   recommendationNeeded,
   roomsDisplayed,
   handleFormChange,
+  MovedEvent,
 } from './utils';
 import classes from './form-ui.module.scss';
 
@@ -35,7 +35,7 @@ type Props = {
   onRemove: () => void;
   onSubmit: (
     values: CreatedEvent,
-    movedEvents: MutableRefObject<UpdateEventVariables[]>
+    movedEvents: MutableRefObject<MovedEvent[]>
   ) => void;
   initialValues?: PageData;
 };
@@ -49,7 +49,7 @@ export const FormUI = ({
   onSubmit: submitForm,
 }: Props) => {
   const size = useSizeCtx();
-  const movedEvents = useRef<UpdateEventVariables[]>([]);
+  const movedEvents = useRef<MovedEvent[]>([]);
   const [{ values, validity, errors }, { field, form }] = useForm<
     FormFields,
     FormErrors

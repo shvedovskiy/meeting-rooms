@@ -16,7 +16,7 @@ import {
   TABLE_QUERY,
   EventsQueryType,
   EVENTS_MAP_QUERY,
-} from 'service/queries';
+} from 'service/apollo/queries';
 import { calculateTable } from './utils';
 import classes from './timesheet.module.scss';
 
@@ -53,14 +53,13 @@ export const Timesheet = () => {
   }, [client.cache, eventsData]);
 
   const handleScroll = useThrottleCallback((event: any) => {
-    if (size === 'large') {
-      if (event.target.scrollLeft > 180 && !scrolled) {
-        setScrolled(true);
-        return;
-      }
-      if (event.target.scrollLeft <= 180 && scrolled) {
-        setScrolled(false);
-      }
+    const sidebarWidth = size === 'large' ? 180 : 245;
+    if (event.target.scrollLeft > sidebarWidth && !scrolled) {
+      setScrolled(true);
+      return;
+    }
+    if (event.target.scrollLeft <= sidebarWidth && scrolled) {
+      setScrolled(false);
     }
   }, 200);
   useEventListener('scroll', handleScroll, containerEl as HTMLElement);

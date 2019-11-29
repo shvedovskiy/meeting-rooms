@@ -2,9 +2,10 @@ import { PageData } from 'context/page-context';
 import { FormFields, FormErrors } from '../form-common/validators';
 import { StateValidity, StateValues } from 'components/common/use-form';
 import { RoomCard, Event, RoomData } from 'components/timesheet/types';
-import { UpdateEventVariables } from 'service/mutations';
+import { UpdateEventVariables } from 'service/apollo/mutations';
 
-export type MovedRoomsEvents = Map<string, UpdateEventVariables[]>;
+export type MovedEvent = UpdateEventVariables & { prevRoom: string };
+export type RoomMovedEvents = Map<string, UpdateEventVariables[]>;
 export interface DayTable {
   [roomId: string]: string[];
 }
@@ -110,7 +111,7 @@ function distanceToNewRoom(
 
 export function measureDistanceToNewRoom(
   roomDef: RoomCard,
-  moved: MovedRoomsEvents,
+  moved: RoomMovedEvents,
   allEvents: Map<string, Event>,
   eventUsersFloors: number[]
 ) {
@@ -129,7 +130,7 @@ export function measureDistanceToNewRoom(
 
 export function measureDistanceToAnyRoom(
   roomDef: RoomCard,
-  moved: MovedRoomsEvents,
+  moved: RoomMovedEvents,
   allEvents: Map<string, Event>,
   eventUsersFloors: number[]
 ) {

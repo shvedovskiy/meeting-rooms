@@ -9,17 +9,18 @@ import {
   RoomsQueryType,
   EventsMapQueryType,
   TableQueryType,
-} from 'service/queries';
+} from 'service/apollo/queries';
 import { timeToRange } from 'service/dates';
 import { FormFields } from '../form-common/validators';
 import { RoomCard, RoomData, Event } from 'components/timesheet/types';
 import { StateValues } from 'components/common/use-form';
-import { UpdateEventVariables } from 'service/mutations';
+import { UpdateEventVariables } from 'service/apollo/mutations';
 import {
   measureDistanceToRoom,
   measureDistanceToNewRoom,
   measureDistanceToAnyRoom,
-  MovedRoomsEvents,
+  MovedEvent,
+  RoomMovedEvents,
   DayTable,
 } from './utils';
 
@@ -34,9 +35,9 @@ function findFreeRooms(
 ) {
   const free: RoomCard[] = [];
   // Rooms available at least half time of scheduled meeting:
-  const candidateRooms = new Map<string, RoomCard>();
+  const roomCards = new Map<string, RoomCard>();
   // Ids of events occurring in candidate rooms during our event:
-  const candidateEvents = new Map<string, Set<string>>();
+  const candidates = new Map<string, Set<string>>();
   const [startOffset, endOffset] = timeToRange(startTime, endTime);
 
   for (const room of rooms.sort(comparator)) {
@@ -57,10 +58,10 @@ function findFreeRooms(
         cnt++;
       } else {
         // Save id of the conflicting meeting for its subsequent movement:
-        if (candidateEvents.has(room.id)) {
-          candidateEvents.get(room.id)!.add(eventId);
+        if (candidates.has(room.id)) {
+          candidates.get(room.id)!.add(eventId);
         } else {
-          candidateEvents.set(room.id, new Set([eventId]));
+          candidates.set(room.id, new Set([eventId]));
         }
       }
     }
@@ -73,8 +74,8 @@ function findFreeRooms(
       continue;
     }
 
-    const candidateRoomEvents = candidateEvents.has(room.id)
-      ? Array.from(candidateEvents.get(room.id)!.values())
+    const candidateRoomEvents = candidates.has(room.id)
+      ? Array.from(candidates.get(room.id)!.values())
       : [];
     const candidateUsersNums = candidateRoomEvents.map(
       id => events.get(id)!.users.length
@@ -85,10 +86,10 @@ function findFreeRooms(
     ) {
       // The room is available at least half time of appointed time
       // or contains meetings with fewer participants than the planned meeting:
-      candidateRooms.set(room.id, { ...room, startTime, endTime });
+      roomCards.set(room.id, { ...room, startTime, endTime });
     }
   }
-  return { free, candidateRooms, candidateEvents };
+  return { free, roomCards, candidates };
 }
 
 function moveConflictingEvents(
@@ -98,10 +99,9 @@ function moveConflictingEvents(
   dayTable: DayTable,
   rooms: RoomData[],
   events: Map<string, Event>,
-  comparator: (moved: MovedRoomsEvents) => (a: RoomCard, b: RoomCard) => number
+  comparator: (moved: RoomMovedEvents) => (a: RoomCard, b: RoomCard) => number
 ) {
-  const movedEvents: MovedRoomsEvents = new Map();
-
+  const movedEvents: RoomMovedEvents = new Map();
   for (const roomId of roomsToMove.keys()) {
     // TS check:
     if (!conflictingEvents.has(roomId)) {
@@ -178,7 +178,7 @@ function findAnotherTimeSlot(rooms: RoomData[]): RoomCard[] {
 export function useRecommendation(
   eventValues: StateValues<FormFields>,
   recommendationNeeded: boolean,
-  movedEvents: MutableRefObject<UpdateEventVariables[]>
+  movedEvents: MutableRefObject<MovedEvent[]>
 ) {
   const { data } = useQuery<
     RoomsQueryType & EventsMapQueryType & TableQueryType
@@ -230,13 +230,13 @@ export function useRecommendation(
     }
     const {
       free: sortedFree,
-      candidateRooms: candidates,
-      candidateEvents,
+      roomCards: candidateRooms,
+      candidates: candidateEvents,
     } = searchResult;
 
     // Trying to move conflicting meetings out of candidate rooms:
     const freeRoomsIds = new Set(sortedFree.map(r => r.id));
-    const movedRoomsComp = (moved: MovedRoomsEvents) => (
+    const movedRoomsComp = (moved: RoomMovedEvents) => (
       a: RoomCard,
       b: RoomCard
     ) =>
@@ -244,7 +244,7 @@ export function useRecommendation(
       measureDistanceToNewRoom(b, moved, allEvents, eventUsersFloors);
 
     const [sortedMovedRooms, movedEvs] = moveConflictingEvents(
-      candidates,
+      candidateRooms,
       candidateEvents,
       freeRoomsIds,
       dayTable,
@@ -252,7 +252,12 @@ export function useRecommendation(
       allEvents,
       movedRoomsComp
     );
-    movedEvents.current = Array.from(movedEvs.values()).flat();
+    movedEvents.current = Array.from(movedEvs.values())
+      .flat()
+      .map(e => ({
+        ...e,
+        prevRoom: allEvents.get(e.id)!.room.id,
+      }));
 
     const anyRoomComp = (a: RoomCard, b: RoomCard) =>
       measureDistanceToAnyRoom(a, movedEvs, allEvents, eventUsersFloors) -

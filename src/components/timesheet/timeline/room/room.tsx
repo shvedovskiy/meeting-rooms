@@ -16,7 +16,7 @@ import { Size } from 'context/size-context';
 import { useScrollCtx } from 'context/scroll-context';
 import { usePageCtx } from 'context/page-context';
 import { HOURS } from 'service/dates';
-import { ROOM_EVENTS_QUERY, RoomEventsQueryType } from 'service/queries';
+import { ROOM_EVENTS_QUERY, RoomEventsQueryType } from 'service/apollo/queries';
 import classes from './room.module.scss';
 
 type Props = {
@@ -28,13 +28,14 @@ type Props = {
 export const Room = ({ room, size = 'default', date }: Props) => {
   const scrolled = useScrollCtx();
   const openPage = usePageCtx();
-  const { data } = useQuery<RoomEventsQueryType>(ROOM_EVENTS_QUERY, {
+  let { data } = useQuery<RoomEventsQueryType>(ROOM_EVENTS_QUERY, {
     variables: { timestamp: date.getTime(), id: room.id },
   });
 
-  const { ranges: roomRanges, events: roomEvents } = (
-    data || { roomEvents: { ranges: [], events: new Map() } }
-  ).roomEvents;
+  if (!data) {
+    data = { roomEvents: { ranges: [], events: new Map() } };
+  }
+  const { ranges: roomRanges, events: roomEvents } = data.roomEvents;
   const ranges = useMemo(() => prepareRanges(roomRanges, roomEvents), [
     roomEvents,
     roomRanges,
