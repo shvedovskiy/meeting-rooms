@@ -39,11 +39,11 @@ export const CalendarInput = (props: Props) => {
     if (!modifiers.disabled && !modifiers.selected) {
       setSelected(date);
 
-      let result: Date | null | undefined = null;
+      let result: Date | null | undefined = undefined;
       if (date == null) {
         const inputValue = input.current!.getInput().value as string;
         if (isDateIncomplete(inputValue)) {
-          result = undefined;
+          result = null;
         }
       } else {
         result = startOfDay(date);

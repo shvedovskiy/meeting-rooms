@@ -40,13 +40,13 @@ const errors = {
 };
 
 // DATE:
-function dateIsEmpty(date: Date | null | undefined): date is undefined {
-  return date === undefined;
+function dateIsEmpty(date: Date | null | undefined): date is null {
+  return date === null;
 }
 
-function dateIsIncorrect(date: Date | null | undefined): date is null {
+function dateIsIncorrect(date: Date | null | undefined): date is undefined {
   if (!dateIsEmpty(date)) {
-    return date === null;
+    return date === undefined;
   }
   return false;
 }
