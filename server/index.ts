@@ -7,7 +7,7 @@ import express from 'express';
 import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
 
-import { isProdEnv, PORT, NODE_ENV, FRONTEND_URL } from './service/config';
+import { PORT, NODE_ENV, FRONTEND_URL } from './service/config';
 import { createSchema } from './service/create-schema';
 import { connectToDatabase } from './service/create-connection';
 
@@ -15,7 +15,7 @@ useContainer(Container);
 
 async function bootstrapServer() {
   try {
-    await connectToDatabase(isProdEnv);
+    await connectToDatabase({ log: NODE_ENV === 'development' });
     const schema = await createSchema();
     const server = new ApolloServer({ schema, context: {} });
 

@@ -10,7 +10,7 @@ import { createRoom, createEvent } from '../test-utils/create-db-entity';
 let connection: Connection;
 
 beforeAll(async () => {
-  connection = await connectToDatabase();
+  connection = await connectToDatabase({ drop: true });
 });
 
 afterAll(async () => {

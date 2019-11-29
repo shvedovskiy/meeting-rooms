@@ -8,11 +8,11 @@ import { Event } from '../entity/event';
 import { seedDatabase } from './seed-database';
 import { DATABASE_NAME } from './config';
 
-export async function connectToDatabase(
-  prod = false,
+export async function connectToDatabase({
+  log = false,
   drop = false,
-  seed = false
-) {
+  seed = false,
+} = {}) {
   useContainer(Container);
 
   const connection = await createConnection({
@@ -20,7 +20,7 @@ export async function connectToDatabase(
     type: 'sqlite',
     database: DATABASE_NAME,
     entities: [User, Room, Event],
-    logging: !prod,
+    logging: log,
     synchronize: drop,
     dropSchema: drop,
   });

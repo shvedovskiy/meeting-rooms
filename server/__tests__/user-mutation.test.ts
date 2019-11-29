@@ -14,7 +14,7 @@ import { Event } from '../entity/event';
 let connection: Connection;
 
 beforeAll(async () => {
-  connection = await connectToDatabase();
+  connection = await connectToDatabase({ drop: true });
 });
 
 afterAll(async () => {
