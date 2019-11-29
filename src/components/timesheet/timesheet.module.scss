@@ -30,7 +30,7 @@
 .dateSwitch {
   @extend %headerBlock;
   grid-area: date;
-  z-index: 3;
+  z-index: 4;
 
   .timesheet.lg & {
     left: 0;

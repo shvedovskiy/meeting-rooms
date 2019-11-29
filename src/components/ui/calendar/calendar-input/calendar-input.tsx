@@ -33,7 +33,7 @@ export const CalendarInput = (props: Props) => {
   const now = new Date();
   const input = useRef<DayPickerInput>(null);
   const { size = 'default', id, value, error, onChange, onBlur } = props;
-  const [selected, setSelected] = useState<Date | null>(now);
+  const [selected, setSelected] = useState<Date | null>(null);
 
   function handleDayChange(date: Date | null = null, modifiers: DayModifiers) {
     if (!modifiers.disabled && !modifiers.selected) {
@@ -65,6 +65,9 @@ export const CalendarInput = (props: Props) => {
     },
     month: selected || now,
     months: MONTHS,
+    onDayClick: () => {
+      input.current!.getInput().blur();
+    },
     showOutsideDays: true,
     weekdayElement: Weekday,
   };
