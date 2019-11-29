@@ -35,7 +35,10 @@ export class Room extends BaseEntity {
   @Column('tinyint')
   floor: number;
 
-  @OneToMany(type => Event, event => event.room)
+  @OneToMany(
+    type => Event,
+    event => event.room
+  )
   @Field(type => [Event], { nullable: true })
   events: Promise<Event[] | null>;
 }

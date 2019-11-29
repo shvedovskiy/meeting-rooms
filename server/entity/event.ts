@@ -44,9 +44,13 @@ export class Event extends BaseEntity {
   roomId?: string;
 
   @Field(type => Room)
-  @ManyToOne(type => Room, room => room.events, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(
+    type => Room,
+    room => room.events,
+    {
+      onDelete: 'CASCADE',
+    }
+  )
   @JoinColumn({ name: 'roomId' })
   room: Promise<Room>;
 

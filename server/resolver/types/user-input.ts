@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { InputType, Field, Int } from 'type-graphql';
 import { Length, IsUrl } from 'class-validator';
 
@@ -13,7 +14,10 @@ export class UserInput implements Partial<User> {
   homeFloor? = 0;
 
   @Length(1, 255)
-  @IsUrl()
+  @IsUrl({
+    require_tld: false,
+    allow_underscores: true,
+  })
   @Field({ nullable: true })
   avatarUrl?: string;
 }
@@ -28,7 +32,10 @@ export class UpdateUserInput implements Partial<User> {
   homeFloor?: number;
 
   @Length(1, 255)
-  @IsUrl()
+  @IsUrl({
+    require_tld: false,
+    allow_underscores: true,
+  })
   @Field({ nullable: true })
   avatarUrl?: string;
 }
