@@ -5,6 +5,7 @@
 }
 
 .roomInfo {
+  z-index: 3;
   flex: 0 0 245px;
   order: -1;
   padding: 2px 25px;
@@ -14,17 +15,21 @@
     color: var(--text-secondary);
   }
 
+  .room.scrolled & {
+    position: sticky;
+    left: 0;
+    padding: 4px 8px 7px 14px;
+    visibility: hidden;
+  }
+
   .room.lg & {
     flex-basis: 180px;
     padding: 10px 16px 8px;
     background-color: var(--bg-primary);
   }
 
-  .room.scrolled & {
-    position: sticky;
-    left: 0;
+  .room.lg.scrolled & {
     padding: 0 8px 25px 14px;
-    visibility: hidden;
   }
 }
 

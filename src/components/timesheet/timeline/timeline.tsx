@@ -6,7 +6,8 @@ import gql from 'graphql-tag';
 import { Room } from './room/room';
 import classes from './timeline.module.scss';
 import { useSizeCtx } from 'context/size-context';
-import { ROOMS_QUERY, RoomsQueryType } from 'service/queries';
+import { useScrollCtx } from 'context/scroll-context';
+import { ROOMS_QUERY, RoomsQueryType } from 'service/apollo/queries';
 import { RoomData, FloorDefinition } from '../types';
 
 type Props = {
@@ -28,6 +29,7 @@ function generateFloorsTable(rooms: RoomData[]): FloorDefinition {
 
 export const Timeline = ({ date }: Props) => {
   const size = useSizeCtx() || 'default';
+  const scrolled = useScrollCtx();
   const { data: roomsData } = useQuery<RoomsQueryType>(gql`
     query Rooms {
       ${ROOMS_QUERY}
@@ -45,7 +47,11 @@ export const Timeline = ({ date }: Props) => {
     for (const [floorNumber, rooms] of floors) {
       components.push(
         <li key={floorNumber} className={classes.floor}>
-          <h1 className={classes.floorName}>{floorNumber} ЭТАЖ</h1>
+          <h1
+            className={cn(classes.floorName, { [classes.scrolled]: scrolled })}
+          >
+            {floorNumber} ЭТАЖ
+          </h1>
           <ul>
             {rooms.map(room => (
               <li key={room.title} className={classes.room}>

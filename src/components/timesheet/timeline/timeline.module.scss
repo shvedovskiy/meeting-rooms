@@ -9,16 +9,30 @@
 }
 
 .floorName {
+  max-width: var(--aside-desktop-width);
   margin-bottom: 4px;
   padding: 0 25px;
   font-size: var(--small-text);
   color: var(--text-secondary);
   @include oneLineEllipsis;
 
+  &.scrolled {
+    position: sticky;
+    left: 0;
+    padding-right: 8px;
+    padding-left: 22px;
+  }
+
   .floors.lg & {
+    max-width: var(--aside-mobile-width);
     margin-bottom: 6px;
     padding-right: 16px;
     padding-left: 16px;
+
+    &.scrolled {
+      padding-right: 8px;
+      padding-left: 22px;
+    }
   }
 }
 

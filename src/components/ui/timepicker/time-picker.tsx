@@ -93,16 +93,12 @@ export class TimePicker extends PureComponent<Props, State> {
 
   onKeyDown: KeyboardEventHandler<HTMLInputElement> = event => {
     switch (event.key) {
-      case 'ArrowLeft':
-      case 'ArrowRight':
       case ':': {
         event.preventDefault();
-        const input = event.target as HTMLInputElement;
-        const property =
-          event.key === 'ArrowLeft'
-            ? 'previousElementSibling'
-            : 'nextElementSibling';
-        const nextInput = findInput(input, property);
+        const nextInput = findInput(
+          event.target as HTMLInputElement,
+          'nextElementSibling'
+        );
         focus(nextInput);
         break;
       }
