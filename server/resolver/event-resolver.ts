@@ -179,7 +179,9 @@ export class EventResolver {
 
   @Mutation(returns => Event, { nullable: true })
   async removeEvent(@Args() { id }: MutationArgs): Promise<Event> {
-    const eventToRemove = await this.eventRepository.findOne(id);
+    const eventToRemove = await this.eventRepository.findOne(id, {
+      relations: ['room'],
+    });
     if (!eventToRemove) {
       throw new Error('Invalid event ID');
     }

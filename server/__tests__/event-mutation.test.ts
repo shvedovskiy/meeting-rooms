@@ -928,6 +928,9 @@ describe('Event Mutation', () => {
           date
           startTime
           endTime
+          room {
+            id
+          }
         }
       }
     `;
@@ -958,8 +961,11 @@ describe('Event Mutation', () => {
             id: dbEvent.id,
             title: dbEvent.title,
             date: dbEvent.date.toISOString(),
-            startTime: dbEvent.startTime,
-            endTime: dbEvent.endTime,
+          },
+          startTime: dbEvent.startTime,
+          endTime: dbEvent.endTime,
+          room: {
+            id: dbRoom.id,
           },
         },
       });
