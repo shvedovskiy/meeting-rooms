@@ -77,9 +77,9 @@ function timeIsEmpty(time: string) {
   return time.trim().length === 0 || splitTimeString(time).some(Number.isNaN);
 }
 
-function timeIsOff(time: string) {
+function timeIsOff(time: string, timeForm: 'start' | 'end') {
   const [hours, minutes] = splitTimeString(time);
-  if (time === 'start') {
+  if (timeForm === 'start') {
     if (
       hours < HOURS[0] ||
       (hours === HOURS[HOURS.length - 2] && minutes > 45) ||
@@ -87,7 +87,7 @@ function timeIsOff(time: string) {
     ) {
       return true;
     }
-  } else {
+  } else if (timeForm === 'end') {
     if (
       hours < HOURS[0] ||
       (hours === HOURS[0] && minutes < 15) ||
@@ -104,8 +104,10 @@ function timeIsInPast(time: string, date: Date | null | undefined) {
   return dateIsValid(date) && isToday(date) && isPastTime(time);
 }
 
-function timeIsValid(value: string | null) {
-  return !timeIsIncorrect(value) && !timeIsEmpty(value) && !timeIsOff(value);
+function timeIsValid(value: string | null, form: 'start' | 'end') {
+  return (
+    !timeIsIncorrect(value) && !timeIsEmpty(value) && !timeIsOff(value, form)
+  );
 }
 
 // USERS:
@@ -128,10 +130,10 @@ export const validation = {
     if (dateIsIncorrect(date)) {
       return Object.assign(valid, { date: false });
     }
-    if (timeIsValid(values.startTime)) {
+    if (timeIsValid(values.startTime, 'start')) {
       Object.assign(valid, { startTime: true });
     }
-    if (timeIsValid(values.endTime)) {
+    if (timeIsValid(values.endTime, 'end')) {
       Object.assign(valid, { endTime: true });
     }
     return valid;
@@ -178,7 +180,7 @@ export const blurValidation = {
     if (timeIsEmpty(startTime)) {
       return true;
     }
-    if (timeIsOff(startTime)) {
+    if (timeIsOff(startTime, 'start')) {
       return { time: true, startTime: errors.OFF_TIME };
     }
 
@@ -188,7 +190,7 @@ export const blurValidation = {
       startTimeResult = errors.START_PAST;
     }
     if (
-      timeIsValid(values.endTime) &&
+      timeIsValid(values.endTime, 'end') &&
       !compareTimeStrings(startTime, values.endTime)
     ) {
       time = errors.END_BEFORE_START;
@@ -205,7 +207,7 @@ export const blurValidation = {
     if (timeIsEmpty(endTime)) {
       return true;
     }
-    if (timeIsOff(endTime)) {
+    if (timeIsOff(endTime, 'end')) {
       return { time: true, endTime: errors.OFF_TIME };
     }
 
@@ -215,7 +217,7 @@ export const blurValidation = {
       endTimeResult = errors.START_PAST;
     }
     if (
-      timeIsValid(values.endTime) &&
+      timeIsValid(values.endTime, 'end') &&
       !compareTimeStrings(values.startTime, endTime)
     ) {
       time = errors.END_BEFORE_START;
@@ -237,14 +239,14 @@ export const blurValidation = {
     if (dateInPast(date)) {
       return Object.assign(valid, { date: errors.DATE_PAST });
     }
-    if (timeIsValid(values.startTime)) {
+    if (timeIsValid(values.startTime, 'start')) {
       Object.assign(valid, {
         startTime: timeIsInPast(values.startTime, date)
           ? errors.START_PAST
           : true,
       });
     }
-    if (timeIsValid(values.endTime)) {
+    if (timeIsValid(values.endTime, 'end')) {
       Object.assign(valid, {
         endTime: timeIsInPast(values.endTime, date) ? errors.END_PAST : true,
       });
