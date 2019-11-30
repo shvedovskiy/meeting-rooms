@@ -64,6 +64,7 @@ export const Button = memo((props: Props) => {
     ref: buttonNode,
     disabled,
     onClick,
+    title: typeof children === 'string' ? (children as string) : '',
     ...rest,
   };
 

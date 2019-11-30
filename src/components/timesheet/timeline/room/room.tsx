@@ -94,6 +94,7 @@ export const Room = ({ room, size = 'default', date }: Props) => {
       <button
         key={index}
         className={cn(classes.slot, classes[`slot--${width}`])}
+        title="Создать событие"
         onClick={() =>
           openAddPage(offsetToTime(HOURS[0], range.offset, range.width))
         }
@@ -101,6 +102,7 @@ export const Room = ({ room, size = 'default', date }: Props) => {
     );
   }
 
+  const roomCapacity = formatCapacity(room.minCapacity, room.maxCapacity);
   return (
     <div
       className={cn(classes.room, {
@@ -114,9 +116,11 @@ export const Room = ({ room, size = 'default', date }: Props) => {
           [classes.unavailable]: ranges.every(r => r.hasOwnProperty('id')),
         })}
       >
-        <div className={classes.name}>{room.title}</div>
-        <p className={classes.capacity}>
-          {formatCapacity(room.minCapacity, room.maxCapacity)}
+        <div className={classes.name} title={room.title}>
+          {room.title}
+        </div>
+        <p className={classes.capacity} title={roomCapacity}>
+          {roomCapacity}
         </p>
       </div>
     </div>

@@ -49,6 +49,7 @@ export const Timeline = ({ date }: Props) => {
         <li key={floorNumber} className={classes.floor}>
           <h1
             className={cn(classes.floorName, { [classes.scrolled]: scrolled })}
+            title={`${floorNumber} этаж`}
           >
             {floorNumber} ЭТАЖ
           </h1>

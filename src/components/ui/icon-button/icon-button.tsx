@@ -1,21 +1,25 @@
-import React, { memo, useRef, useEffect } from 'react';
+import React, { memo, useRef, useEffect, ButtonHTMLAttributes } from 'react';
 import cn from 'classnames';
 
-import { Size } from 'context/size-context';
-import classes from './icon-button.module.scss';
 import { Icon, IconType } from '../icon/icon';
+import { Size } from 'context/size-context';
+import { Override } from 'service/typings';
+import classes from './icon-button.module.scss';
 
 type ArgsType = any[];
-export type Props = {
-  ariaLabel?: string;
-  autoFocus?: boolean;
-  className?: string;
-  disabled?: boolean;
-  size?: Size;
-  icon: IconType;
-  onClick?: (...args: ArgsType) => any;
-  onClickArgs?: ArgsType;
-};
+export type Props = Override<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  {
+    ariaLabel?: string;
+    autoFocus?: boolean;
+    className?: string;
+    disabled?: boolean;
+    size?: Size;
+    icon: IconType;
+    onClick?: (...args: ArgsType) => any;
+    onClickArgs?: ArgsType;
+  }
+>;
 
 export const IconButton = memo((props: Props) => {
   const buttonNode = useRef<HTMLButtonElement>(null!);

@@ -36,7 +36,15 @@ export const Option = (props: Props) => {
     );
   }
   return (
-    <button className={className} onClick={selected ? onDeselect : onSelect}>
+    <button
+      className={className}
+      onClick={selected ? onDeselect : onSelect}
+      title={
+        selected
+          ? 'Отменить выбор'
+          : `${item.startTime} — ${item.endTime}, ${item.title} · ${item.floor} этаж`
+      }
+    >
       <span className={classes.time}>
         {item.startTime}&ndash;{item.endTime}
       </span>

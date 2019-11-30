@@ -72,7 +72,9 @@ export const FormUI = ({
   function renderFormFields() {
     const fields = [
       <div key="title">
-        <label htmlFor="title">Тема</label>
+        <label htmlFor="title" title="Тема">
+          Тема
+        </label>
         <Input
           id="title"
           size={size}
@@ -87,7 +89,10 @@ export const FormUI = ({
       </div>,
       <div key="datetime" className={classes.dateTime}>
         <div className={classes.date}>
-          <label htmlFor="date">
+          <label
+            htmlFor="date"
+            title={size === 'default' ? 'Дата' : 'Дата и время'}
+          >
             {size === 'default' ? 'Дата' : 'Дата и время'}
           </label>
           <CalendarInput
@@ -105,7 +110,7 @@ export const FormUI = ({
         </div>
         <div className={classes.timeContainer}>
           <div className={classes.time}>
-            {size === 'default' && <label>Начало</label>}
+            {size === 'default' && <label title="Начало">Начало</label>}
             <TimePicker
               size={size}
               {...field({
@@ -122,7 +127,7 @@ export const FormUI = ({
           </div>
           <span>&mdash;</span>
           <div className={classes.time}>
-            {size === 'default' && <label>Конец</label>}
+            {size === 'default' && <label title="Конец">Конец</label>}
             <TimePicker
               size={size}
               {...field({
@@ -145,7 +150,9 @@ export const FormUI = ({
         )}
       </div>,
       <div key="users" className={classes.users}>
-        <label htmlFor="users">Участники</label>
+        <label htmlFor="users" title="Участники">
+          Участники
+        </label>
         <Selectpicker
           id="selectpicker"
           items={users}
@@ -162,10 +169,13 @@ export const FormUI = ({
     ];
 
     if (roomsShouldDisplay(validity, values, initialValues)) {
+      const label = values.room
+        ? 'Ваша переговорка'
+        : 'Рекомендуемые переговорки';
       fields.push(
         <div key="room" className={classes.room}>
-          <label htmlFor="room">
-            {values.room ? 'Ваша переговорка' : 'Рекомендуемые переговорки'}
+          <label htmlFor="room" title={label}>
+            {label}
           </label>
           <OptionPicker
             id="room"

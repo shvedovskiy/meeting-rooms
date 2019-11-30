@@ -59,6 +59,7 @@ export const DateSwitch = (props: Props) => {
           className={classes.switchBtn}
           disabled={isToday(date)}
           ariaLabel="Предыдущий день"
+          title="Предыдущий день"
           onClickArgs={[false]}
           onClick={handleDayChange}
         />
@@ -66,6 +67,7 @@ export const DateSwitch = (props: Props) => {
           use="borderless"
           className={classes.dateBtn}
           onClick={handleCalendarToggle}
+          title={dateString}
         >
           {dateString}
         </Button>
@@ -74,6 +76,7 @@ export const DateSwitch = (props: Props) => {
           size={size}
           className={cn(classes.switchBtn, classes.next)}
           ariaLabel="Следующий день"
+          title="Следующий день"
           onClickArgs={[true]}
           onClick={handleDayChange}
         />
