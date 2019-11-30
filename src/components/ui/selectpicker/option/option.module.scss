@@ -22,15 +22,21 @@
   }
 
   .optionText {
+    display: flex;
     flex-grow: 1;
-    @include oneLineEllipsis;
+    overflow: hidden;
   }
 
   .bullet {
     font-size: var(--xs-text);
   }
 
+  .login {
+    @include oneLineEllipsis;
+  }
+
   .homeFloor {
+    flex-shrink: 0;
     color: var(--text-secondary);
   }
 }

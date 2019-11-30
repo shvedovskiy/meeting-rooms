@@ -40,6 +40,10 @@ export const customStyles = {
         : 'var(--medium-text)',
     fontWeight: 100,
     color: 'var(--text-secondary)',
+    maxWidth: '85%',
+    whiteSpace: 'nowrap' as const,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   }),
   dropdownIndicator: (provided: CSSProperties, state: any) => ({
     ...provided,

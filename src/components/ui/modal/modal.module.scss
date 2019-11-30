@@ -1,3 +1,5 @@
+@import '../../../service/styles/mixins';
+
 .modal {
   width: 444px;
   padding: 32px;
@@ -10,6 +12,11 @@
     margin-bottom: 24px;
     vertical-align: bottom;
   }
+}
+
+.modalTitle,
+.modalText {
+  @include hyphenate;
 }
 
 .modalIcon {

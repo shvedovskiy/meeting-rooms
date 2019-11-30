@@ -25,7 +25,7 @@ export const Option = (props: OptionProps<UserData>) => {
         <Avatar avatarPath={data.avatarUrl} size="default" />
       </div>
       <div className={classes.optionText}>
-        {data.login}&nbsp;·&nbsp;
+        <span className={classes.login}>{data.login}&nbsp;·</span>&nbsp;
         <span className={classes.homeFloor}>{data.homeFloor}&nbsp;этаж</span>
       </div>
     </div>

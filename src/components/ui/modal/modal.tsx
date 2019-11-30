@@ -82,7 +82,11 @@ export const Modal = ({
             <Emoji symbol={icon} label={iconLabel} />
           </span>
         )}
-        {title && <h1 id="modal-title">{title}</h1>}
+        {title && (
+          <h1 className={classes.modalTitle} id="modal-title">
+            {title}
+          </h1>
+        )}
         {renderText(text)}
         {buttons && (
           <div className={classes.modalButtons}>

@@ -75,6 +75,7 @@
 
   .date {
     grid-area: date;
+    min-width: 0;
     margin-right: 16px;
 
     .formArea.lg & {

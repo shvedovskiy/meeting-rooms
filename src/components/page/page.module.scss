@@ -28,6 +28,7 @@
   margin-bottom: 18px;
   padding: 0 16px;
 
+  @include hyphenate;
   @include clearfix;
 }
 
