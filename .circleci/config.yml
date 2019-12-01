@@ -39,11 +39,12 @@ jobs:
             at: .
         - run:
             name: Build application
-            command: npm run server:build # npm run build
+            command: npm run build:all
         - persist_to_workspace:
             root: .
             paths:
                 - dist
+                - build
   test:
     <<: *defaults
     steps:
