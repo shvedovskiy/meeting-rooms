@@ -7,7 +7,6 @@ interface InjectedProps {
 export function withErrorBoundary<BaseProps extends InjectedProps>(
   _BaseComponent: ComponentType<BaseProps>
 ) {
-  // @ts-ignore
   const BaseComponent = _BaseComponent as ComponentType<InjectedProps>;
 
   type HOCProps = {};
