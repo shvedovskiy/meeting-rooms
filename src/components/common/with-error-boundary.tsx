@@ -1,39 +1,44 @@
 import React, { Component, ComponentType } from 'react';
 
-interface InjectedProps {
-  onReset: () => void;
+export interface ErrorBoundaryProps {
+  onReset?: () => void;
 }
 
-export function withErrorBoundary<BaseProps extends InjectedProps>(
+export function withErrorBoundary<BaseProps extends ErrorBoundaryProps>(
   _BaseComponent: ComponentType<BaseProps>
 ) {
-  const BaseComponent = _BaseComponent as ComponentType<InjectedProps>;
+  const BaseComponent = _BaseComponent as ComponentType<ErrorBoundaryProps>;
 
-  type HOCProps = {};
+  type HOCProps = {
+    className?: string;
+    onError?: () => void;
+  };
   type HOCState = {
-    error: Error | null | undefined;
+    hasError: boolean;
   };
 
   return class extends Component<HOCProps, HOCState> {
     static displayName = `withErrorBoundary(${BaseComponent.name})`;
     static readonly WrappedComponent = BaseComponent;
     state = {
-      error: undefined,
+      hasError: false,
     };
 
     componentDidCatch(error: Error | null) {
-      this.setState({
-        error: error || new Error('Error was swallowed during propagation.'),
+      this.setState({ hasError: error != null }, () => {
+        if (this.props.onError) {
+          this.props.onError();
+        }
       });
     }
 
     handleReset = () => {
-      this.setState({ error: undefined });
+      this.setState({ hasError: false });
     };
 
     render() {
       const { children, ...restProps } = this.props;
-      if (this.state.error) {
+      if (this.state.hasError) {
         return <BaseComponent onReset={this.handleReset} {...restProps} />;
       }
       return children;

@@ -1,11 +1,12 @@
 import React from 'react';
 import cn from 'classnames';
 
+import { ErrorBoundaryProps } from 'components/common/with-error-boundary';
 import classes from './error.module.scss';
 
-type Props = {
+interface Props extends ErrorBoundaryProps {
   className?: string;
-};
+}
 
 export const Error = ({ className }: Props) => (
   <div className={cn(className)}>
