@@ -1,6 +1,8 @@
 @import '../../service/styles/mixins';
 
 .page {
+  --page-padding: 16px;
+
   position: absolute;
   top: 0;
   left: 0;
@@ -26,14 +28,10 @@
   max-width: 900px;
   margin: 0 auto;
   margin-bottom: 18px;
-  padding: 0 16px;
+  padding: 0 var(--page-padding);
 
   @include hyphenate;
   @include clearfix;
-}
-
-.title {
-  word-break: break-word;
 }
 
 .closePage {

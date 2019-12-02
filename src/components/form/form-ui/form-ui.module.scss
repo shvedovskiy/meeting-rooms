@@ -25,15 +25,13 @@
   label {
     display: block;
     margin-bottom: 3px;
-    overflow: hidden;
     font-weight: 600;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    @include oneLineEllipsis;
   }
 
   & > div {
-    padding-right: 16px;
-    padding-left: 16px;
+    padding-right: var(--page-padding);
+    padding-left: var(--page-padding);
 
     .formArea.lg & {
       margin-bottom: 16px;

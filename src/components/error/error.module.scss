@@ -1,6 +1,8 @@
+@import '../../service/styles/mixins';
+
 .title,
 .text {
-  word-break: break-word;
+  @include hyphenate;
 }
 
 .title {
