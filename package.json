@@ -16,7 +16,7 @@
   },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start",
-    "build": "react-scripts build && node scripts/insert-preloads.js",
+    "build": "react-scripts build && node scripts/insert-preloads.js && precompress -e .DS_Store,.map ./build/",
     "test": "react-scripts test",
     "start:all": "concurrently \"npm run server:dev\" \"npm start\"",
     "build:all": "run-s build server:build",
@@ -99,6 +99,7 @@
     "jest-extended": "^0.11.2",
     "lint-staged": "^9.5.0",
     "npm-run-all": "^4.1.5",
+    "precompress": "^5.1.1",
     "prettier": "^1.19.1",
     "stylelint": "^12.0.0",
     "stylelint-config-prettier": "^6.0.0",
