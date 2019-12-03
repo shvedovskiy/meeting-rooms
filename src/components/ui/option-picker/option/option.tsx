@@ -52,14 +52,7 @@ export const Option = (props: Props) => {
         {item.title}&nbsp;·&nbsp;{item.floor} этаж
       </span>
 
-      {selected && (
-        <Icon
-          name="close"
-          className={classes.icon}
-          size={size}
-          viewBox="0 0 10 10"
-        />
-      )}
+      {selected && <Icon name="close" className={classes.icon} size={size} />}
     </button>
   );
 };

@@ -43,9 +43,9 @@
 .closeIcon {
   position: absolute;
   right: 12px;
+  color: var(--icon-default);
   background: none;
-  opacity: 0.43;
-  transition: opacity 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   .input.lg ~ & {
     top: 1px;
@@ -68,7 +68,8 @@
 button.sideIcon,
 .closeIcon {
   &:hover,
-  &:focus {
-    opacity: 1;
+  &:focus,
+  &:active {
+    color: var(--icon-active);
   }
 }

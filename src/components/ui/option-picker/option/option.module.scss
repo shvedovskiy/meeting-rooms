@@ -63,7 +63,7 @@
   position: absolute;
   top: 50%;
   right: 12px;
-  filter: invert(1);
+  color: var(--text-inverted);
   transform: translateY(-50%);
 
   .option.lg & {
