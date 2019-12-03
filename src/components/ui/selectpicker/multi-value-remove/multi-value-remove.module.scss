@@ -1,16 +1,13 @@
 .removeButton {
   flex-shrink: 0;
   line-height: 0.9;
-  background-color: transparent;
-}
-
-.icon {
   color: var(--icon-default);
+  background-color: transparent;
   transition: color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-  .removeButton:hover &,
-  .removeButton:focus &,
-  .removeButton:active & {
+  &:hover,
+  &:focus,
+  &:active {
     color: var(--icon-active);
   }
 }

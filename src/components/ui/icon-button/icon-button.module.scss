@@ -5,9 +5,17 @@
   justify-content: center;
   width: 24px;
   height: 24px;
+  color: var(--icon-default);
   background-color: var(--secondary-1);
   border: none;
   border-radius: 50%;
+  transition: color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  &:focus,
+  &:hover,
+  &:active {
+    color: var(--icon-active);
+  }
 
   &.disabled {
     pointer-events: none;
@@ -22,14 +30,6 @@
 
 .icon {
   display: inline-block;
-  color: var(--icon-default);
-  transition: color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-
-  .btn:focus &,
-  .btn:hover &,
-  .btn:active & {
-    color: var(--icon-active);
-  }
 
   .btn.lg & {
     transform: scale(1.2);

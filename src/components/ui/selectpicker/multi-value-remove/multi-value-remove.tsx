@@ -14,7 +14,7 @@ export const MultiValueRemove = ({
   };
   return (
     <button {...props} title="Удалить участника">
-      <Icon name="close" className={classes.icon} />
+      <Icon name="close" />
     </button>
   );
 };
