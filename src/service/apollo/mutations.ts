@@ -86,16 +86,9 @@ export const REMOVE_EVENT_MUTATION = gql`
   mutation RemoveEvent($id: ID!) {
     removeEvent(id: $id) {
       id
-      title
       date
-      startTime
-      endTime
       room {
         id
-        title
-        minCapacity
-        maxCapacity
-        floor
       }
     }
   }
