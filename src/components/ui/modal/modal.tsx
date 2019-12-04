@@ -65,17 +65,18 @@ export const Modal = ({
       unmountOnExit
     >
       <AriaModal
-        alert={true}
-        aria-modal={true}
+        alert
+        aria-modal
         dialogClass={cn(classes.modal, {
           [classes.lg]: size === 'large',
         })}
         dialogStyle={{ textAlign: 'center', verticalAlign: 'initial' }}
-        focusDialog={true}
+        focusDialog
         onExit={onExit}
         titleId="modal-title"
         underlayColor="rgba(0, 16, 33, 0.8)"
-        verticallyCenter={true}
+        underlayClickExits
+        verticallyCenter
       >
         {icon && (
           <span className={classes.modalIcon}>

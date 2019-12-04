@@ -12,7 +12,8 @@ import classes from './page.module.scss';
 import spinnerTransitionClasses from 'components/ui/spinner/spinner-transition.module.scss';
 
 const ErrorBoundary = withErrorBoundary(Error);
-const Form = lazy(() => import('components/form'));
+const AddForm = lazy(() => import('components/form/form-add'));
+const EditForm = lazy(() => import('components/form/form-edit'));
 
 type Props = {
   mode: NonNullable<PageMode>;
@@ -30,7 +31,6 @@ export const Page = ({ mode, pageData: formData }: Props) => {
 
   function renderPage() {
     const formProps = {
-      mode,
       formData,
       onMount() {
         setIsLoading(false);
@@ -43,7 +43,11 @@ export const Page = ({ mode, pageData: formData }: Props) => {
         onError={formProps.onMount}
       >
         <Suspense fallback={null}>
-          <Form {...formProps} />
+          {mode === 'add' ? (
+            <AddForm {...formProps} />
+          ) : (
+            <EditForm {...formProps} />
+          )}
         </Suspense>
       </ErrorBoundary>
     );

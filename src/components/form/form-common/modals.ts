@@ -35,10 +35,45 @@ function generateSuccessfulModal(
   return modalConfig;
 }
 
-export function generateCreateModal(eventData: Event, closeModal: () => void) {
-  return generateSuccessfulModal('Встреча создана!', eventData, closeModal);
+function generateFailedModal(
+  title: string,
+  text: string,
+  retry: () => void,
+  closeModal: () => void
+) {
+  return {
+    icon: '🧯',
+    iconLabel: 'none',
+    title,
+    text,
+    buttons: [
+      {
+        id: '1',
+        text: 'Повторить',
+        use: 'primary',
+        onClick: () => retry(),
+      },
+    ],
+    onBackdropClick: () => closeModal(),
+  } as ModalDef;
 }
 
-export function generateUpdateModal(eventData: Event, closeModal: () => void) {
-  return generateSuccessfulModal('Встреча обновлена!', eventData, closeModal);
-}
+export const generateCreateModal = generateSuccessfulModal.bind(
+  null,
+  'Встреча создана!'
+);
+
+export const generateUpdateModal = generateSuccessfulModal.bind(
+  null,
+  'Встреча обновлена!'
+);
+
+export const generateFailedSaveModal = generateFailedModal.bind(
+  null,
+  'При сохранении события произошла ошибка'
+);
+
+export const generateFailedRemoveModal = generateFailedModal.bind(
+  null,
+  'При удалении события произошла ошибка'
+);

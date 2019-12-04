@@ -1,4 +1,4 @@
-import React, { useRef, MutableRefObject } from 'react';
+import React, { MutableRefObject } from 'react';
 import cn from 'classnames';
 
 import { FormActions } from '../form-actions/form-actions';
@@ -31,25 +31,23 @@ import classes from './form-ui.module.scss';
 type Props = {
   mode: NonNullable<PageMode>;
   users: UserData[];
-  onClose: () => void;
-  onRemove: () => void;
-  onSubmit: (
-    values: CreatedEvent,
-    movedEvents: MutableRefObject<MovedEvent[]>
-  ) => void;
   initialValues?: PageData;
+  movedEvents: MutableRefObject<MovedEvent[]>;
+  onClose: () => void;
+  onRemove?: () => void;
+  onSubmit: (values: CreatedEvent) => void;
 };
 
 export const FormUI = ({
   mode,
-  initialValues = {},
   users,
+  initialValues = {},
+  movedEvents,
   onClose,
   onRemove,
   onSubmit: submitForm,
 }: Props) => {
   const size = useSizeCtx();
-  const movedEvents = useRef<MovedEvent[]>([]);
   const [{ values, validity, errors }, { field, form }] = useForm<
     FormFields,
     FormErrors

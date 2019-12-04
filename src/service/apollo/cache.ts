@@ -68,7 +68,7 @@ export function updateCacheAfterRemoving(
   });
 }
 
-export function refetchQueriesAfterUpdating(
+export function refetchQueriesAfterStoring(
   mutationData?: CreateEventMutationType | UpdateEventMutationType | null,
   oldRoom?: string,
   oldDate?: Date

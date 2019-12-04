@@ -15,7 +15,7 @@ type Props = {
   values: FormFields;
   validity: StateValidity<FormFields>;
   closePage: () => void;
-  removeEvent: () => void;
+  removeEvent?: () => void;
 };
 
 function isSubmitBlocked(
@@ -90,7 +90,12 @@ export const FormActions = ({
               {
                 id: '2',
                 text: 'Удалить',
-                onClick: removeEvent,
+                onClick() {
+                  if (removeEvent) {
+                    removeEvent();
+                  }
+                  setModalOpen(false);
+                },
               },
             ]}
             onBackdropClick={() => setModalOpen(false)}

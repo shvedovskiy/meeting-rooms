@@ -8,12 +8,14 @@ import {
   Table,
 } from 'components/timesheet/types';
 
-export const USERS_QUERY = `
-  users {
-    id
-    login
-    homeFloor
-    avatarUrl
+export const USERS_QUERY = gql`
+  {
+    users {
+      id
+      login
+      homeFloor
+      avatarUrl
+    }
   }
 `;
 export interface UsersQueryType {
