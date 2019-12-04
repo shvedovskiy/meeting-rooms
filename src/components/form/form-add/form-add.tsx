@@ -29,7 +29,11 @@ import {
 } from '../form-common/modals';
 import classes from '../form.module.scss';
 
-export const FormAdd: FC<FormPageProps> = ({ onMount, onClose: closePage }) => {
+export const FormAdd: FC<FormPageProps> = ({
+  formData: initialValues,
+  onMount,
+  onClose: closePage,
+}) => {
   const [modal, setModal] = useState<ModalDef | null>(null);
   const [vars, setVars] = useState<Partial<CreateEventVariables>>({});
   const movedEvents = useRef<MovedEvent[]>([]);
@@ -116,6 +120,7 @@ export const FormAdd: FC<FormPageProps> = ({ onMount, onClose: closePage }) => {
       <FormUI
         mode="add"
         users={usersData.users}
+        initialValues={initialValues}
         movedEvents={movedEvents}
         onClose={closePage}
         onSubmit={handleFormSubmit}

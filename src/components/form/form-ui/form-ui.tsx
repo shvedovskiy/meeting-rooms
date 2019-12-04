@@ -45,7 +45,7 @@ export const FormUI = ({
   movedEvents,
   onClose,
   onRemove,
-  onSubmit: submitForm,
+  onSubmit,
 }: Props) => {
   const size = useSizeCtx();
   const [{ values, validity, errors }, { field, form }] = useForm<
@@ -205,9 +205,7 @@ export const FormUI = ({
           className={classes.form}
           {...form<CreatedEvent>({
             name: 'form',
-            onSubmit(formValues: CreatedEvent) {
-              submitForm(formValues, movedEvents);
-            },
+            onSubmit,
           })}
         >
           <div className={classes.formError}>
