@@ -5,9 +5,8 @@ import { FormUI } from '../form-ui/form-ui';
 import { Error } from 'components/error/error';
 import { CreatedEvent, FormEvent } from 'components/timesheet/types';
 import { Spinner } from 'components/ui/spinner/spinner';
-import { FormPageProps } from '../types';
+import { FormPageProps, MovedEvent } from '../form-common/types';
 import { Props as ModalDef, Modal } from 'components/ui/modal/modal';
-import { MovedEvent } from '../form-ui/utils';
 import {
   USERS_QUERY,
   UsersQueryType as UsersQuery,

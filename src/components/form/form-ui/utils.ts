@@ -7,13 +7,7 @@ import {
 } from '../form-common/validators';
 import { StateValidity, StateValues } from 'components/common/use-form';
 import { RoomCard, Event, RoomData } from 'components/timesheet/types';
-import { UpdateEventVariables } from 'service/apollo/mutations';
-
-export type MovedEvent = UpdateEventVariables & { prevRoom: string };
-export type RoomMovedEvents = Map<string, UpdateEventVariables[]>;
-export interface DayTable {
-  [roomId: string]: string[];
-}
+import { RoomMovedEvents } from '../form-common/types';
 
 export const defaultFormValues = {
   title: '',

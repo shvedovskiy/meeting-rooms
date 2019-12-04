@@ -19,12 +19,12 @@ import {
   FormFields,
   FormErrors,
 } from '../form-common/validators';
+import { MovedEvent } from '../form-common/types';
 import {
   defaultFormValues,
   recommendationNeeded,
   roomsShouldDisplay,
   handleFormChange,
-  MovedEvent,
 } from './utils';
 import classes from './form-ui.module.scss';
 

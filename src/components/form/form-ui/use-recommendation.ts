@@ -19,10 +19,8 @@ import {
   measureDistanceToRoom,
   measureDistanceToNewRoom,
   measureDistanceToAnyRoom,
-  MovedEvent,
-  RoomMovedEvents,
-  DayTable,
 } from './utils';
+import { MovedEvent, RoomMovedEvents, DayTable } from '../form-common/types';
 
 function findFreeRooms(
   startTime: string,
