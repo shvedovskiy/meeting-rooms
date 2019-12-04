@@ -5,7 +5,7 @@
 }
 
 .roomInfo {
-  z-index: 3;
+  z-index: var(--room-badge-z);
   flex: 0 0 245px;
   order: -1;
   padding: 2px 25px;
@@ -18,8 +18,7 @@
   .room.scrolled & {
     position: sticky;
     left: 0;
-    padding: 4px 8px 7px 14px;
-    visibility: hidden;
+    padding: 4px 8px 11px 14px;
   }
 
   .room.lg & {
@@ -29,14 +28,13 @@
   }
 
   .room.lg.scrolled & {
-    padding: 0 8px 25px 14px;
+    padding: 0 8px 29px 14px;
   }
 }
 
 .name {
   font-size: var(--medium-text);
   font-weight: 700;
-  visibility: visible;
   transition: color 0.2s ease-out;
   @include oneLineEllipsis;
 
@@ -46,7 +44,7 @@
     margin-bottom: 0;
     padding: 5px 8px;
     font-size: var(--small-text);
-    visibility: visible;
+    vertical-align: bottom;
     background-color: var(--bg-primary);
     border-radius: 4px;
     box-shadow: 0 1px 8px rgba(0, 44, 92, 0.28);
@@ -99,12 +97,6 @@ $states: '&:hover::before, &:focus::before, &:active::before' !default;
   &:focus {
     background-color: var(--table-cell-primary-2);
     border-radius: 2px;
-  }
-
-  &:hover,
-  &:focus,
-  &:active {
-    z-index: 2;
   }
 
   &:active {

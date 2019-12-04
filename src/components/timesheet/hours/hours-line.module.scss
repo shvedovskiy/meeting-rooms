@@ -24,7 +24,7 @@
 .currentTime {
   position: absolute;
   top: 50%;
-  z-index: 3;
+  z-index: 1;
   transform: translateY(-50%);
 
   &::before {

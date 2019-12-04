@@ -3,6 +3,7 @@
 :root {
   font-size: 0.8125em;
 
+  /* COLORS */
   --bg-primary: #fff;
   --bg-secondary: #f6f7f9;
   --text-primary: #000;
@@ -12,10 +13,6 @@
   --text-inactive: rgba(0, 0, 0, 0.2);
   --icon-default: #929292;
   --icon-active: #000;
-  --large-text: 1.5384615385rem;
-  --medium-text: 1.1538461538rem;
-  --default-text: 1rem;
-  --small-text: 0.8461538462rem;
   --primary-1: #007dff;
   --primary-2: #1d54fe;
   --primary-3: #1d00fe;
@@ -32,6 +29,20 @@
   --table-cell-secondary-2: #99a9b9;
   --table-cell-secondary-3: #8594a2;
   --shadow-color: rgba(0, 44, 92, 0.28);
+
+  /* UNITS */
+  --large-text: 1.5384615385rem;
+  --medium-text: 1.1538461538rem;
+  --default-text: 1rem;
+  --small-text: 0.8461538462rem;
+  --spinner-z: 1000;
+  --page-z: 100;
+  --table-calendar-z: 40;
+  --table-tooltip-z: 30;
+  --table-header-z: 20;
+  --room-badge-z: 10;
+  --form-buttons-z: 1;
+  --table-placeholder-z: -1;
 }
 
 :disabled {
@@ -43,7 +54,6 @@
 }
 
 body {
-  position: fixed;
   font-family: 'YS Text', 'Arial', sans-serif;
   color: var(--text-primary);
   background-color: var(--bg-primary);
@@ -119,6 +129,7 @@ img {
 
 /* stylelint-disable-next-line selector-max-id */
 #root {
+  position: fixed;
   width: 100vw;
   height: var(--vh100);
 }
