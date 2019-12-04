@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef } from 'react';
+import React, { FC, useEffect, useState, useRef, useCallback } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import { FormUI } from '../form-ui/form-ui';
@@ -29,10 +29,11 @@ import {
 } from '../form-common/modals';
 import classes from '../form.module.scss';
 
-export const FormAdd: FC<FormPageProps> = ({ onMount, onClose }) => {
+export const FormAdd: FC<FormPageProps> = ({ onMount, onClose: closePage }) => {
   const [modal, setModal] = useState<ModalDef | null>(null);
   const [vars, setVars] = useState<Partial<CreateEventVariables>>({});
   const movedEvents = useRef<MovedEvent[]>([]);
+  const closeModal = useCallback(() => setModal(null), []);
 
   const {
     data: usersData,
@@ -43,16 +44,16 @@ export const FormAdd: FC<FormPageProps> = ({ onMount, onClose }) => {
     CREATE_EVENT_MUTATION,
     {
       onCompleted({ createEvent }) {
-        setModal(generateCreateModal(createEvent, onClose));
+        setModal(generateCreateModal(createEvent, closePage));
       },
       onError({ message }) {
         const modalConfig = generateFailedSaveModal(
           message,
           () => {
             createEvent({ variables: vars });
-            setModal(null);
+            closeModal();
           },
-          () => setModal(null)
+          closeModal
         );
         setModal(modalConfig);
       },
@@ -116,7 +117,7 @@ export const FormAdd: FC<FormPageProps> = ({ onMount, onClose }) => {
         mode="add"
         users={usersData.users}
         movedEvents={movedEvents}
-        onClose={onClose}
+        onClose={closePage}
         onSubmit={handleFormSubmit}
       />
     </>

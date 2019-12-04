@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef } from 'react';
+import React, { FC, useEffect, useState, useRef, useCallback } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import { FormUI } from '../form-ui/form-ui';
@@ -37,11 +37,12 @@ import classes from '../form.module.scss';
 export const FormEdit: FC<FormPageProps> = ({
   formData: initialValues,
   onMount,
-  onClose,
+  onClose: closePage,
 }) => {
   const [modal, setModal] = useState<ModalDef | null>(null);
   const [vars, setVars] = useState<Partial<UpdateEventVariables>>({});
   const movedEvents = useRef<MovedEvent[]>([]);
+  const closeModal = useCallback(() => setModal(null), []);
 
   const {
     data: usersData,
@@ -52,16 +53,16 @@ export const FormEdit: FC<FormPageProps> = ({
     UPDATE_EVENT_MUTATION,
     {
       onCompleted({ updateEvent }) {
-        setModal(generateUpdateModal(updateEvent, onClose));
+        setModal(generateUpdateModal(updateEvent, closePage));
       },
       onError({ message }) {
         const modalConfig = generateFailedSaveModal(
           message,
           () => {
             updateEvent({ variables: vars });
-            setModal(null);
+            closeModal();
           },
-          () => setModal(null)
+          closeModal
         );
         setModal(modalConfig);
       },
@@ -85,7 +86,7 @@ export const FormEdit: FC<FormPageProps> = ({
   const [removeEvent, { loading: removing }] = useMutation<RemoveMutation>(
     REMOVE_EVENT_MUTATION,
     {
-      onCompleted: onClose,
+      onCompleted: closePage,
       onError({ message }) {
         const modalConfig = generateFailedRemoveModal(
           message,
@@ -93,9 +94,9 @@ export const FormEdit: FC<FormPageProps> = ({
             if (initialValues && initialValues.id) {
               removeEvent({ variables: { id: initialValues.id } });
             }
-            setModal(null);
+            closeModal();
           },
-          () => setModal(null)
+          closeModal
         );
         setModal(modalConfig);
       },
@@ -159,7 +160,7 @@ export const FormEdit: FC<FormPageProps> = ({
         users={usersData.users}
         initialValues={initialValues}
         movedEvents={movedEvents}
-        onClose={onClose}
+        onClose={closePage}
         onRemove={onRemoveEvent}
         onSubmit={handleFormSubmit}
       />
