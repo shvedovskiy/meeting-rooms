@@ -14,13 +14,13 @@ import { timeToRange } from 'service/dates';
 import { FormFields } from '../form-common/validators';
 import { RoomCard, RoomData, Event } from 'components/timesheet/types';
 import { StateValues } from 'components/common/use-form';
-import { UpdateEventVariables } from 'service/apollo/mutations';
+import { UpdateEventVars } from 'service/apollo/mutations';
 import {
   measureDistanceToRoom,
   measureDistanceToNewRoom,
   measureDistanceToAnyRoom,
 } from './utils';
-import { MovedEvent, RoomMovedEvents, DayTable } from '../form-common/types';
+import { EventToMove, RoomMovedEvents, DayTable } from '../form-common/types';
 
 function findFreeRooms(
   startTime: string,
@@ -142,14 +142,14 @@ function moveConflictingEvents(
           return moved;
         } else {
           conflictingEvents.delete(targetRoom.id);
-          const updatedEvent: UpdateEventVariables = {
+          const updatedEvent: UpdateEventVars = {
             id: eventId,
             roomId: targetRoom.id,
           };
           return moved.concat(updatedEvent);
         }
       },
-      [] as UpdateEventVariables[]
+      [] as UpdateEventVars[]
     );
     if (movedEventsIds.length) {
       forbiddenRoomsIds.add(roomId);
@@ -176,7 +176,7 @@ function findAnotherTimeSlot(rooms: RoomData[]): RoomCard[] {
 export function useRecommendation(
   eventValues: StateValues<FormFields>,
   recommendationNeeded: boolean,
-  movedEvents: MutableRefObject<MovedEvent[]>
+  movedEvents: MutableRefObject<EventToMove[]>
 ) {
   const { data } = useQuery<
     RoomsQueryType & EventsMapQueryType & TableQueryType

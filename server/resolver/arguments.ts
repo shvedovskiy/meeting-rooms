@@ -1,7 +1,7 @@
 import { Field, ID, ArgsType } from 'type-graphql';
 import { IsNotEmpty } from 'class-validator';
 
-import { UpdateEventInput } from './types/event-input';
+import { EventUpdateInput } from './types/event-input';
 
 @ArgsType()
 export class IdArg {
@@ -28,8 +28,8 @@ export class EventRelationArgs {
 
 @ArgsType()
 export class EventUpdateArgs {
-  @Field(type => UpdateEventInput, { nullable: true })
-  input: UpdateEventInput;
+  @Field(type => EventUpdateInput, { nullable: true })
+  input: EventUpdateInput;
 
   @Field(type => [ID], { nullable: true })
   userIds: string[];

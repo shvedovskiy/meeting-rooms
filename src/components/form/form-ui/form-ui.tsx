@@ -19,7 +19,7 @@ import {
   FormFields,
   FormErrors,
 } from '../form-common/validators';
-import { MovedEvent } from '../form-common/types';
+import { EventToMove } from '../form-common/types';
 import {
   defaultFormValues,
   recommendationNeeded,
@@ -32,7 +32,7 @@ type Props = {
   mode: NonNullable<PageMode>;
   users: UserData[];
   initialValues?: PageData;
-  movedEvents: MutableRefObject<MovedEvent[]>;
+  eventsToMove: MutableRefObject<EventToMove[]>;
   onClose: () => void;
   onRemove?: () => void;
   onSubmit: (values: CreatedEvent) => void;
@@ -42,7 +42,7 @@ export const FormUI = ({
   mode,
   users,
   initialValues = {},
-  movedEvents,
+  eventsToMove,
   onClose,
   onRemove,
   onSubmit,
@@ -64,7 +64,7 @@ export const FormUI = ({
   const recommendedRooms = useRecommendation(
     values,
     recommendationNeeded(validity, values, initialValues),
-    movedEvents
+    eventsToMove
   );
 
   function renderFormFields() {

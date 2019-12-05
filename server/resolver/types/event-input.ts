@@ -20,7 +20,7 @@ export class EventInput implements Partial<Event> {
 }
 
 @InputType({ description: 'Update event data' })
-export class UpdateEventInput implements Partial<Event> {
+export class EventUpdateInput implements Partial<Event> {
   @Length(1, 255)
   @Field({ nullable: true })
   title?: string;

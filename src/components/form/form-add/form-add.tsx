@@ -1,27 +1,29 @@
-import React, { FC, useEffect, useState, useRef, useCallback } from 'react';
+import React, { FC, useEffect, useState, useCallback, useRef } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import { FormUI } from '../form-ui/form-ui';
 import { Error } from 'components/error/error';
 import { CreatedEvent } from 'components/timesheet/types';
 import { Spinner } from 'components/ui/spinner/spinner';
-import { FormPageProps, MovedEvent } from '../form-common/types';
+import { FormPageProps as Props, EventToMove } from '../form-common/types';
 import { Props as ModalDef, Modal } from 'components/ui/modal/modal';
-
 import {
   USERS_QUERY,
   UsersQueryType as UsersQuery,
 } from 'service/apollo/queries';
 import {
-  CREATE_EVENT_MUTATION,
-  CreateEventMutationType as CreateMutation,
-  CreateEventVariables,
-  UpdateEventMutationType as UpdateMutation,
-  UPDATE_EVENT_MUTATION,
+  CREATE_EVENT_MUTATION as CREATE,
+  MOVE_EVENTS_MUTATION as MOVE,
+  CreateEventMutation,
+  MoveEventsMutation,
+  CreateEventVars,
+  UpdateEventVars,
 } from 'service/apollo/mutations';
 import {
-  updateCacheAfterUpdating,
-  refetchQueriesAfterStoring,
+  updateCacheAfterStoring as updateCacheAfterCreating,
+  updateCacheAfterMoving,
+  refetchQueriesAfterStoring as refetchQueriesAfterCreating,
+  refetchQueriesAfterMoving,
 } from 'service/apollo/cache';
 import {
   generateCreateModal,
@@ -29,23 +31,23 @@ import {
 } from '../form-common/modals';
 import classes from '../form.module.scss';
 
-export const FormAdd: FC<FormPageProps> = ({
-  formData: initialValues,
+export const FormAdd: FC<Props> = ({
+  formData,
   onMount,
   onClose: closePage,
 }) => {
   const [modal, setModal] = useState<ModalDef | null>(null);
-  const [vars, setVars] = useState<Partial<CreateEventVariables>>({});
-  const movedEvents = useRef<MovedEvent[]>([]);
+  const [vars, setVars] = useState<Partial<CreateEventVars>>({});
+  const eventsToMove = useRef<EventToMove[]>([]);
   const closeModal = useCallback(() => setModal(null), []);
 
   const {
     data: usersData,
-    loading: queryLoading,
-    error: queryError,
+    loading: usersLoading,
+    error: usersError,
   } = useQuery<UsersQuery>(USERS_QUERY);
-  const [createEvent, { loading: creating }] = useMutation<CreateMutation>(
-    CREATE_EVENT_MUTATION,
+  const [createEvent, { loading: creating }] = useMutation<CreateEventMutation>(
+    CREATE,
     {
       onCompleted({ createEvent }) {
         setModal(generateCreateModal(createEvent, closePage));
@@ -62,55 +64,75 @@ export const FormAdd: FC<FormPageProps> = ({
         setModal(modalConfig);
       },
       update(cache, { data }) {
-        updateCacheAfterUpdating(cache, data);
+        updateCacheAfterCreating(cache, data);
       },
-      refetchQueries: ({ data }) => refetchQueriesAfterStoring(data),
+      refetchQueries: ({ data }: { data: CreateEventMutation }) =>
+        refetchQueriesAfterCreating(data),
     }
   );
-  const [moveEvent, { loading: moving }] = useMutation<UpdateMutation>(
-    UPDATE_EVENT_MUTATION,
+  const [moveEvents, { loading: moving }] = useMutation<MoveEventsMutation>(
+    MOVE,
     {
-      update(cache, { data }) {
-        updateCacheAfterUpdating(cache, data);
+      onCompleted() {
+        if (Object.keys(vars).length) {
+          createEvent({ variables: vars });
+        }
       },
+      onError({ message }) {
+        const modalConfig = generateFailedSaveModal(
+          message,
+          () => {
+            const inputsToMove: UpdateEventVars[] = eventsToMove.current.map(
+              ({ prevRoom, ...eventData }) => eventData
+            );
+            if (inputsToMove.length) {
+              moveEvents({ variables: { events: inputsToMove } });
+            }
+            closeModal();
+          },
+          closeModal
+        );
+        setModal(modalConfig);
+      },
+      update(cache, { data }) {
+        updateCacheAfterMoving(cache, data);
+      },
+      refetchQueries: ({ data }: { data: MoveEventsMutation }) =>
+        refetchQueriesAfterMoving(data, eventsToMove.current),
     }
   );
 
   // Hide loading spinner:
   useEffect(() => {
-    if (!queryLoading) {
+    if (!usersLoading) {
       onMount();
     }
-  }, [queryLoading, onMount]);
+  }, [usersLoading, onMount]);
 
-  if (queryLoading) {
+  if (usersLoading) {
     return null;
   }
-  if (queryError || !usersData) {
+  if (usersError || !usersData) {
     return <Error className={classes.loadingError} />;
   }
 
   function handleFormSubmit(formValues: CreatedEvent) {
-    for (const { prevRoom, ...eventData } of movedEvents.current) {
-      moveEvent({
-        variables: eventData,
-        refetchQueries: ({ data }) =>
-          refetchQueriesAfterStoring(data, prevRoom),
-      });
-    }
     const { title, date, startTime, endTime, users, room } = formValues;
-    const variables: CreateEventVariables = {
-      input: {
-        title,
-        date,
-        startTime,
-        endTime,
-      },
+    const variables: CreateEventVars = {
+      input: { title, date, startTime, endTime },
       roomId: room.id,
       userIds: users.map(u => u.id),
     };
     setVars(variables);
-    createEvent({ variables });
+
+    const inputsToMove: UpdateEventVars[] = eventsToMove.current.map(
+      ({ prevRoom, ...eventData }) => eventData
+    );
+    if (inputsToMove.length) {
+      moveEvents({ variables: { events: inputsToMove } });
+    } else {
+      createEvent({ variables });
+    }
   }
 
   return (
@@ -120,8 +142,8 @@ export const FormAdd: FC<FormPageProps> = ({
       <FormUI
         mode="add"
         users={usersData.users}
-        initialValues={initialValues}
-        movedEvents={movedEvents}
+        initialValues={formData}
+        eventsToMove={eventsToMove}
         onClose={closePage}
         onSubmit={handleFormSubmit}
       />

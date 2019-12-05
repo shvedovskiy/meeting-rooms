@@ -11,23 +11,39 @@ import { ServerEvent } from 'components/timesheet/types';
 
 const serverEventTransformer = new ApolloLink((operation, forward) =>
   forward(operation).map(response => {
-    if (operation.operationName === 'RoomsEvents' && response.data) {
-      response.data.events = (response.data.events as ServerEvent[]).map(
-        serverEvent => ({
-          ...serverEvent,
-          date: parseISO(serverEvent.date),
-        })
-      );
-    } else {
-      const method = [
-        { name: 'CreateEvent', prop: 'createEvent' },
-        { name: 'UpdateEvent', prop: 'updateEvent' },
-        { name: 'RemoveEvent', prop: 'removeEvent' },
-      ].find(op => op.name === operation.operationName);
-      if (method && response.data) {
-        response.data[method.prop].date = parseISO(
-          (response.data[method.prop] as ServerEvent).date
-        );
+    if (response.data) {
+      let methods, prop;
+      switch (operation.operationName) {
+        case 'RoomsEvents':
+        case 'MoveEvents':
+          methods = {
+            RoomsEvents: 'events',
+            MoveEvents: 'updateEvents',
+          };
+          prop = methods[operation.operationName];
+          if (response.data[prop]) {
+            response.data[prop] = (response.data[prop] as ServerEvent[]).map(
+              serverEvent => ({
+                ...serverEvent,
+                date: parseISO(serverEvent.date),
+              })
+            );
+          }
+          break;
+        case 'CreateEvent':
+        case 'UpdateEvent':
+        case 'RemoveEvent':
+          methods = {
+            CreateEvent: 'createEvent',
+            UpdateEvent: 'updateEvent',
+            RemoveEvent: 'removeEvent',
+          };
+          prop = methods[operation.operationName];
+          if (response.data[prop]) {
+            response.data[prop].date = parseISO(
+              (response.data[prop] as ServerEvent).date
+            );
+          }
       }
     }
     return response;

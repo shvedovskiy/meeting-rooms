@@ -1,5 +1,5 @@
 import { PageData } from 'context/page-context';
-import { UpdateEventVariables } from 'service/apollo/mutations';
+import { UpdateEventVars } from 'service/apollo/mutations';
 
 export type FormPageProps = {
   formData?: PageData;
@@ -7,8 +7,8 @@ export type FormPageProps = {
   onClose: () => void;
 };
 
-export type MovedEvent = UpdateEventVariables & { prevRoom: string };
-export type RoomMovedEvents = Map<string, UpdateEventVariables[]>;
+export type EventToMove = UpdateEventVars & { prevRoom: string };
+export type RoomMovedEvents = Map<string, UpdateEventVars[]>;
 export interface DayTable {
   [roomId: string]: string[];
 }

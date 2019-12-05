@@ -2,20 +2,24 @@ import gql from 'graphql-tag';
 
 import { EventInput, Event } from 'components/timesheet/types';
 
-export interface CreateEventVariables {
+export interface CreateEventVars {
   input: EventInput;
   roomId: string;
   userIds: string[];
 }
 
-export interface UpdateEventVariables {
+export interface UpdateEventVars {
   id: string;
   input?: Partial<EventInput>;
   roomId?: string;
   userIds?: string[];
 }
 
-export interface RemoveEventVariables {
+export interface MoveEventsVars {
+  events: Partial<UpdateEventVars[]>;
+}
+
+export interface RemoveEventVars {
   id: string;
 }
 
@@ -44,14 +48,14 @@ export const CREATE_EVENT_MUTATION = gql`
   }
 `;
 
-export interface CreateEventMutationType {
+export interface CreateEventMutation {
   createEvent: Event;
 }
 
 export const UPDATE_EVENT_MUTATION = gql`
   mutation UpdateEvent(
     $id: ID!
-    $input: UpdateEventInput
+    $input: EventUpdateInput
     $roomId: ID
     $userIds: [ID!]
   ) {
@@ -78,8 +82,26 @@ export const UPDATE_EVENT_MUTATION = gql`
   }
 `;
 
-export interface UpdateEventMutationType {
+export interface UpdateEventMutation {
   updateEvent: Event;
+}
+
+export const MOVE_EVENTS_MUTATION = gql`
+  mutation MoveEvents($events: [UpdateInput!]!) {
+    updateEvents(events: $events) {
+      id
+      date
+      startTime
+      endTime
+      room {
+        id
+      }
+    }
+  }
+`;
+
+export interface MoveEventsMutation {
+  updateEvents: Event[];
 }
 
 export const REMOVE_EVENT_MUTATION = gql`
@@ -94,6 +116,6 @@ export const REMOVE_EVENT_MUTATION = gql`
   }
 `;
 
-export interface RemoveEventMutationType {
+export interface RemoveEventMutation {
   removeEvent: Event;
 }

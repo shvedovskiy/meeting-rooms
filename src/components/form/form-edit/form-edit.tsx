@@ -1,27 +1,31 @@
-import React, { FC, useEffect, useState, useRef, useCallback } from 'react';
+import React, { FC, useEffect, useState, useCallback, useRef } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import { FormUI } from '../form-ui/form-ui';
 import { Error } from 'components/error/error';
 import { CreatedEvent, FormEvent } from 'components/timesheet/types';
 import { Spinner } from 'components/ui/spinner/spinner';
-import { FormPageProps, MovedEvent } from '../form-common/types';
+import { FormPageProps as Props, EventToMove } from '../form-common/types';
 import { Props as ModalDef, Modal } from 'components/ui/modal/modal';
 import {
   USERS_QUERY,
   UsersQueryType as UsersQuery,
 } from 'service/apollo/queries';
 import {
-  UPDATE_EVENT_MUTATION,
-  REMOVE_EVENT_MUTATION,
-  UpdateEventMutationType as UpdateMutation,
-  UpdateEventVariables,
-  RemoveEventMutationType as RemoveMutation,
+  UPDATE_EVENT_MUTATION as UPDATE,
+  MOVE_EVENTS_MUTATION as MOVE,
+  REMOVE_EVENT_MUTATION as REMOVE,
+  UpdateEventMutation,
+  RemoveEventMutation,
+  MoveEventsMutation,
+  UpdateEventVars,
 } from 'service/apollo/mutations';
 import {
-  updateCacheAfterUpdating,
+  updateCacheAfterStoring as updateCacheAfterUpdating,
+  updateCacheAfterMoving,
   updateCacheAfterRemoving,
-  refetchQueriesAfterStoring,
+  refetchQueriesAfterStoring as refetchCacheAfterUpdaring,
+  refetchQueriesAfterMoving,
   refetchQueriesAfterRemoving,
 } from 'service/apollo/cache';
 import {
@@ -33,23 +37,23 @@ import { compareFormStates } from '../form-common/compare-form-states';
 import { FormFields } from '../form-common/validators';
 import classes from '../form.module.scss';
 
-export const FormEdit: FC<FormPageProps> = ({
+export const FormEdit: FC<Props> = ({
   formData: initialValues,
   onMount,
   onClose: closePage,
 }) => {
   const [modal, setModal] = useState<ModalDef | null>(null);
-  const [vars, setVars] = useState<Partial<UpdateEventVariables>>({});
-  const movedEvents = useRef<MovedEvent[]>([]);
+  const [vars, setVars] = useState<Partial<UpdateEventVars>>({});
+  const eventsToMove = useRef<EventToMove[]>([]);
   const closeModal = useCallback(() => setModal(null), []);
 
   const {
     data: usersData,
-    loading: queryLoading,
-    error: queryError,
+    loading: usersLoading,
+    error: usersError,
   } = useQuery<UsersQuery>(USERS_QUERY);
-  const [updateEvent, { loading: updating }] = useMutation<UpdateMutation>(
-    UPDATE_EVENT_MUTATION,
+  const [updateEvent, { loading: updating }] = useMutation<UpdateEventMutation>(
+    UPDATE,
     {
       onCompleted({ updateEvent }) {
         setModal(generateUpdateModal(updateEvent, closePage));
@@ -70,20 +74,43 @@ export const FormEdit: FC<FormPageProps> = ({
       },
       refetchQueries({ data }) {
         const { date: oldDate, room: oldRoom } = initialValues || {};
-        return refetchQueriesAfterStoring(data, (oldRoom || {}).id, oldDate);
+        return refetchCacheAfterUpdaring(data, (oldRoom || {}).id, oldDate);
       },
     }
   );
-  const [moveEvent, { loading: moving }] = useMutation<UpdateMutation>(
-    UPDATE_EVENT_MUTATION,
+  const [moveEvents, { loading: moving }] = useMutation<MoveEventsMutation>(
+    MOVE,
     {
-      update(cache, { data }) {
-        updateCacheAfterUpdating(cache, data);
+      onCompleted() {
+        if (Object.keys(vars).length) {
+          updateEvent({ variables: vars });
+        }
       },
+      onError({ message }) {
+        const modalConfig = generateFailedSaveModal(
+          message,
+          () => {
+            const inputsToMove: UpdateEventVars[] = eventsToMove.current.map(
+              ({ prevRoom, ...eventData }) => eventData
+            );
+            if (inputsToMove.length) {
+              moveEvents({ variables: { events: inputsToMove } });
+            }
+            closeModal();
+          },
+          closeModal
+        );
+        setModal(modalConfig);
+      },
+      update(cache, { data }) {
+        updateCacheAfterMoving(cache, data);
+      },
+      refetchQueries: ({ data }: { data: MoveEventsMutation }) =>
+        refetchQueriesAfterMoving(data, eventsToMove.current),
     }
   );
-  const [removeEvent, { loading: removing }] = useMutation<RemoveMutation>(
-    REMOVE_EVENT_MUTATION,
+  const [removeEvent, { loading: removing }] = useMutation<RemoveEventMutation>(
+    REMOVE,
     {
       onCompleted: closePage,
       onError({ message }) {
@@ -108,43 +135,41 @@ export const FormEdit: FC<FormPageProps> = ({
 
   // Hide loading spinner:
   useEffect(() => {
-    if (!queryLoading) {
+    if (!usersLoading) {
       onMount();
     }
-  }, [onMount, queryLoading]);
+  }, [onMount, usersLoading]);
 
-  if (queryLoading) {
+  if (usersLoading) {
     return null;
   }
-  if (queryError || !usersData) {
+  if (usersError || !usersData) {
     return <Error className={classes.loadingError} />;
   }
 
   function handleFormSubmit(formValues: CreatedEvent) {
-    const { id } = initialValues as FormEvent;
-    let variables: UpdateEventVariables = { id };
     const diff = compareFormStates(
       formValues as FormFields,
       initialValues as FormEvent
     );
     if (['input', 'roomId', 'userIds'].some(i => diff.hasOwnProperty(i))) {
-      variables = {
-        ...variables,
+      const variables: UpdateEventVars = {
+        id: (initialValues as FormEvent).id,
         ...diff,
       };
+      setVars(variables);
+      const inputsToMove: UpdateEventVars[] = eventsToMove.current.map(
+        ({ prevRoom, ...eventData }) => eventData
+      );
+      if (inputsToMove.length) {
+        moveEvents({ variables: { events: inputsToMove } });
+      } else {
+        updateEvent({ variables });
+      }
     }
-    for (const { prevRoom, ...eventData } of movedEvents.current) {
-      moveEvent({
-        variables: eventData,
-        refetchQueries: ({ data }) =>
-          refetchQueriesAfterStoring(data, prevRoom),
-      });
-    }
-    setVars(variables);
-    updateEvent({ variables });
   }
 
-  function onRemoveEvent() {
+  function handleRemove() {
     if (initialValues && initialValues.id) {
       removeEvent({ variables: { id: initialValues.id } });
     }
@@ -158,9 +183,9 @@ export const FormEdit: FC<FormPageProps> = ({
         mode="edit"
         users={usersData.users}
         initialValues={initialValues}
-        movedEvents={movedEvents}
+        eventsToMove={eventsToMove}
         onClose={closePage}
-        onRemove={onRemoveEvent}
+        onRemove={handleRemove}
         onSubmit={handleFormSubmit}
       />
     </>

@@ -344,7 +344,7 @@ describe('Event Mutation', () => {
 
   describe('updateEvent()::$input', () => {
     const updateEventQuery = `
-      mutation UpdateEvent($id: ID!, $input: UpdateEventInput) {
+      mutation UpdateEvent($id: ID!, $input: EventUpdateInput) {
         updateEvent(id: $id, input: $input) {
           id
           title

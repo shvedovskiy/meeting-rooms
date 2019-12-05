@@ -1,12 +1,18 @@
 import { Resolver, Query, Args, Mutation, Arg } from 'type-graphql';
-import { Repository, MoreThan } from 'typeorm';
+import {
+  Repository,
+  MoreThan,
+  Transaction,
+  TransactionRepository,
+} from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { startOfDay, subDays } from 'date-fns';
 
 import { User } from '../entity/user';
 import { Room } from '../entity/room';
 import { Event } from '../entity/event';
-import { EventInput } from './types/event-input';
+import { EventInput, EventUpdateInput } from './types/event-input';
+import { UpdateInput } from './types/common-input';
 import {
   QueryArgs,
   MutationArgs,
@@ -68,12 +74,14 @@ export class EventResolver {
     return this.eventRepository.save(event);
   }
 
-  @Mutation(returns => Event, { nullable: true })
-  async updateEvent(
-    @Args() { id }: MutationArgs,
-    @Args() { input, userIds, roomId }: EventUpdateArgs
-  ): Promise<Event> {
-    const eventToUpdate = await this.eventRepository.findOne(id);
+  private async _updateEvent(
+    id: string,
+    input?: EventUpdateInput,
+    userIds?: string[],
+    roomId?: string,
+    repository = this.eventRepository
+  ) {
+    const eventToUpdate = await repository.findOne(id);
     if (!eventToUpdate) {
       throw new Error('Invalid event ID');
     }
@@ -91,8 +99,33 @@ export class EventResolver {
     if (userIds) {
       await this._setEventUsers(event, userIds);
     }
+    return repository.save(event);
+  }
 
-    return this.eventRepository.save(event);
+  @Mutation(returns => Event, { nullable: true })
+  updateEvent(
+    @Args() { id }: MutationArgs,
+    @Args() { input, userIds, roomId }: EventUpdateArgs
+  ): Promise<Event> {
+    return this._updateEvent(id, input, userIds, roomId);
+  }
+
+  @Mutation(returns => [Event], { nullable: true })
+  @Transaction()
+  async updateEvents(
+    @Arg('events', type => [UpdateInput])
+    events: UpdateInput[],
+    @TransactionRepository(Event) eventRepository?: Repository<Event>
+  ): Promise<Event[]> {
+    const updatedEvents: Event[] = [];
+    if (eventRepository != null) {
+      for (const { id, input, userIds, roomId } of events) {
+        updatedEvents.push(
+          await this._updateEvent(id, input, userIds, roomId, eventRepository)
+        );
+      }
+    }
+    return updatedEvents;
   }
 
   @Mutation(returns => Event, { nullable: true })
