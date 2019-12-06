@@ -1,17 +1,17 @@
 import React, { lazy, Suspense, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
+import ErrorBoundary from 'react-error-boundary';
 import cn from 'classnames';
 
 import { Spinner } from 'components/ui/spinner/spinner';
 import { IconButton } from 'components/ui/icon-button/icon-button';
-import { withErrorBoundary } from 'components/common/with-error-boundary';
 import { Error } from 'components/error/error';
 import { usePageCtx, PageMode, PageData } from 'context/page-context';
 import { useSizeCtx } from 'context/size-context';
 import classes from './page.module.scss';
 import spinnerTransitionClasses from 'components/ui/spinner/spinner-transition.module.scss';
 
-const ErrorBoundary = withErrorBoundary(Error);
+const ErrorFallback = () => <Error className={classes.errorMessage} />;
 const AddForm = lazy(() => import('components/form/form-add'));
 const EditForm = lazy(() => import('components/form/form-edit'));
 
@@ -39,7 +39,7 @@ export const Page = ({ mode, pageData: formData }: Props) => {
     };
     return (
       <ErrorBoundary
-        className={classes.errorMessage}
+        FallbackComponent={ErrorFallback}
         onError={formProps.onMount}
       >
         <Suspense fallback={null}>

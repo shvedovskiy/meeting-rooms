@@ -1,10 +1,9 @@
 import React from 'react';
 import cn from 'classnames';
 
-import { ErrorBoundaryProps } from 'components/common/with-error-boundary';
 import classes from './error.module.scss';
 
-interface Props extends ErrorBoundaryProps {
+interface Props {
   className?: string;
 }
 
