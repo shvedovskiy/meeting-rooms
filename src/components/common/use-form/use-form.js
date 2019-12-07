@@ -112,11 +112,13 @@ export function useForm(initialFormState, options) {
           setInitialValue(formState);
         }
 
-        if (
-          typeof fieldOptions.validate === 'function' &&
-          !hasValidatorInState
-        ) {
-          formState.setValidator({ [name]: fieldOptions.validate });
+        if (!hasValidatorInState) {
+          if (typeof fieldOptions.validate === 'function') {
+            formState.setValidator({ [name]: fieldOptions.validate });
+          }
+          if (typeof fieldOptions.validateOnBlur === 'function') {
+            formState.setBlurValidator({ [name]: fieldOptions.validateOnBlur });
+          }
         }
 
         // auto populating default values of touched
@@ -192,29 +194,30 @@ export function useForm(initialFormState, options) {
       return true;
     }
 
-    function makeValidation() {
-      const validities = {};
-      const errors = {};
-      Object.entries(formState.current.validators ?? {}).forEach(
-        ([fieldName, fieldValidator]) => {
-          const [validity, error] = validateField(
-            fieldName,
-            formState.current.values[fieldName],
-            formState.current.values,
-            fieldValidator
-          );
-          Object.assign(validities, validity);
-          if (
-            Object.keys(error).length &&
-            Object.values(error).every(v => v != null)
-          ) {
-            Object.assign(errors, error);
+    function makeValidation(validators = {}) {
+      const allValidities = {};
+      const allErors = {};
+      Object.entries(validators).forEach(([fieldName, fieldValidator]) => {
+        const [validity, error] = validateField(
+          fieldName,
+          formState.current.values[fieldName],
+          formState.current.values,
+          fieldValidator
+        );
+        Object.assign(allValidities, validity);
+        const errorMessages = Object.keys(error).reduce((res, key) => {
+          if (error[key] != null) {
+            res[key] = error[key];
           }
+          return res;
+        }, {});
+        if (Object.keys(errorMessages).length) {
+          Object.assign(allErors, errorMessages);
         }
-      );
-      if (Object.keys(errors).length) {
-        formState.setValidity(validities);
-        formState.setError(errors);
+      });
+      if (Object.keys(allErors).length) {
+        formState.setValidity(allValidities);
+        formState.setError(allErors);
         return false;
       }
       return true;
@@ -223,7 +226,11 @@ export function useForm(initialFormState, options) {
     return {
       onSubmit: callbacks.getOrSet(ON_SUBMIT_HANDLER + key, e => {
         e.preventDefault();
-        if (makeSubmitValidation() && makeValidation()) {
+        if (
+          makeSubmitValidation() &&
+          makeValidation(formState.current.blurValidators) &&
+          makeValidation(formState.current.validators)
+        ) {
           submitCallback(formState.current.values);
         }
       }),

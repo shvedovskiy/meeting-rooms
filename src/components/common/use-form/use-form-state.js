@@ -13,8 +13,16 @@ export function useFormState(initialState) {
   const [validity, setValidity] = useReducer(stateReducer, {});
   const [errors, setError] = useReducer(stateReducer, {});
   const [validators, setValidator] = useReducer(stateReducer, {});
+  const [blurValidators, setBlurValidator] = useReducer(stateReducer, {});
 
-  state.current = { values, touched, validity, errors, validators };
+  state.current = {
+    values,
+    touched,
+    validity,
+    errors,
+    validators,
+    blurValidators,
+  };
 
   return {
     get current() {
@@ -25,5 +33,6 @@ export function useFormState(initialState) {
     setValidity,
     setError,
     setValidator,
+    setBlurValidator,
   };
 }
