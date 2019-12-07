@@ -92,7 +92,10 @@ export const Room = ({ room, size = 'default', date }: Props) => {
           <Card
             room={room.title}
             data={eventInfo}
-            onAction={openEditEventPage}
+            onAction={(event: Event) => {
+              setTooltipOpen(false);
+              openEditEventPage(event);
+            }}
           />
         </ArrowContainer>
       );
