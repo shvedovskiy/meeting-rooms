@@ -1,12 +1,12 @@
 import React from 'react';
 import cn from 'classnames';
 
-import classes from './card.module.scss';
-import { Event } from '../../types';
-import { IconButton } from 'components/ui/icon-button/icon-button';
-import { useSizeCtx } from 'context/size-context';
 import { CardParticipants } from './participants';
+import { IconButton } from 'components/ui/icon-button/icon-button';
+import { Event } from '../../types';
+import { useSizeCtx } from 'context/size-context';
 import { format } from 'service/dates';
+import classes from './card.module.scss';
 
 type Props = {
   data: Event;
@@ -33,7 +33,7 @@ export const Card = ({ data, room, onAction }: Props) => {
 
   return (
     <div
-      className={cn(classes.cardContainer, {
+      className={cn(classes.card, {
         [classes.lg]: size === 'large',
       })}
     >

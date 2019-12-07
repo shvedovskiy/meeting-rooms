@@ -1,9 +1,13 @@
 @import '../../../../service/styles/mixins';
 
-.cardContainer {
+.card {
   min-width: 320px;
   max-width: 100vw;
   padding: 16px;
+  background: var(--bg-primary);
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.1))
+    drop-shadow(0 1px 6px rgba(0, 0, 0, 0.3));
+  border-radius: 8px;
 
   &.lg {
     font-size: var(--medium-text);
@@ -13,7 +17,7 @@
 .header {
   @include clearfix;
 
-  .cardContainer.cardContainer.lg & {
+  .card.lg & {
     margin-bottom: 8px;
   }
 
@@ -24,7 +28,7 @@
     float: right;
     margin-left: 10px;
 
-    .cardContainer.lg & {
+    .card.lg & {
       position: static;
     }
   }
@@ -35,12 +39,12 @@
   word-break: break-word;
   @include hyphenate;
 
-  .cardContainer.lg & {
+  .card.lg & {
     font-size: var(--large-text);
   }
 }
 
-.cardContainer > p {
+.card > p {
   @include hyphenate;
 }
 
@@ -56,7 +60,7 @@
   height: 24px;
   margin-right: 8px;
 
-  .cardContainer.lg & {
+  .card.lg & {
     width: 32px;
     height: 32px;
   }

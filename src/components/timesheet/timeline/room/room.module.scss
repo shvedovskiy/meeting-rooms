@@ -19,6 +19,7 @@
     position: sticky;
     left: 0;
     padding: 4px 8px 11px 14px;
+    visibility: hidden;
   }
 
   .room.lg & {
@@ -39,12 +40,14 @@
   @include oneLineEllipsis;
 
   .room.scrolled & {
+    position: relative;
     display: inline-block;
     max-width: 100%;
     margin-bottom: 0;
     padding: 5px 8px;
     font-size: var(--small-text);
     vertical-align: bottom;
+    visibility: visible;
     background-color: var(--bg-primary);
     border-radius: 4px;
     box-shadow: 0 1px 8px rgba(0, 44, 92, 0.28);

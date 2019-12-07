@@ -1,5 +1,6 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useQuery } from '@apollo/react-hooks';
+import Popover, { ArrowContainer, PopoverInfo } from 'react-tiny-popover';
 import cn from 'classnames';
 
 import {
@@ -9,7 +10,6 @@ import {
   CommonSlot,
   offsetToTime,
 } from './room-utils';
-import { Tooltip } from 'components/ui/tooltip/tooltip';
 import { Card } from '../card/card';
 import { RoomData, Event } from '../../types';
 import { Size } from 'context/size-context';
@@ -26,6 +26,7 @@ type Props = {
 };
 
 export const Room = ({ room, size = 'default', date }: Props) => {
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   const scrolled = useScrollCtx();
   const openPage = usePageCtx();
   let { data } = useQuery<RoomEventsQueryType>(ROOM_EVENTS_QUERY, {
@@ -75,19 +76,45 @@ export const Room = ({ room, size = 'default', date }: Props) => {
   function renderSlot(range: any, index: number) {
     const { width, ...eventInfo } = range;
     if (range.id) {
-      const slot = (
-        <button
-          className={cn(classes.slot, classes[`slot--${width}`], classes.busy)}
-        />
-      );
-      return (
-        <Tooltip key={range.id} trigger={slot} position="bottom center">
+      const popoverContent = ({
+        position,
+        targetRect,
+        popoverRect,
+      }: PopoverInfo) => (
+        <ArrowContainer
+          position={position}
+          targetRect={targetRect}
+          popoverRect={popoverRect}
+          arrowColor="var(--bg-primary)"
+          arrowSize={8}
+          arrowStyle={{ zIndex: 1 }}
+        >
           <Card
             room={room.title}
             data={eventInfo}
             onAction={openEditEventPage}
           />
-        </Tooltip>
+        </ArrowContainer>
+      );
+      const slot = (
+        <button
+          className={cn(classes.slot, classes[`slot--${width}`], classes.busy)}
+          onClick={() => setTooltipOpen(t => !t)}
+        />
+      );
+      return (
+        <Popover
+          key={range.id}
+          isOpen={tooltipOpen}
+          position={['bottom', 'top', 'right', 'left']}
+          padding={-8}
+          content={popoverContent}
+          containerStyle={{ overflow: 'visible' }}
+          transitionDuration={0.2}
+          onClickOutside={() => setTooltipOpen(false)}
+        >
+          {slot}
+        </Popover>
       );
     }
     return (
