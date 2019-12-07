@@ -7,7 +7,7 @@ import express from 'express';
 import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
 
-import { PORT, NODE_ENV, FRONTEND_URL } from './service/config';
+import { HOST, PORT, NODE_ENV, FRONTEND_URL } from './service/config';
 import { createSchema } from './service/create-schema';
 import { connectToDatabase } from './service/create-connection';
 
@@ -34,7 +34,7 @@ async function bootstrapServer() {
         throw new Error(err);
       }
       console.info(
-        `🚀 Server running at http://localhost:${PORT} in ${NODE_ENV} mode`
+        `🚀 Server running at http://${HOST}:${PORT} in ${NODE_ENV} mode`
       );
     });
   } catch (err) {

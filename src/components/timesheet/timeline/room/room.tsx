@@ -111,6 +111,7 @@ export const Room = ({ room, size = 'default', date }: Props) => {
           isOpen={tooltipOpen}
           position={['bottom', 'top', 'right', 'left']}
           padding={-8}
+          windowBorderPadding={0}
           content={popoverContent}
           containerStyle={{ overflow: 'visible' }}
           transitionDuration={0.2}

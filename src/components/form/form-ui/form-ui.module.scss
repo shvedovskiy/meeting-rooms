@@ -5,6 +5,7 @@
   flex-direction: column;
   justify-content: space-between;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .form {
   display: grid;
