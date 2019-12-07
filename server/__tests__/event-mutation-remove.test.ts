@@ -78,7 +78,7 @@ describe('Event Mutation removeEvent()', () => {
     expect(dbEventAfterRemove).toBeUndefined();
     expect(eventRoomAfterRemove).toBeDefined();
     const roomEvents = await eventRoomAfterRemove!.events;
-    expect((roomEvents || []).find(e => e.id === dbEvent.id)).toBeUndefined();
+    expect((roomEvents ?? []).find(e => e.id === dbEvent.id)).toBeUndefined();
     expect(eventUsersAfterRemove).toHaveLength(dbUsers.length);
   });
 

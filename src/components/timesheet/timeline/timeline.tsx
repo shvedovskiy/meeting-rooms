@@ -28,7 +28,7 @@ function generateFloorsTable(rooms: RoomData[]): FloorDefinition {
 }
 
 export const Timeline = ({ date }: Props) => {
-  const size = useSizeCtx() || 'default';
+  const size = useSizeCtx() ?? 'default';
   const scrolled = useScrollCtx();
   const { data: roomsData } = useQuery<RoomsQueryType>(gql`
     query Rooms {

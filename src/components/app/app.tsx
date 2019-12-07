@@ -58,7 +58,7 @@ export const App = ({ onLoad }: Props) => {
   }
 
   function renderHeader() {
-    if (page.mode === null && data && data.rooms.length) {
+    if (page.mode === null && data?.rooms.length) {
       return (
         <Header>
           <Button

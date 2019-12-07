@@ -73,9 +73,7 @@ export const TimeInput = (props: Props) => {
           if (ref) {
             updateInputWidth(ref);
           }
-          if (itemRef) {
-            itemRef(ref, name);
-          }
+          itemRef?.(ref, name);
         }}
         step={step}
         type="number"

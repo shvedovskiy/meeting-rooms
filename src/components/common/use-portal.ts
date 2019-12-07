@@ -14,7 +14,7 @@ export function usePortal(parentId: string, rootClass?: string) {
   const root = useRef<HTMLDivElement>(null!);
 
   useEffect(() => {
-    const parent = document.getElementById(parentId) || createParent(parentId);
+    const parent = document.getElementById(parentId) ?? createParent(parentId);
     // Add the detached element to the parent:
     parent.appendChild(root.current);
 

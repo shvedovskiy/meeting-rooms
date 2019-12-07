@@ -8,7 +8,7 @@ function stateReducer(state, newState) {
 
 export function useFormState(initialState) {
   const state = useRef();
-  const [values, setValues] = useReducer(stateReducer, initialState || {});
+  const [values, setValues] = useReducer(stateReducer, initialState ?? {});
   const [touched, setTouched] = useReducer(stateReducer, {});
   const [validity, setValidity] = useReducer(stateReducer, {});
   const [errors, setError] = useReducer(stateReducer, {});

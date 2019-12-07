@@ -155,8 +155,8 @@ export class TimePicker extends PureComponent<Props, State> {
     });
 
     let changeValue: string | null = null;
-    if (formElements.every(el => el != null && el.checkValidity() === true)) {
-      if (formElements.every(el => el != null && el.value === '')) {
+    if (formElements.every(el => el?.checkValidity() === true)) {
+      if (formElements.every(el => el?.value === '')) {
         changeValue = '';
       } else {
         changeValue = `${values.hour ? values.hour.padStart(2, '0') : ''}:${

@@ -73,8 +73,8 @@ export const FormEdit: FC<Props> = ({
         updateCacheAfterUpdating(cache, data);
       },
       refetchQueries({ data }) {
-        const { date: oldDate, room: oldRoom } = initialValues || {};
-        return refetchCacheAfterUpdaring(data, (oldRoom || {}).id, oldDate);
+        const { date: oldDate, room: oldRoom } = initialValues ?? {};
+        return refetchCacheAfterUpdaring(data, (oldRoom ?? {}).id, oldDate);
       },
     }
   );
@@ -117,7 +117,7 @@ export const FormEdit: FC<Props> = ({
         const modalConfig = generateFailedRemoveModal(
           message,
           () => {
-            if (initialValues && initialValues.id) {
+            if (initialValues?.id) {
               removeEvent({ variables: { id: initialValues.id } });
             }
             closeModal();
@@ -170,7 +170,7 @@ export const FormEdit: FC<Props> = ({
   }
 
   function handleRemove() {
-    if (initialValues && initialValues.id) {
+    if (initialValues?.id) {
       removeEvent({ variables: { id: initialValues.id } });
     }
   }

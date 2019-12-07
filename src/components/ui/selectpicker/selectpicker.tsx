@@ -43,18 +43,6 @@ export const Selectpicker = (props: Props) => {
     MultiValueRemove,
   };
 
-  function handleBlur(event: FocusEvent<HTMLElement>) {
-    if (onBlur) {
-      onBlur(event);
-    }
-  }
-
-  function handleChange(values: ValueType<UserData>) {
-    if (onChange) {
-      onChange(values);
-    }
-  }
-
   return (
     <div id={id}>
       <Select
@@ -68,8 +56,8 @@ export const Selectpicker = (props: Props) => {
         maxMenuHeight={120}
         menuPlacement="auto"
         noOptionsMessage={() => 'Ничего не найдено'}
-        onBlur={handleBlur}
-        onChange={handleChange}
+        onBlur={onBlur}
+        onChange={onChange}
         openMenuOnFocus
         options={items}
         placeholder={placeholder}

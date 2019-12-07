@@ -24,7 +24,7 @@ export const Timesheet = () => {
   const [dateShown, setDateShown] = useDay();
   const [scrolled, setScrolled] = useState(false);
   const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);
-  const size = useSizeCtx() || 'default';
+  const size = useSizeCtx() ?? 'default';
 
   const { data: eventsData, client } = useQuery<EventsQueryType>(gql`
     query Events {

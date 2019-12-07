@@ -28,7 +28,7 @@ export function createResolver<
     @Query(returns => Entity, { name: `${suffix}`, nullable: true })
     async getOne(@Args() { id }: QueryArgs): Promise<TEntity | null> {
       const entity = await this.repository.findOne(id);
-      return entity || null;
+      return entity ?? null;
     }
 
     @Mutation(returns => Entity, { name: `create${capitalizedSuffix}` })

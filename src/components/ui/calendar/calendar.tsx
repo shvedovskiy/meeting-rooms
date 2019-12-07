@@ -21,10 +21,7 @@ export const Calendar = (props: Props) => {
 
   useEffect(() => {
     function checkOutsideClick(event: MouseEvent) {
-      if (
-        pickerRef.current &&
-        !pickerRef.current.dayPicker.contains(event.target as Element)
-      ) {
+      if (!pickerRef.current?.dayPicker.contains(event.target as Element)) {
         onBlur();
       }
     }

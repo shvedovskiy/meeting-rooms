@@ -40,13 +40,11 @@ export const Input = (props: Props) => {
     onSideIconClick,
     ...rest
   } = props;
-  const [showClose, setShowClose] = useState(value && value.trim() !== '');
+  const [showClose, setShowClose] = useState(value?.trim() !== '');
   const inputNode = useRef<HTMLInputElement>(null!);
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    if (onChange) {
-      onChange(event.target.value);
-    }
+    onChange?.(event.target.value);
     if (event.target.value.trim() !== '') {
       setShowClose(true);
     } else {
@@ -60,9 +58,7 @@ export const Input = (props: Props) => {
     event.preventDefault();
     inputNode.current.value = '';
     inputNode.current.focus();
-    if (onChange) {
-      onChange('');
-    }
+    onChange?.('');
     setShowClose(false);
   }
 
@@ -104,7 +100,7 @@ export const Input = (props: Props) => {
   return (
     <span className={classes.wrapper}>
       <input {...inputProps} />
-      {renderSideIcon() || (
+      {renderSideIcon() ?? (
         <button {...closeIconProps}>
           <Icon name="close" size={size} className={classes.icon} />
         </button>

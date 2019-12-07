@@ -11,9 +11,7 @@ export function useInterval(cb: CallbackType, delay: number) {
 
   useEffect(() => {
     function tick() {
-      if (savedCb.current) {
-        savedCb.current();
-      }
+      savedCb.current?.();
     }
 
     if (delay !== null) {

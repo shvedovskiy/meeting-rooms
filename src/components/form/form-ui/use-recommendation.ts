@@ -125,7 +125,7 @@ function moveConflictingEvents(
           if (
             roomId === id ||
             forbiddenRoomsIds.has(id) ||
-            (maxCapacity || Infinity) < roomEvent.users.length
+            (maxCapacity ?? Infinity) < roomEvent.users.length
           ) {
             return false;
           }
@@ -203,7 +203,7 @@ export function useRecommendation(
       measureDistanceToRoom(b, eventUsersFloors);
 
     const capableRooms = allRooms.filter(
-      r => (r.maxCapacity || Infinity) >= users!.length
+      r => (r.maxCapacity ?? Infinity) >= users!.length
     );
     const dayTable = table.get(date!.getTime());
     // All rooms are free:

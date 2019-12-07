@@ -31,17 +31,11 @@ export const Modal = ({
   enterAnimation = true,
 }: Props) => {
   const [showModal, setShowModal] = useState(false);
-  const size = useSizeCtx() || 'default';
+  const size = useSizeCtx() ?? 'default';
 
   useEffect(() => {
     setShowModal(true);
   }, []);
-
-  function onExit() {
-    if (onBackdropClick) {
-      onBackdropClick();
-    }
-  }
 
   function renderText(text?: string | string[]) {
     if (typeof text === 'string') {
@@ -72,7 +66,7 @@ export const Modal = ({
         })}
         dialogStyle={{ textAlign: 'center', verticalAlign: 'initial' }}
         focusDialog
-        onExit={onExit}
+        onExit={onBackdropClick}
         titleId="modal-title"
         underlayColor="rgba(0, 16, 33, 0.8)"
         underlayClickExits

@@ -25,9 +25,7 @@ export const OptionPicker = (props: Props) => {
 
   function handleSelect(item: RoomCard | null) {
     setSelected(item);
-    if (onChange) {
-      onChange(item);
-    }
+    onChange?.(item);
   }
 
   const renderSelectedOption = () => (

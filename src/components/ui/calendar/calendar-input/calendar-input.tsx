@@ -63,7 +63,7 @@ export const CalendarInput = (props: Props) => {
         before: now,
       },
     },
-    month: selected || now,
+    month: selected ?? now,
     months: MONTHS,
     onDayClick: () => {
       input.current!.getInput().blur();

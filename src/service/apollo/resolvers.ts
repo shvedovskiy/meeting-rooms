@@ -23,7 +23,7 @@ export const resolvers: Resolvers = {
       });
 
       let roomEventsRanges: string[] = [];
-      if (table.has(day) && table.get(day)[roomId]) {
+      if (table.get(day)?.[roomId]) {
         roomEventsRanges = table.get(day)[roomId];
       }
 

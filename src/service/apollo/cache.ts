@@ -122,8 +122,8 @@ export function refetchQueriesAfterStoring(
     queries.push({
       query: ROOM_EVENTS_QUERY,
       variables: {
-        id: oldRoom || event.room.id,
-        timestamp: (oldDate || event.date).getTime(),
+        id: oldRoom ?? event.room.id,
+        timestamp: (oldDate ?? event.date).getTime(),
       },
     });
   }

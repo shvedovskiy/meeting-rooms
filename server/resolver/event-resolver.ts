@@ -45,7 +45,7 @@ export class EventResolver {
   @Query(returns => Event, { nullable: true })
   async event(@Args() { id }: QueryArgs): Promise<Event | null> {
     const event = await this.eventRepository.findOne(id);
-    return event || null;
+    return event ?? null;
   }
 
   private async _setEventUsers(event: Event, userIds: string[]) {

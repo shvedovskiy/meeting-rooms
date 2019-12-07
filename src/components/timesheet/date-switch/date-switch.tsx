@@ -36,9 +36,7 @@ export const DateSwitch = (props: Props) => {
   const handleDateSelect = useCallback(
     (date: Date) => {
       handleCalendarToggle();
-      if (onChange) {
-        onChange(date);
-      }
+      onChange?.(date);
     },
     [handleCalendarToggle, onChange]
   );

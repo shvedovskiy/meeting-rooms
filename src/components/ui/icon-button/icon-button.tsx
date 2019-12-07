@@ -54,9 +54,7 @@ export const IconButton = memo((props: Props) => {
     ref: buttonNode,
     disabled,
     onClick() {
-      if (onClick) {
-        onClick(...onClickArgs);
-      }
+      onClick?.(...onClickArgs);
     },
   };
 

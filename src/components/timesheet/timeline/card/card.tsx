@@ -15,13 +15,7 @@ type Props = {
 };
 
 export const Card = ({ data, room, onAction }: Props) => {
-  const size = useSizeCtx() || 'default';
-
-  function handleClick() {
-    if (onAction) {
-      onAction(data);
-    }
-  }
+  const size = useSizeCtx() ?? 'default';
 
   function renderInfo() {
     const { date, startTime, endTime } = data;
@@ -41,7 +35,7 @@ export const Card = ({ data, room, onAction }: Props) => {
         <IconButton
           icon="pen"
           ariaLabel="Редактировать встречу"
-          onClick={handleClick}
+          onClick={() => onAction?.(data)}
         />
         <h1 className={classes.title}>{data.title}</h1>
       </div>

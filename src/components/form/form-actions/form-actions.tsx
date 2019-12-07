@@ -91,9 +91,7 @@ export const FormActions = ({
                 id: '2',
                 text: 'Удалить',
                 onClick() {
-                  if (removeEvent) {
-                    removeEvent();
-                  }
+                  removeEvent?.();
                   setModalOpen(false);
                 },
               },

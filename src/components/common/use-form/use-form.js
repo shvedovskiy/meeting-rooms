@@ -195,7 +195,7 @@ export function useForm(initialFormState, options) {
     function makeValidation() {
       const validities = {};
       const errors = {};
-      Object.entries(formState.current.validators || {}).forEach(
+      Object.entries(formState.current.validators ?? {}).forEach(
         ([fieldName, fieldValidator]) => {
           const [validity, error] = validateField(
             fieldName,
