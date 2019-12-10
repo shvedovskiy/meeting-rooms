@@ -11,13 +11,7 @@ export function createSchema() {
     resolvers: [UserResolver, RoomResolver, EventResolver],
     container: Container,
     emitSchemaFile: {
-      path: path.resolve(
-        __dirname,
-        '..',
-        '__snapshots__',
-        'schema',
-        'schema.gql'
-      ),
+      path: path.resolve(__dirname, '..', '__snapshots__', 'schema', 'schema.gql'),
       commentDescriptions: true,
     },
   });

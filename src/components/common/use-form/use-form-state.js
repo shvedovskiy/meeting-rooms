@@ -1,9 +1,7 @@
 import { useReducer, useRef } from 'react';
 
 function stateReducer(state, newState) {
-  return typeof newState === 'function'
-    ? newState(state)
-    : { ...state, ...newState };
+  return typeof newState === 'function' ? newState(state) : { ...state, ...newState };
 }
 
 export function useFormState(initialState) {

@@ -2,11 +2,7 @@ import { Connection } from 'typeorm';
 
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
-import {
-  createRoom,
-  createUser,
-  createEvent,
-} from '../test-utils/create-db-entity';
+import { createRoom, createUser, createEvent } from '../test-utils/create-db-entity';
 import { User } from '../entity/user';
 import { Event } from '../entity/event';
 import { Room } from '../entity/room';
@@ -172,9 +168,7 @@ describe('Event Mutation Users', () => {
           },
         },
       });
-      expect(response!.data!.removeUsersFromEvent.users).toIncludeSameMembers(
-        eventUsers
-      );
+      expect(response!.data!.removeUsersFromEvent.users).toIncludeSameMembers(eventUsers);
       expect(dbEventUsers.find(u => u.id === dbUsers[1].id)).toBeUndefined();
     });
 

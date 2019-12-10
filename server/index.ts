@@ -33,9 +33,7 @@ async function bootstrapServer() {
       if (err) {
         throw new Error(err);
       }
-      console.info(
-        `🚀 Server running at http://${HOST}:${PORT} in ${NODE_ENV} mode`
-      );
+      console.info(`🚀 Server running at http://${HOST}:${PORT} in ${NODE_ENV} mode`);
     });
   } catch (err) {
     console.error(err);

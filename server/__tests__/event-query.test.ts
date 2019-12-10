@@ -7,11 +7,7 @@ import { graphQLCall } from '../test-utils/graphql-call';
 import { Event } from '../entity/event';
 import { User } from '../entity/user';
 import { Room } from '../entity/room';
-import {
-  createEvent,
-  createRoom,
-  createUser,
-} from '../test-utils/create-db-entity';
+import { createEvent, createRoom, createUser } from '../test-utils/create-db-entity';
 
 let connection: Connection;
 
@@ -99,12 +95,8 @@ describe('Event Query', () => {
           ],
         },
       });
-      expect(response!.data!.events[0].users).toIncludeSameMembers(
-        dbUsers.slice(0, 3)
-      );
-      expect(response!.data!.events[1].users).toIncludeSameMembers(
-        dbUsers.slice(3, 6)
-      );
+      expect(response!.data!.events[0].users).toIncludeSameMembers(dbUsers.slice(0, 3));
+      expect(response!.data!.events[1].users).toIncludeSameMembers(dbUsers.slice(3, 6));
     });
 
     it('does dot return past events', async () => {

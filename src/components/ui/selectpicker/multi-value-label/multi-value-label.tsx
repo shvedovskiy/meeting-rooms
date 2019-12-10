@@ -5,10 +5,7 @@ import classes from './multi-value-label.module.scss';
 import { UserData } from 'components/timesheet/types';
 import { Avatar } from 'components/ui/avatar/avatar';
 
-export const MultiValueLabel = ({
-  innerProps,
-  data,
-}: MultiValueGenericProps<UserData>) => {
+export const MultiValueLabel = ({ innerProps, data }: MultiValueGenericProps<UserData>) => {
   const props = {
     ...innerProps,
     className: `${innerProps.className} ${classes.labelContainer}`,

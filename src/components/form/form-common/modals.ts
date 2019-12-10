@@ -2,11 +2,7 @@ import { Event } from 'components/timesheet/types';
 import { Props as ModalDef } from 'components/ui/modal/modal';
 import { format } from 'service/dates';
 
-function generateSuccessfulModal(
-  title: string,
-  eventData: Event,
-  closeModal: () => void
-) {
+function generateSuccessfulModal(title: string, eventData: Event, closeModal: () => void) {
   const {
     date,
     startTime,
@@ -58,15 +54,9 @@ function generateFailedModal(
   } as ModalDef;
 }
 
-export const generateCreateModal = generateSuccessfulModal.bind(
-  null,
-  'Встреча создана!'
-);
+export const generateCreateModal = generateSuccessfulModal.bind(null, 'Встреча создана!');
 
-export const generateUpdateModal = generateSuccessfulModal.bind(
-  null,
-  'Встреча обновлена!'
-);
+export const generateUpdateModal = generateSuccessfulModal.bind(null, 'Встреча обновлена!');
 
 export const generateFailedSaveModal = generateFailedModal.bind(
   null,

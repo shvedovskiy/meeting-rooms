@@ -15,13 +15,7 @@ type Props = {
 };
 
 export const Option = (props: Props) => {
-  const {
-    item,
-    size = 'default',
-    selected = false,
-    onSelect,
-    onDeselect,
-  } = props;
+  const { item, size = 'default', selected = false, onSelect, onDeselect } = props;
   const className = cn(classes.option, {
     [classes.selected]: selected,
     [classes.lg]: size === 'large',

@@ -5,9 +5,7 @@ import classes from './multi-value-remove.module.scss';
 import { Icon } from 'components/ui/icon/icon';
 import { UserData } from 'components/timesheet/types';
 
-export const MultiValueRemove = ({
-  innerProps,
-}: MultiValueRemoveProps<UserData>) => {
+export const MultiValueRemove = ({ innerProps }: MultiValueRemoveProps<UserData>) => {
   const props = {
     ...innerProps,
     className: `${innerProps.className} ${classes.removeButton}`,

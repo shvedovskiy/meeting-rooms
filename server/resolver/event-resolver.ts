@@ -1,10 +1,5 @@
 import { Resolver, Query, Args, Mutation, Arg } from 'type-graphql';
-import {
-  Repository,
-  MoreThan,
-  Transaction,
-  TransactionRepository,
-} from 'typeorm';
+import { Repository, MoreThan, Transaction, TransactionRepository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { startOfDay, subDays } from 'date-fns';
 
@@ -13,12 +8,7 @@ import { Room } from '../entity/room';
 import { Event } from '../entity/event';
 import { EventInput, EventUpdateInput } from './types/event-input';
 import { UpdateInput } from './types/common-input';
-import {
-  QueryArgs,
-  MutationArgs,
-  EventRelationArgs,
-  EventUpdateArgs,
-} from './arguments';
+import { QueryArgs, MutationArgs, EventRelationArgs, EventUpdateArgs } from './arguments';
 
 @Resolver()
 export class EventResolver {

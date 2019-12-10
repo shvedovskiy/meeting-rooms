@@ -8,21 +8,14 @@ import classes from './value-container.module.scss';
 import selectpickerClasses from '../selectpicker.module.scss';
 import { UserData } from 'components/timesheet/types';
 
-export const ValueContainer = ({
-  children,
-  selectProps,
-}: ValueContainerProps<UserData>) => {
+export const ValueContainer = ({ children, selectProps }: ValueContainerProps<UserData>) => {
   const target = usePortal(
     selectProps.containerId as string,
     selectpickerClasses.selectedContainer
   );
   const childrenArray = Children.toArray(children as ReactElement);
-  const portalChildren = childrenArray.filter(
-    c => c && c.type === components.MultiValue
-  );
-  const containerChildren = childrenArray.filter(
-    c => !c || c.type !== components.MultiValue
-  );
+  const portalChildren = childrenArray.filter(c => c && c.type === components.MultiValue);
+  const containerChildren = childrenArray.filter(c => !c || c.type !== components.MultiValue);
 
   return (
     <>

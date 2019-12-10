@@ -22,12 +22,10 @@ const serverEventTransformer = new ApolloLink((operation, forward) =>
           };
           prop = methods[operation.operationName];
           if (response.data[prop]) {
-            response.data[prop] = (response.data[prop] as ServerEvent[]).map(
-              serverEvent => ({
-                ...serverEvent,
-                date: parseISO(serverEvent.date),
-              })
-            );
+            response.data[prop] = (response.data[prop] as ServerEvent[]).map(serverEvent => ({
+              ...serverEvent,
+              date: parseISO(serverEvent.date),
+            }));
           }
           break;
         case 'CreateEvent':
@@ -40,9 +38,7 @@ const serverEventTransformer = new ApolloLink((operation, forward) =>
           };
           prop = methods[operation.operationName];
           if (response.data[prop]) {
-            response.data[prop].date = parseISO(
-              (response.data[prop] as ServerEvent).date
-            );
+            response.data[prop].date = parseISO((response.data[prop] as ServerEvent).date);
           }
       }
     }

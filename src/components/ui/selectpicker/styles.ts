@@ -6,15 +6,9 @@ export const customStyles = {
     height: state.selectProps.size === 'default' ? 38 : 44,
     padding: '0 6px 0 8px',
     fontSize:
-      state.selectProps.size === 'default'
-        ? 'var(--default-text)'
-        : 'var(--medium-text)',
+      state.selectProps.size === 'default' ? 'var(--default-text)' : 'var(--medium-text)',
     border: `2px solid var(${
-      state.selectProps.error
-        ? '--text-invalid'
-        : state.isFocused
-        ? '--border-1'
-        : '--border'
+      state.selectProps.error ? '--text-invalid' : state.isFocused ? '--border-1' : '--border'
     })`,
     boxShadow: 'none',
     transition: 'none',
@@ -35,9 +29,7 @@ export const customStyles = {
   placeholder: (provided: CSSProperties, state: any) => ({
     ...provided,
     fontSize:
-      state.selectProps.size === 'default'
-        ? 'var(--default-text)'
-        : 'var(--medium-text)',
+      state.selectProps.size === 'default' ? 'var(--default-text)' : 'var(--medium-text)',
     fontWeight: 100,
     color: 'var(--text-secondary)',
     maxWidth: '85%',

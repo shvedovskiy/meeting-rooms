@@ -2,10 +2,7 @@ import { EventInput } from 'components/timesheet/types';
 import { PageData } from 'context/page-context';
 import { FormFields } from './validators';
 
-export function compareFormStates(
-  formValues: FormFields,
-  initialValues: PageData
-) {
+export function compareFormStates(formValues: FormFields, initialValues: PageData) {
   const { title, date, startTime, endTime, users, room } = formValues;
   const event = {
     title,
@@ -21,15 +18,10 @@ export function compareFormStates(
   } = {};
 
   const inputFields = Object.keys(event).reduce((acc, name) => {
-    if (
-      initialValues.hasOwnProperty(name) &&
-      event[name as keyof typeof event] !== null
-    ) {
+    if (initialValues.hasOwnProperty(name) && event[name as keyof typeof event] !== null) {
       if (
-        (name === 'date' &&
-          event.date!.getTime() === initialValues.date!.getTime()) ||
-        event[name as keyof typeof event] ===
-          initialValues[name as keyof typeof event]
+        (name === 'date' && event.date!.getTime() === initialValues.date!.getTime()) ||
+        event[name as keyof typeof event] === initialValues[name as keyof typeof event]
       ) {
         return acc;
       }

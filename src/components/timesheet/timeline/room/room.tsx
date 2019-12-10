@@ -3,13 +3,7 @@ import { useQuery } from '@apollo/react-hooks';
 import Popover, { ArrowContainer, PopoverInfo } from 'react-tiny-popover';
 import cn from 'classnames';
 
-import {
-  prepareRanges,
-  formatCapacity,
-  Slot,
-  CommonSlot,
-  offsetToTime,
-} from './room-utils';
+import { prepareRanges, formatCapacity, Slot, CommonSlot, offsetToTime } from './room-utils';
 import { Card } from '../card/card';
 import { RoomData, Event } from '../../types';
 import { Size } from 'context/size-context';
@@ -76,11 +70,7 @@ export const Room = ({ room, size = 'default', date }: Props) => {
   function renderSlot(range: any, index: number) {
     const { width, ...eventInfo } = range;
     if (range.id) {
-      const popoverContent = ({
-        position,
-        targetRect,
-        popoverRect,
-      }: PopoverInfo) => (
+      const popoverContent = ({ position, targetRect, popoverRect }: PopoverInfo) => (
         <ArrowContainer
           position={position}
           targetRect={targetRect}
@@ -126,9 +116,7 @@ export const Room = ({ room, size = 'default', date }: Props) => {
         key={index}
         className={cn(classes.slot, classes[`slot--${width}`])}
         title="Создать событие"
-        onClick={() =>
-          openAddPage(offsetToTime(HOURS[0], range.offset, range.width))
-        }
+        onClick={() => openAddPage(offsetToTime(HOURS[0], range.offset, range.width))}
       />
     );
   }

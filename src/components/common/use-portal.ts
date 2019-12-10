@@ -3,10 +3,7 @@ import { useRef, useEffect } from 'react';
 function createParent(id: string) {
   const el = document.createElement('div');
   el.setAttribute('id', id);
-  document.body.insertBefore(
-    el,
-    document.body.lastElementChild!.nextElementSibling
-  );
+  document.body.insertBefore(el, document.body.lastElementChild!.nextElementSibling);
   return el;
 }
 

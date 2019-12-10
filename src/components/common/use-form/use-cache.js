@@ -6,8 +6,7 @@ export function useCache() {
   const has = key => cache.current.has(key);
   const get = key => cache.current.get(key);
   const set = (key, value) => cache.current.set(key, value);
-  const getOrSet = (key, value) =>
-    has(key) ? get(key) : set(key, value) && get(key);
+  const getOrSet = (key, value) => (has(key) ? get(key) : set(key, value) && get(key));
 
   return { has, get, set, getOrSet };
 }

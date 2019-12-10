@@ -8,11 +8,7 @@ import { Event } from '../entity/event';
 import { seedDatabase } from './seed-database';
 import { DATABASE_NAME } from './config';
 
-export async function connectToDatabase({
-  log = false,
-  drop = false,
-  seed = false,
-} = {}) {
+export async function connectToDatabase({ log = false, drop = false, seed = false } = {}) {
   useContainer(Container);
 
   const connection = await createConnection({

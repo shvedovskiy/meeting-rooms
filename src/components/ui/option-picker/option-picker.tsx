@@ -30,12 +30,7 @@ export const OptionPicker = (props: Props) => {
 
   const renderSelectedOption = () => (
     <li className={classes.item}>
-      <Option
-        selected
-        item={selected!}
-        size={size}
-        onDeselect={() => handleSelect(null)}
-      />
+      <Option selected item={selected!} size={size} onDeselect={() => handleSelect(null)} />
     </li>
   );
   const renderOptions = () => {

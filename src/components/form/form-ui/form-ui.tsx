@@ -48,10 +48,7 @@ export const FormUI = ({
   onSubmit,
 }: Props) => {
   const size = useSizeCtx();
-  const [{ values, validity, errors }, { field, form }] = useForm<
-    FormFields,
-    FormErrors
-  >(
+  const [{ values, validity, errors }, { field, form }] = useForm<FormFields, FormErrors>(
     {
       ...defaultFormValues,
       ...initialValues,
@@ -87,10 +84,7 @@ export const FormUI = ({
       </div>,
       <div key="datetime" className={classes.dateTime}>
         <div className={classes.date}>
-          <label
-            htmlFor="date"
-            title={size === 'default' ? 'Дата' : 'Дата и время'}
-          >
+          <label htmlFor="date" title={size === 'default' ? 'Дата' : 'Дата и время'}>
             {size === 'default' ? 'Дата' : 'Дата и время'}
           </label>
           <CalendarInput
@@ -119,9 +113,7 @@ export const FormUI = ({
               })}
               error={validity.startTime === false || validity.time === false}
             />
-            {errors.startTime && (
-              <p className={classes.inputError}>{errors.startTime}</p>
-            )}
+            {errors.startTime && <p className={classes.inputError}>{errors.startTime}</p>}
           </div>
           <span>&mdash;</span>
           <div className={classes.time}>
@@ -136,15 +128,11 @@ export const FormUI = ({
               })}
               error={validity.endTime === false || validity.time === false}
             />
-            {errors.endTime && (
-              <p className={classes.inputError}>{errors.endTime}</p>
-            )}
+            {errors.endTime && <p className={classes.inputError}>{errors.endTime}</p>}
           </div>
         </div>
         {errors.time && (
-          <p className={cn(classes.inputError, classes.timeErrors)}>
-            {errors.time}
-          </p>
+          <p className={cn(classes.inputError, classes.timeErrors)}>{errors.time}</p>
         )}
       </div>,
       <div key="users" className={classes.users}>
@@ -167,9 +155,7 @@ export const FormUI = ({
     ];
 
     if (roomsShouldDisplay(validity, values, initialValues)) {
-      const label = values.room
-        ? 'Ваша переговорка'
-        : 'Рекомендуемые переговорки';
+      const label = values.room ? 'Ваша переговорка' : 'Рекомендуемые переговорки';
       fields.push(
         <div key="room" className={classes.room}>
           <label htmlFor="room" title={label}>
@@ -209,9 +195,7 @@ export const FormUI = ({
           })}
         >
           <div className={classes.formError}>
-            {errors.form && (
-              <p className={classes.formErrorMessage}>{errors.form}</p>
-            )}
+            {errors.form && <p className={classes.formErrorMessage}>{errors.form}</p>}
           </div>
           {renderFormFields()}
         </form>

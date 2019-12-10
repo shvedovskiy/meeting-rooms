@@ -16,8 +16,7 @@ const hoursAreDifferent = (date1?: string, date2?: string) =>
   (date1 && !date2) || (!date1 && date2) || (date1 && date2 && date1 !== date2); // TODO: Compare 11:22:00 and 11:22 properly
 
 const isValidInput = (element: Element) =>
-  element.tagName === 'INPUT' &&
-  (element as HTMLInputElement).type === 'number';
+  element.tagName === 'INPUT' && (element as HTMLInputElement).type === 'number';
 
 function findInput(
   element: Element,
@@ -95,10 +94,7 @@ export class TimePicker extends PureComponent<Props, State> {
     switch (event.key) {
       case ':': {
         event.preventDefault();
-        const nextInput = findInput(
-          event.target as HTMLInputElement,
-          'nextElementSibling'
-        );
+        const nextInput = findInput(event.target as HTMLInputElement, 'nextElementSibling');
         focus(nextInput);
         break;
       }
@@ -114,10 +110,7 @@ export class TimePicker extends PureComponent<Props, State> {
     const input = event.target as HTMLInputElement;
     const max = Number.parseInt(input.getAttribute('max')!, 10);
 
-    if (
-      Number.parseInt(input.value, 10) * 10 > max ||
-      input.value.length >= 2
-    ) {
+    if (Number.parseInt(input.value, 10) * 10 > max || input.value.length >= 2) {
       const property = 'nextElementSibling';
       const nextInput = findInput(input, property);
       focus(nextInput);

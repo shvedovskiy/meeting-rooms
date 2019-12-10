@@ -29,10 +29,7 @@ function isSubmitBlocked(
     return hasInvalidFields;
   } else {
     if (!hasInvalidFields) {
-      const { input, roomId, userIds } = compareFormStates(
-        values,
-        initialValues
-      );
+      const { input, roomId, userIds } = compareFormStates(values, initialValues);
       if ([input, roomId, userIds].some(Boolean)) {
         return false;
       }
@@ -62,12 +59,7 @@ export const FormActions = ({
       {mode === 'edit' && size === 'large' && (
         <div className={classes.formButton}>
           <div className={classes.removeEvent}>
-            <Button
-              use="borderless"
-              size={size}
-              danger
-              onClick={() => setModalOpen(true)}
-            >
+            <Button use="borderless" size={size} danger onClick={() => setModalOpen(true)}>
               Удалить встречу
             </Button>
           </div>

@@ -28,8 +28,7 @@ export const HoursLine = memo(({ displayedDate }: Props) => {
       } else if (currentHour >= HOURS[HOURS.length - 1]) {
         setOffset(96.875);
       } else {
-        const minsFromStart =
-          (currentHour - (HOURS[0] - 0.5)) * 60 + currentMinute;
+        const minsFromStart = (currentHour - (HOURS[0] - 0.5)) * 60 + currentMinute;
         setOffset(minsFromStart * TIME_PERCENTAGE_COEF);
       }
     }
@@ -43,9 +42,7 @@ export const HoursLine = memo(({ displayedDate }: Props) => {
     });
     return (
       <div key={hour} className={className}>
-        <span className={classes.hourBadge}>
-          {index === 0 ? hour + ':00' : hour}
-        </span>
+        <span className={classes.hourBadge}>{index === 0 ? hour + ':00' : hour}</span>
       </div>
     );
   }
@@ -54,14 +51,8 @@ export const HoursLine = memo(({ displayedDate }: Props) => {
       return null;
     }
     return (
-      <div
-        key="current"
-        className={classes.currentTime}
-        style={{ left: `${offset}%` }}
-      >
-        <span className={classes.currentTimeBadge}>
-          {dateToTimeString(now)}
-        </span>
+      <div key="current" className={classes.currentTime} style={{ left: `${offset}%` }}>
+        <span className={classes.currentTimeBadge}>{dateToTimeString(now)}</span>
       </div>
     );
   }

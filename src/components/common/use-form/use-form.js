@@ -78,8 +78,7 @@ export function useForm(initialFormState, options) {
 
     const hasValueInState = formState.current.values.hasOwnProperty(name);
     const hasValidatorInState =
-      !formState.current.validators ||
-      formState.current.validators[name] != null;
+      !formState.current.validators || formState.current.validators[name] != null;
 
     const key = `${name}`;
 
@@ -88,12 +87,7 @@ export function useForm(initialFormState, options) {
     }
 
     function makeFieldValidation(value, formValues, validator) {
-      const [validities, errors] = validateField(
-        name,
-        value,
-        formValues,
-        validator
-      );
+      const [validities, errors] = validateField(name, value, formValues, validator);
       formState.setValidity(validities);
       formState.setError(errors);
     }

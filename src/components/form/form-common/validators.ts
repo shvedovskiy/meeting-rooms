@@ -1,12 +1,7 @@
 import { isToday, isFuture } from 'date-fns/esm';
 
 import { StateValues, StateErrors } from 'components/common/use-form';
-import {
-  splitTimeString,
-  isPastTime,
-  compareTimeStrings,
-  HOURS,
-} from 'service/dates';
+import { splitTimeString, isPastTime, compareTimeStrings, HOURS } from 'service/dates';
 import { UserData, RoomCard } from 'components/timesheet/types';
 
 export interface FormFields {
@@ -105,9 +100,7 @@ function timeIsInPast(time: string, date: Date | null | undefined) {
 }
 
 function timeIsValid(value: string | null, form: 'start' | 'end') {
-  return (
-    !timeIsIncorrect(value) && !timeIsEmpty(value) && !timeIsOff(value, form)
-  );
+  return !timeIsIncorrect(value) && !timeIsEmpty(value) && !timeIsOff(value, form);
 }
 
 // USERS:
@@ -189,10 +182,7 @@ export const blurValidation = {
     if (timeIsInPast(startTime, values.date)) {
       startTimeResult = errors.START_PAST;
     }
-    if (
-      timeIsValid(values.endTime, 'end') &&
-      !compareTimeStrings(startTime, values.endTime)
-    ) {
+    if (timeIsValid(values.endTime, 'end') && !compareTimeStrings(startTime, values.endTime)) {
       time = errors.END_BEFORE_START;
     }
     return {
@@ -216,10 +206,7 @@ export const blurValidation = {
     if (timeIsInPast(endTime, values.date)) {
       endTimeResult = errors.START_PAST;
     }
-    if (
-      timeIsValid(values.endTime, 'end') &&
-      !compareTimeStrings(values.startTime, endTime)
-    ) {
+    if (timeIsValid(values.endTime, 'end') && !compareTimeStrings(values.startTime, endTime)) {
       time = errors.END_BEFORE_START;
     }
     return {
@@ -241,9 +228,7 @@ export const blurValidation = {
     }
     if (timeIsValid(values.startTime, 'start')) {
       Object.assign(valid, {
-        startTime: timeIsInPast(values.startTime, date)
-          ? errors.START_PAST
-          : true,
+        startTime: timeIsInPast(values.startTime, date) ? errors.START_PAST : true,
       });
     }
     if (timeIsValid(values.endTime, 'end')) {

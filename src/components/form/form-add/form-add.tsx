@@ -7,10 +7,7 @@ import { CreatedEvent } from 'components/timesheet/types';
 import { Spinner } from 'components/ui/spinner/spinner';
 import { FormPageProps as Props, EventToMove } from '../form-common/types';
 import { Props as ModalDef, Modal } from 'components/ui/modal/modal';
-import {
-  USERS_QUERY,
-  UsersQueryType as UsersQuery,
-} from 'service/apollo/queries';
+import { USERS_QUERY, UsersQueryType as UsersQuery } from 'service/apollo/queries';
 import {
   CREATE_EVENT_MUTATION as CREATE,
   MOVE_EVENTS_MUTATION as MOVE,
@@ -25,82 +22,67 @@ import {
   refetchQueriesAfterStoring as refetchQueriesAfterCreating,
   refetchQueriesAfterMoving,
 } from 'service/apollo/cache';
-import {
-  generateCreateModal,
-  generateFailedSaveModal,
-} from '../form-common/modals';
+import { generateCreateModal, generateFailedSaveModal } from '../form-common/modals';
 import classes from '../form.module.scss';
 
-export const FormAdd: FC<Props> = ({
-  formData,
-  onMount,
-  onClose: closePage,
-}) => {
+export const FormAdd: FC<Props> = ({ formData, onMount, onClose: closePage }) => {
   const [modal, setModal] = useState<ModalDef | null>(null);
   const [vars, setVars] = useState<Partial<CreateEventVars>>({});
   const eventsToMove = useRef<EventToMove[]>([]);
   const closeModal = useCallback(() => setModal(null), []);
 
-  const {
-    data: usersData,
-    loading: usersLoading,
-    error: usersError,
-  } = useQuery<UsersQuery>(USERS_QUERY);
-  const [createEvent, { loading: creating }] = useMutation<CreateEventMutation>(
-    CREATE,
-    {
-      onCompleted({ createEvent }) {
-        setModal(generateCreateModal(createEvent, closePage));
-      },
-      onError({ message }) {
-        const modalConfig = generateFailedSaveModal(
-          message,
-          () => {
-            createEvent({ variables: vars });
-            closeModal();
-          },
-          closeModal
-        );
-        setModal(modalConfig);
-      },
-      update(cache, { data }) {
-        updateCacheAfterCreating(cache, data);
-      },
-      refetchQueries: ({ data }: { data: CreateEventMutation }) =>
-        refetchQueriesAfterCreating(data),
-    }
+  const { data: usersData, loading: usersLoading, error: usersError } = useQuery<UsersQuery>(
+    USERS_QUERY
   );
-  const [moveEvents, { loading: moving }] = useMutation<MoveEventsMutation>(
-    MOVE,
-    {
-      onCompleted() {
-        if (Object.keys(vars).length) {
+  const [createEvent, { loading: creating }] = useMutation<CreateEventMutation>(CREATE, {
+    onCompleted({ createEvent }) {
+      setModal(generateCreateModal(createEvent, closePage));
+    },
+    onError({ message }) {
+      const modalConfig = generateFailedSaveModal(
+        message,
+        () => {
           createEvent({ variables: vars });
-        }
-      },
-      onError({ message }) {
-        const modalConfig = generateFailedSaveModal(
-          message,
-          () => {
-            const inputsToMove: UpdateEventVars[] = eventsToMove.current.map(
-              ({ prevRoom, ...eventData }) => eventData
-            );
-            if (inputsToMove.length) {
-              moveEvents({ variables: { events: inputsToMove } });
-            }
-            closeModal();
-          },
-          closeModal
-        );
-        setModal(modalConfig);
-      },
-      update(cache, { data }) {
-        updateCacheAfterMoving(cache, data);
-      },
-      refetchQueries: ({ data }: { data: MoveEventsMutation }) =>
-        refetchQueriesAfterMoving(data, eventsToMove.current),
-    }
-  );
+          closeModal();
+        },
+        closeModal
+      );
+      setModal(modalConfig);
+    },
+    update(cache, { data }) {
+      updateCacheAfterCreating(cache, data);
+    },
+    refetchQueries: ({ data }: { data: CreateEventMutation }) =>
+      refetchQueriesAfterCreating(data),
+  });
+  const [moveEvents, { loading: moving }] = useMutation<MoveEventsMutation>(MOVE, {
+    onCompleted() {
+      if (Object.keys(vars).length) {
+        createEvent({ variables: vars });
+      }
+    },
+    onError({ message }) {
+      const modalConfig = generateFailedSaveModal(
+        message,
+        () => {
+          const inputsToMove: UpdateEventVars[] = eventsToMove.current.map(
+            ({ prevRoom, ...eventData }) => eventData
+          );
+          if (inputsToMove.length) {
+            moveEvents({ variables: { events: inputsToMove } });
+          }
+          closeModal();
+        },
+        closeModal
+      );
+      setModal(modalConfig);
+    },
+    update(cache, { data }) {
+      updateCacheAfterMoving(cache, data);
+    },
+    refetchQueries: ({ data }: { data: MoveEventsMutation }) =>
+      refetchQueriesAfterMoving(data, eventsToMove.current),
+  });
 
   // Hide loading spinner:
   useEffect(() => {

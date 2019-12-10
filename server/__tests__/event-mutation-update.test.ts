@@ -4,11 +4,7 @@ import addDays from 'date-fns/addDays';
 
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
-import {
-  createRoom,
-  createUser,
-  createEvent,
-} from '../test-utils/create-db-entity';
+import { createRoom, createUser, createEvent } from '../test-utils/create-db-entity';
 import { User } from '../entity/user';
 import { Event } from '../entity/event';
 import { Room } from '../entity/room';
@@ -71,11 +67,7 @@ describe('Event Mutation Update', () => {
           input: updateData,
         },
       });
-      const userIds = [
-        { id: dbUsers[0].id },
-        { id: dbUsers[1].id },
-        { id: dbUsers[2].id },
-      ];
+      const userIds = [{ id: dbUsers[0].id }, { id: dbUsers[1].id }, { id: dbUsers[2].id }];
 
       expect(response).toMatchObject({
         data: {
@@ -106,11 +98,7 @@ describe('Event Mutation Update', () => {
           input: updateData,
         },
       });
-      const userIds = [
-        { id: dbUsers[0].id },
-        { id: dbUsers[1].id },
-        { id: dbUsers[2].id },
-      ];
+      const userIds = [{ id: dbUsers[0].id }, { id: dbUsers[1].id }, { id: dbUsers[2].id }];
 
       expect(response).toMatchObject({
         data: {
@@ -300,9 +288,7 @@ describe('Event Mutation Update', () => {
           },
         },
       });
-      expect(response!.data!.updateEvent.users).toIncludeSameMembers([
-        ...newDbUsers,
-      ]);
+      expect(response!.data!.updateEvent.users).toIncludeSameMembers([...newDbUsers]);
       expect(dbEventUsers.find(u => u.id === newDbUsers[0].id)).toBeDefined();
       expect(dbEventUsers.find(u => u.id === newDbUsers[1].id)).toBeDefined();
     });
@@ -483,9 +469,7 @@ describe('Event Mutation Update', () => {
       expect(dbEventAfterUpdate2!.title).not.toBe(updateData[1].input.title);
       expect(dbEventAfterUpdate1!.roomId).toBe(dbRooms[0].id);
       expect(dbEventAfterUpdate2!.roomId).toBe(dbRooms[1].id);
-      expect(dbEvent1Users).not.toIncludeSameMembers([
-        ...newDbUsers.slice(0, 2),
-      ]);
+      expect(dbEvent1Users).not.toIncludeSameMembers([...newDbUsers.slice(0, 2)]);
       expect(dbEvent2Users).not.toIncludeSameMembers([...newDbUsers.slice(2)]);
       expect(response.data).toEqual({ updateEvents: null });
       expect(response.errors).toBeDefined();

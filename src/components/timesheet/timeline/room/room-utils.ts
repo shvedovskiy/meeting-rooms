@@ -37,10 +37,7 @@ export function prepareRanges(eventRanges: string[], eventsMap: EventsMap) {
   return slotRanges;
 }
 
-export function formatCapacity(
-  minCapacity: number | null,
-  maxCapacity: number | null
-) {
+export function formatCapacity(minCapacity: number | null, maxCapacity: number | null) {
   const hasMinCapacity = minCapacity !== null && minCapacity !== 0;
   const hasMaxCapacity = maxCapacity !== null && maxCapacity !== 0;
   if (hasMinCapacity) {
@@ -55,11 +52,7 @@ export function formatCapacity(
   return '';
 }
 
-export function offsetToTime(
-  firstHour: number,
-  offset: number,
-  length: number
-) {
+export function offsetToTime(firstHour: number, offset: number, length: number) {
   const startMinutes = (firstHour * 4 + offset) * 15;
   const endMinutes = startMinutes + length * 15;
   return [minutesToHours(startMinutes), minutesToHours(endMinutes)];

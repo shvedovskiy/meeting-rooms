@@ -1,12 +1,6 @@
 import gql from 'graphql-tag';
 
-import {
-  UserData,
-  RoomData,
-  Event,
-  EventsMap,
-  Table,
-} from 'components/timesheet/types';
+import { UserData, RoomData, Event, EventsMap, Table } from 'components/timesheet/types';
 
 export const USERS_QUERY = gql`
   {

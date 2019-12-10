@@ -53,12 +53,7 @@ export interface CreateEventMutation {
 }
 
 export const UPDATE_EVENT_MUTATION = gql`
-  mutation UpdateEvent(
-    $id: ID!
-    $input: EventUpdateInput
-    $roomId: ID
-    $userIds: [ID!]
-  ) {
+  mutation UpdateEvent($id: ID!, $input: EventUpdateInput, $roomId: ID, $userIds: [ID!]) {
     updateEvent(id: $id, input: $input, roomId: $roomId, userIds: $userIds) {
       id
       title

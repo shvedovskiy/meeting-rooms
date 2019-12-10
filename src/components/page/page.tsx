@@ -38,16 +38,9 @@ export const Page = ({ mode, pageData: formData }: Props) => {
       onClose: onPageClosed,
     };
     return (
-      <ErrorBoundary
-        FallbackComponent={ErrorFallback}
-        onError={formProps.onMount}
-      >
+      <ErrorBoundary FallbackComponent={ErrorFallback} onError={formProps.onMount}>
         <Suspense fallback={null}>
-          {mode === 'add' ? (
-            <AddForm {...formProps} />
-          ) : (
-            <EditForm {...formProps} />
-          )}
+          {mode === 'add' ? <AddForm {...formProps} /> : <EditForm {...formProps} />}
         </Suspense>
       </ErrorBoundary>
     );

@@ -19,9 +19,7 @@ export const Card = ({ data, room, onAction }: Props) => {
 
   function renderInfo() {
     const { date, startTime, endTime } = data;
-    const info = `${format(
-      date
-    )}, ${startTime}\u2013${endTime}\u00A0·\u00A0${room}`;
+    const info = `${format(date)}, ${startTime}\u2013${endTime}\u00A0·\u00A0${room}`;
     return <p>{info}</p>;
   }
 

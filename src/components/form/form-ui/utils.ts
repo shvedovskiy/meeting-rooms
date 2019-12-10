@@ -94,11 +94,7 @@ export function recommendationNeeded(
     return false;
   }
   const emptyValidationResult = emptyValidation(formValues);
-  if (
-    ['date', 'startTime', 'endTime'].some(f =>
-      emptyValidationResult.hasOwnProperty(f)
-    )
-  ) {
+  if (['date', 'startTime', 'endTime'].some(f => emptyValidationResult.hasOwnProperty(f))) {
     return false;
   }
   const blurValidationResults = [
@@ -142,16 +138,10 @@ export function measureDistanceToRoom<T extends RoomCard | RoomData>(
   roomDef: T,
   eventUsersFloors: number[]
 ) {
-  return Math.abs(
-    eventUsersFloors.reduce((sum, next) => sum + (roomDef.floor - next), 0)
-  );
+  return Math.abs(eventUsersFloors.reduce((sum, next) => sum + (roomDef.floor - next), 0));
 }
 
-function distanceToNewRoom(
-  eventId: string,
-  newFloor: number,
-  allEvents: Map<string, Event>
-) {
+function distanceToNewRoom(eventId: string, newFloor: number, allEvents: Map<string, Event>) {
   const floors = allEvents.get(eventId)!.users.map(u => u.homeFloor);
   return Math.abs(floors.reduce((sum, next) => sum + (newFloor - next), 0));
 }
@@ -168,10 +158,7 @@ export function measureDistanceToNewRoom(
     .reduce((sum, next) => sum + next, 0);
 
   return Math.abs(
-    eventUsersFloors.reduce(
-      (sum, next) => sum + (roomDef.floor - next) + movedDistance,
-      0
-    )
+    eventUsersFloors.reduce((sum, next) => sum + (roomDef.floor - next) + movedDistance, 0)
   );
 }
 
@@ -182,12 +169,7 @@ export function measureDistanceToAnyRoom(
   eventUsersFloors: number[]
 ) {
   if (moved.has(roomDef.id)) {
-    return measureDistanceToNewRoom(
-      roomDef,
-      moved,
-      allEvents,
-      eventUsersFloors
-    );
+    return measureDistanceToNewRoom(roomDef, moved, allEvents, eventUsersFloors);
   }
   return measureDistanceToRoom(roomDef, eventUsersFloors);
 }

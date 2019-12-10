@@ -159,9 +159,7 @@ export function refetchQueriesAfterMoving(
   return queries;
 }
 
-export function refetchQueriesAfterRemoving(
-  mutationData?: RemoveEventMutation | null
-) {
+export function refetchQueriesAfterRemoving(mutationData?: RemoveEventMutation | null) {
   if (!mutationData) {
     return [];
   }

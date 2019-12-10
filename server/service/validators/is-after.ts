@@ -14,9 +14,7 @@ class IsAfterConstraint implements ValidatorConstraintInterface {
   public async validate(value: string, args: ValidationArguments) {
     const [relatedPropertyName] = args.constraints;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const relatedValue: Maybe<string> = (args.object as any)[
-      relatedPropertyName
-    ];
+    const relatedValue: Maybe<string> = (args.object as any)[relatedPropertyName];
     return (
       typeof relatedValue === 'string' &&
       parse(value, 'HH:mm', Date.now(), { locale: ruLocale }) >
@@ -30,10 +28,7 @@ class IsAfterConstraint implements ValidatorConstraintInterface {
   }
 }
 
-export function IsAfter(
-  property: string,
-  validationOptions?: ValidationOptions
-) {
+export function IsAfter(property: string, validationOptions?: ValidationOptions) {
   // eslint-disable-next-line @typescript-eslint/ban-types
   return (object: Object, propertyName: string) => {
     registerDecorator({

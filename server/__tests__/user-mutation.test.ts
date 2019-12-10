@@ -4,11 +4,7 @@ import faker from 'faker';
 import { connectToDatabase } from '../service/create-connection';
 import { graphQLCall } from '../test-utils/graphql-call';
 import { User } from '../entity/user';
-import {
-  createUser,
-  createEvent,
-  createRoom,
-} from '../test-utils/create-db-entity';
+import { createUser, createEvent, createRoom } from '../test-utils/create-db-entity';
 import { Event } from '../entity/event';
 
 let connection: Connection;

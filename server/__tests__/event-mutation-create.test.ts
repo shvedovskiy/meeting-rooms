@@ -81,11 +81,7 @@ describe('Event Mutation createEvent()', () => {
           room: {
             id: dbRoom.id,
           },
-          users: [
-            { id: dbUsers[0].id },
-            { id: dbUsers[1].id },
-            { id: dbUsers[2].id },
-          ],
+          users: [{ id: dbUsers[0].id }, { id: dbUsers[1].id }, { id: dbUsers[2].id }],
         },
       },
     });
