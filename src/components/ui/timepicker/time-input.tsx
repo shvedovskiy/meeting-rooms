@@ -1,8 +1,4 @@
-import React, {
-  FormEventHandler,
-  KeyboardEventHandler,
-  FocusEventHandler,
-} from 'react';
+import React, { FormEventHandler, KeyboardEventHandler, FocusEventHandler } from 'react';
 import cn from 'classnames';
 import updateInputWidth from 'update-input-width';
 
@@ -43,8 +39,7 @@ export const TimeInput = (props: Props) => {
     step,
     value,
   } = props;
-  const hasLeadingZero =
-    showLeadingZeros === true && value !== null && value < 10;
+  const hasLeadingZero = showLeadingZeros === true && value !== null && value < 10;
 
   const handleKeyUp: KeyboardEventHandler<HTMLInputElement> = event => {
     updateInputWidth(event.target);
@@ -59,6 +54,7 @@ export const TimeInput = (props: Props) => {
         className={cn(classes.input, {
           [classes['input-hasLeadingZero']]: hasLeadingZero,
         })}
+        inputMode="decimal"
         max={max}
         min={min}
         name={name}

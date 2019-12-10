@@ -11,6 +11,14 @@
   }
 }
 
+@supports (display: contents) {
+  .app {
+    display: contents;
+    width: auto;
+    height: auto;
+  }
+}
+
 .headerBtn {
   max-width: 200px;
   @include oneLineEllipsis;
