@@ -2,6 +2,7 @@
   "useTabs": false,
   "tabWidth": 2,
   "singleQuote": true,
+  "printWidth": 95,
   "trailingComma": "es5",
   "jsxBracketSameLine": false,
   "endOfLine": "lf",
