@@ -154,8 +154,8 @@ function moveConflictingEvents(
     .map(id => roomsToMove.find(r => r.id === id)!)
     .sort(comparator(movedEvents))
     .slice(0, 5 - forbiddenRooms.size);
-  const slicedMovedEvents = new Map(movedRoomDefs.map(({ id }) => [id, movedEvents.get(id)!]));
-  return [movedRoomDefs, slicedMovedEvents] as const;
+  const finalMovedEvents = new Map(movedRoomDefs.map(({ id }) => [id, movedEvents.get(id)!]));
+  return [movedRoomDefs, finalMovedEvents] as const;
 }
 
 function findAnotherTime(
@@ -297,12 +297,12 @@ export function useRecommendation(
     let { freeRooms } = searchResult;
     const { candidateRooms, eventsFromCandidates } = searchResult;
 
-    // Trying to move conflicting meetings out of candidate rooms:
     let freeRoomsIds = new Set(freeRooms.map(room => room.id));
     const movedRoomsComp = (moved: RoomMovedEvents) => (a: RoomCard, b: RoomCard) =>
       measureDistanceToNewRoom(a, moved, allEvents, formUsersFloors) -
       measureDistanceToNewRoom(b, moved, allEvents, formUsersFloors);
 
+    // Trying to move conflicting meetings out of candidate rooms:
     const [releasedRooms, movedEvents] = moveConflictingEvents(
       candidateRooms,
       eventsFromCandidates,
@@ -323,8 +323,7 @@ export function useRecommendation(
         measureDistanceToAnyRoom(a, movedEvents, allEvents, formUsersFloors) -
         measureDistanceToAnyRoom(b, movedEvents, allEvents, formUsersFloors)
     );
-    // TODO отрицание в условии:
-    if (!(freeRooms.length < 5) || freeRooms.length === capableRooms.length) {
+    if (freeRooms.length === 5 || freeRooms.length === capableRooms.length) {
       return freeRooms;
     }
 
