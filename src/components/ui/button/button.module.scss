@@ -6,16 +6,31 @@
   font-size: var(--default-text);
   font-weight: 700;
   line-height: 1.1;
+  color: var(--text-color, --text-primary);
   text-align: center;
   word-break: break-all;
   vertical-align: middle;
   user-select: none;
+  background-color: var(--bg-color, --secondary-1);
   border-radius: 4px;
   transition: background-color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     box-shadow 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   @include hyphenate;
+
+  &:hover,
+  &:focus {
+    background-color: var(--focus-color, --secondary-2);
+  }
+
+  &:active {
+    background-color: var(--active-color, --secondary-3);
+
+    @media (hover: none) and (pointer: coarse) {
+      background-color: var(--focus-color, --secondary-2);
+    }
+  }
 
   &:disabled {
     color: var(--text-inactive);
@@ -29,56 +44,27 @@
   }
 }
 
-@mixin buttonColors($textColor, $defaultColor, $focusColor, $activeColor) {
-  color: $textColor;
-  background-color: $defaultColor;
-
-  &:hover,
-  &:focus {
-    background-color: $focusColor;
-  }
-
-  &:active {
-    background-color: $activeColor;
-
-    @media (hover: none) and (pointer: coarse) {
-      background-color: $focusColor;
-    }
-  }
-}
-
 .default {
-  @include buttonColors(
-    var(--text-primary),
-    var(--secondary-1),
-    var(--secondary-2),
-    var(--secondary-3)
-  );
+  --text-color: var(--text-primary);
+  --bg-color: var(--secondary-1);
+  --focus-color: var(--secondary-2);
+  --active-color: var(--secondary-3);
 }
 
 .primary {
-  @include buttonColors(
-    var(--text-inverted),
-    var(--primary-1),
-    var(--primary-2),
-    var(--primary-3)
-  );
+  --text-color: var(--text-inverted);
+  --bg-color: var(--primary-1);
+  --focus-color: var(--primary-2);
+  --active-color: var(--primary-3);
 }
 
 .borderless {
+  --text-color: var(--text-primary);
+  --bg-color: transparent;
+  --focus-color: var(--primary-1);
+  --active-color: var(--primary-2);
   /* stylelint-disable-next-line declaration-no-important */
   padding: 0 !important;
-  color: var(--text-primary);
-  background-color: transparent;
-
-  &:hover,
-  &:focus {
-    color: var(--primary-1);
-  }
-
-  &:active {
-    color: var(--primary-2);
-  }
 }
 
 .danger {
@@ -90,6 +76,6 @@
   }
 
   &.borderless {
-    color: var(--text-invalid);
+    --text-color: var(--text-invalid);
   }
 }
