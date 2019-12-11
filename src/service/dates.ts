@@ -18,9 +18,9 @@ export function parse(date: string, format: string, fallback: number | Date = Da
   return dateFnsParse(date, format, fallback, { locale: ruLocale });
 }
 
-export function roundDate(date: number) {
+export function roundDate(date: Date) {
   const ms = 1000 * 60 * 5;
-  return new Date(Math.ceil(date / ms) * ms);
+  return new Date(Math.ceil(date.getTime() / ms) * ms);
 }
 
 export function dateToTimeString(date: Date) {
@@ -31,12 +31,14 @@ export function splitTimeString(time: string) {
   return time.split(':').map(part => Number.parseInt(part, 10));
 }
 
+export function timeToOffset(time: string) {
+  const [hours, minutes] = splitTimeString(time);
+  const offset = (hours - HOURS[0]) * 4 + minutes / 15;
+  return offset;
+}
+
 export function timeToRange(startTime: string, endTime: string) {
-  const [startHours, startMinutes] = splitTimeString(startTime);
-  const [endHours, endMinutes] = splitTimeString(endTime);
-  const startTimeOffset = (startHours - HOURS[0]) * 4 + startMinutes / 15;
-  const endTimeOffset = (endHours - HOURS[0]) * 4 + endMinutes / 15;
-  return [startTimeOffset, endTimeOffset] as const;
+  return [timeToOffset(startTime), timeToOffset(endTime)] as const;
 }
 
 export function rangeToTime(startTimeOffset: number, endTimeOffset: number) {

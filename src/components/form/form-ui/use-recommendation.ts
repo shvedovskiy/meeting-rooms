@@ -10,7 +10,14 @@ import {
   EventsMapQueryType,
   TableQueryType,
 } from 'service/apollo/queries';
-import { timeToRange, RANGES_LEN, rangeToTime } from 'service/dates';
+import {
+  timeToRange,
+  RANGES_LEN,
+  rangeToTime,
+  timeToOffset,
+  dateToTimeString,
+  roundDate,
+} from 'service/dates';
 import { FormFields } from '../form-common/validators';
 import { RoomCard, RoomData, Event } from 'components/timesheet/types';
 import { StateValues } from 'components/common/use-form';
@@ -82,7 +89,7 @@ function findFreeRooms(
       candidateUsersNums.every(num => num < eventUsersNum)
     ) {
       // The room is available at least half time of appointed time
-      // or contains meetings with fewer participants than the planned meeting:
+      // or contains meetings with fewer participants than our meeting:
       candidateRooms.push({ ...room, startTime, endTime });
     }
   }
@@ -100,10 +107,6 @@ function moveConflictingEvents(
 ) {
   const movedEvents: RoomMovedEvents = new Map();
   for (const { id: roomId } of roomsToMove) {
-    // TS check:
-    if (!conflictingEvents.has(roomId)) {
-      continue;
-    }
     const roomConflictingEvents = conflictingEvents.get(roomId);
     if (!roomConflictingEvents) {
       continue;
@@ -195,10 +198,12 @@ function findAnotherTime(
     // Starts of free time slots for a given day:
     const result: number[] = [];
     let range;
+    const now = timeToOffset(dateToTimeString(roundDate(new Date())));
     // Looking for all possible slots in this interval:
     for (i = 0; i < ranges.length; i++) {
       range = ranges[i];
-      for (let j = range[0]; j <= range[1] - eventLength + 1; j++) {
+      // There's no need to look for an slot in the past:
+      for (let j = range[0] < now ? now : range[0]; j <= range[1] - eventLength + 1; j++) {
         result.push(j);
         startValues.add(j);
       }
