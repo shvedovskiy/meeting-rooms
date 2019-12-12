@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import { startOfDay } from 'date-fns/esm';
 
 import { Weekday } from './weekday';
 import { MONTHS, LABELS } from './utils';
+import { useOnclickOutside } from 'components/common/use-outside-click';
 import classes from './calendar.module.scss';
 
 type Props = {
@@ -19,15 +20,7 @@ export const Calendar = (props: Props) => {
   const [selected, setSelected] = useState(initialDate);
   const pickerRef = useRef<DayPicker>(null);
 
-  useEffect(() => {
-    function checkOutsideClick(event: MouseEvent) {
-      if (!pickerRef.current?.dayPicker.contains(event.target as Element)) {
-        onBlur();
-      }
-    }
-    window.addEventListener('click', checkOutsideClick);
-    return () => window.removeEventListener('click', checkOutsideClick);
-  });
+  useOnclickOutside(pickerRef.current?.dayPicker, onBlur);
 
   function handleDayClick(date: Date, modifiers: DayModifiers) {
     if (!modifiers.disabled && !modifiers.selected) {

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState } from 'react';
+import React, { lazy, Suspense, useState, useCallback } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import ErrorBoundary from 'react-error-boundary';
 import cn from 'classnames';
@@ -25,9 +25,7 @@ export const Page = ({ mode, pageData: formData }: Props) => {
   const setPage = usePageCtx();
   const size = useSizeCtx();
 
-  function onPageClosed() {
-    setPage(null); // TODO use bind
-  }
+  const closePage = useCallback(() => setPage(null), [setPage]);
 
   function renderPage() {
     const formProps = {
@@ -35,7 +33,7 @@ export const Page = ({ mode, pageData: formData }: Props) => {
       onMount() {
         setIsLoading(false);
       },
-      onClose: onPageClosed,
+      onClose: closePage,
     };
     return (
       <ErrorBoundary FallbackComponent={ErrorFallback} onError={formProps.onMount}>
@@ -67,7 +65,7 @@ export const Page = ({ mode, pageData: formData }: Props) => {
             ariaLabel="Отмена"
             icon="close"
             className={classes.closePage}
-            onClick={onPageClosed}
+            onClick={closePage}
           />
         )}
         <h1>{mode === 'add' ? 'Новая встреча' : 'Редактирование встречи'}</h1>
