@@ -61,8 +61,8 @@
 .borderless {
   --text-color: var(--text-primary);
   --bg-color: transparent;
-  --focus-color: var(--primary-1);
-  --active-color: var(--primary-2);
+  --focus-color: transparent;
+  --active-color: transparent;
   /* stylelint-disable-next-line declaration-no-important */
   padding: 0 !important;
 }

@@ -1,14 +1,34 @@
-import { useEffect, MutableRefObject } from 'react';
+import { useEffect, RefObject } from 'react';
 
 export type OutsideClickHandler = (event: MouseEvent | TouchEvent) => any;
 
 export function useOnclickOutside(
-  element: HTMLElement | null | undefined,
+  ref: RefObject<HTMLElement>,
   handler: OutsideClickHandler
-) {
+): void;
+export function useOnclickOutside<Ref extends Record<string, any>>(
+  ref: RefObject<Ref>,
+  handler: OutsideClickHandler,
+  property: keyof Ref
+): void;
+export function useOnclickOutside<Ref extends Record<string, any>>(
+  ref: RefObject<HTMLElement | Ref>,
+  handler: OutsideClickHandler,
+  property?: keyof Ref
+): void {
   useEffect(() => {
     const listener = (event: MouseEvent | TouchEvent) => {
-      if (element?.contains(event.target as HTMLElement)) {
+      const refValue = ref.current;
+      if (!refValue) {
+        return;
+      }
+      let element: HTMLElement | null = null;
+      if (refValue instanceof HTMLElement) {
+        element = refValue;
+      } else if (property && (refValue[property] as any) instanceof HTMLElement) {
+        element = refValue[property];
+      }
+      if (element && !element.contains(event.target as HTMLElement)) {
         handler(event);
       }
     };
@@ -20,5 +40,5 @@ export function useOnclickOutside(
       document.removeEventListener('mousedown', listener);
       document.removeEventListener('touchstart', listener);
     };
-  }, [handler, element]);
+  }, [handler, property, ref]);
 }

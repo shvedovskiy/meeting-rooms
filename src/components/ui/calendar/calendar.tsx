@@ -20,7 +20,7 @@ export const Calendar = (props: Props) => {
   const [selected, setSelected] = useState(initialDate);
   const pickerRef = useRef<DayPicker>(null);
 
-  useOnclickOutside(pickerRef.current?.dayPicker, onBlur);
+  useOnclickOutside<DayPicker>(pickerRef, onBlur, 'dayPicker');
 
   function handleDayClick(date: Date, modifiers: DayModifiers) {
     if (!modifiers.disabled && !modifiers.selected) {
