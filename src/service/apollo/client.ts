@@ -5,7 +5,7 @@ import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { parseISO } from 'date-fns/esm';
 
-import { SERVER_URL } from 'service/config';
+import { NODE_ENV, SERVER_URL } from 'service/config';
 import { resolvers } from 'service/apollo/resolvers';
 import { ServerEvent } from 'components/timesheet/types';
 
@@ -53,14 +53,13 @@ export const apolloClient = new ApolloClient({
       if (graphQLErrors)
         graphQLErrors.forEach(
           ({ message, locations, path }) =>
-            process.env.NODE_ENV === 'production' ||
+            NODE_ENV === 'production' ??
             console.log(
               `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
             )
         );
       if (networkError) {
-        process.env.NODE_ENV === 'production' ||
-          console.log(`[Network error]: ${networkError}`);
+        NODE_ENV === 'production' ?? console.log(`[Network error]: ${networkError}`);
       }
     }),
     new HttpLink({

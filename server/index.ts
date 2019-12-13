@@ -21,6 +21,7 @@ async function bootstrapServer() {
 
     const app = express();
     app.use(express.static(path.join(__dirname, 'assets')));
+    app.use(express.static(path.join(__dirname, '..', 'build')));
     app.use(
       cors({
         origin: FRONTEND_URL,
