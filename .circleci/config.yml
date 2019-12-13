@@ -9,10 +9,6 @@ jobs:
     <<: *defaults
     steps:
         - checkout
-        - restore_cache:
-            keys:
-                - dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
-                - dependency-cache-
         - run:
             name: Install NPM packages
             command: npm i
