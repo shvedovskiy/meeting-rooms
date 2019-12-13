@@ -9,6 +9,10 @@ jobs:
     <<: *defaults
     steps:
         - checkout
+        - restore_cache:
+            keys:
+                - dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+                - dependency-cache-
         - run:
             name: Install NPM packages
             command: npm i
@@ -48,7 +52,7 @@ jobs:
             at: .
         - run:
             name: Run tests # and collect coverage
-            command: npm run server:test # npm t
+            command: npm run test:server # npm t
 
 workflows:
   version: 2
