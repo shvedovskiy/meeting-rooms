@@ -11,13 +11,13 @@ jobs:
         - checkout
         - restore_cache:
             keys:
-                - dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
-                - dependency-cache-
+                - dependencies-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+                - dependencies-cache-
         - run:
             name: Install NPM packages
             command: npm i
         - save_cache:
-            key: dependency-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+            key: dependencies-cache-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
             paths:
                 - 'node_modules'
         - persist_to_workspace:
