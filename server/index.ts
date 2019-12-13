@@ -22,12 +22,14 @@ async function bootstrapServer() {
     const app = express();
     app.use(express.static(path.join(__dirname, 'assets')));
     app.use(express.static(path.join(__dirname, '..', 'build')));
-    app.use(
-      cors({
-        origin: FRONTEND_URL,
-        credentials: true,
-      })
-    );
+    if (FRONTEND_URL.trim().length) {
+      app.use(
+        cors({
+          origin: FRONTEND_URL,
+          credentials: true,
+        })
+      );
+    }
     server.applyMiddleware({ app, cors: false });
 
     app.listen({ port: PORT }, (err?: string) => {
