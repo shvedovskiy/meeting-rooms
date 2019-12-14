@@ -45,7 +45,12 @@ async function bootstrapServer() {
         orderPreference: ['br'],
       })
     );
-    app.use(express.static(pathToAssets));
+    app.use(
+      expressStaticGzip(pathToAssets, {
+        enableBrotli: true,
+        orderPreference: ['br'],
+      })
+    );
     server.applyMiddleware({
       app,
       cors: FRONTEND_URL

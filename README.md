@@ -4,7 +4,7 @@
 
 ## Installation
 
-``` bash
+```bash
 npm i
 ```
 
@@ -12,13 +12,13 @@ npm i
 
 Prepare sample database:
 
-``` bash
+```bash
 npm run db-setup
 ```
 
 Start application:
 
-``` bash
+```bash
 npm run dev
 ```
 
@@ -28,15 +28,12 @@ GraphQL in-browser IDE is available at http://localhost:4000/graphql
 
 Build static assets and server:
 
-``` bash
+```bash
 npm run build
 ```
 
 Run application in production mode:
 
-``` bash
+```bash
 npm start
 ```
-
-
-[![CircleCI](https://circleci.com/gh/shvedovskiy/meeting-rooms.svg?style=svg)](https://circleci.com/gh/shvedovskiy/meeting-rooms)

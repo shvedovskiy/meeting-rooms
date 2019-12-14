@@ -11,9 +11,6 @@
 /build/
 /dist/
 
-#assets
-server/assets/avatars/
-
 # misc
 .DS_Store
 .env.local

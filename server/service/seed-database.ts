@@ -24,19 +24,54 @@ export async function seedDatabase() {
 
   const users = userRepository.create([
     {
-      login: 'veged',
-      avatarUrl: 'https://avatars3.githubusercontent.com/u/15365?s=460&v=4',
-      homeFloor: 0,
+      login: 'Vaughn Ziemann',
+      avatarUrl: '/avatars/4d/4db2525d-649e-4a74-baf4-ec820d7f797c',
+      homeFloor: 2,
     },
     {
-      login: 'alt-j',
-      avatarUrl: 'https://avatars1.githubusercontent.com/u/3763844?s=400&v=4',
+      login: 'Imelda Walter',
+      avatarUrl: '/avatars/43/4317f88f-67c9-40df-956c-2c6abd1ecd45',
+      homeFloor: 2,
+    },
+    {
+      login: 'Gregory Lakin',
+      avatarUrl: '/avatars/11/11b0dafc-80cd-485e-9e7e-557943380554',
       homeFloor: 3,
     },
     {
-      login: 'yeti-or',
-      avatarUrl: 'https://avatars0.githubusercontent.com/u/1813468?s=460&v=4',
+      login: 'Hardy Denesik',
+      avatarUrl: '/avatars/5e/5e926f68-7e6f-45ae-aea1-b891bf018c05',
+      homeFloor: 6,
+    },
+    {
+      login: 'Jennings Feest',
+      avatarUrl: '/avatars/1c/1c930d7a-9f21-47d7-87f9-95f751b93b1f',
+      homeFloor: 8,
+    },
+    {
+      login: 'Miles Bartoletti',
+      avatarUrl: '/avatars/99/99125a8e-376e-46ac-8773-1e0b50dc47d1',
+      homeFloor: 4,
+    },
+    {
+      login: 'Dejah Reilly',
+      avatarUrl: '/avatars/fd/fdf56b93-e47a-4473-8d44-caf0b37f07e7',
+      homeFloor: 6,
+    },
+    {
+      login: 'Tevin Adams',
+      avatarUrl: '/avatars/a9/a9c67262-ddcc-4511-964e-d72700937625',
+      homeFloor: 1,
+    },
+    {
+      login: 'Durward Schroeder',
+      avatarUrl: '/avatars/60/600f9be2-1c76-4f56-9d60-d04c9b0e6fdb',
       homeFloor: 2,
+    },
+    {
+      login: 'Connie Kling',
+      avatarUrl: '/avatars/17/17904c5f-f3c4-4dbb-88af-491dd209767d',
+      homeFloor: 4,
     },
   ]);
 
@@ -44,33 +79,63 @@ export async function seedDatabase() {
 
   const rooms = roomRepository.create([
     {
-      title: '404',
-      minCapacity: 5,
-      maxCapacity: 10,
+      title: 'North Theo',
+      minCapacity: 10,
+      maxCapacity: 14,
+      floor: 2,
+    },
+    {
+      title: 'Feestside',
+      minCapacity: 1,
+      maxCapacity: 2,
+      floor: 1,
+    },
+    {
+      title: 'New Wilton',
+      minCapacity: 1,
+      maxCapacity: 18,
+      floor: 5,
+    },
+    {
+      title: 'Richardshire',
+      minCapacity: 1,
+      maxCapacity: 4,
+      floor: 5,
+    },
+    {
+      title: 'West Roxanne',
+      minCapacity: 1,
+      maxCapacity: 8,
+      floor: 3,
+    },
+    {
+      title: 'Kodymouth',
+      minCapacity: 3,
+      maxCapacity: 12,
       floor: 4,
     },
     {
-      title: 'Деньги',
+      title: 'Corwinstad',
       minCapacity: 1,
-      maxCapacity: 4,
-      floor: 2,
+      maxCapacity: 10,
+      floor: 9,
     },
     {
-      title: 'Карты',
-      minCapacity: 4,
+      title: 'Port Moniqueberg',
+      minCapacity: 1,
+      maxCapacity: 10,
+      floor: 1,
+    },
+    {
+      title: 'New Marquise',
+      minCapacity: 3,
+      maxCapacity: 12,
+      floor: 6,
+    },
+    {
+      title: 'Dietrichtown',
+      minCapacity: 1,
       maxCapacity: 8,
-      floor: 2,
-    },
-    {
-      title: 'Ствола',
-      minCapacity: 2,
-      maxCapacity: 2,
-      floor: 2,
-    },
-    {
-      title: '14',
-      minCapacity: 1,
-      maxCapacity: 6,
       floor: 3,
     },
   ]);
