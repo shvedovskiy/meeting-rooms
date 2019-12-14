@@ -25,13 +25,13 @@
     "test:server": "cross-env NODE_ENV=test jest --config=./server/jest.config.js --forceExit --detectOpenHandles",
     "dev": "cross-env NODE_ENV=development concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "build": "run-s build:*",
-    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "start": "pm2-runtime start ecosystem.config.js --env production",
     "lint:typescript": "tsc -p server/tsconfig.json --noEmit && tsc --noEmit",
     "lint:eslint": "eslint '{src,server}/**/*.{js?(x),ts?(x)}' --fix",
     "lint:prettier": "prettier --write \"{src,server}/**/*.{js?(x),ts?(x),css,json}\"",
     "lint:stylelint": "stylelint \"src/**/*.css\" \"public/**/*.html\"",
     "lint": "run-s lint:*",
-    "db-setup": "cross-env ts-node --project ./server/tsconfig.json ./server/db-setup.ts"
+    "db-setup": "cross-env NODE_ENV=development ts-node --project ./server/tsconfig.json ./server/db-setup.ts"
   },
   "dependencies": {
     "apollo-server-express": "^2.9.13",
@@ -45,6 +45,7 @@
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
     "npm-run-all": "^4.1.5",
+    "pm2": "^4.2.1",
     "reflect-metadata": "^0.1.13",
     "serve-favicon": "^2.5.0",
     "sqlite3": "^4.1.1",
