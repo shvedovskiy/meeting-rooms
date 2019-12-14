@@ -5,6 +5,7 @@ import { useContainer } from 'typeorm';
 import { Container } from 'typedi';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
+import expressStaticGzip from 'express-static-gzip';
 import favicon from 'serve-favicon';
 
 import { HOST, PORT, NODE_ENV, FRONTEND_URL } from './service/config';
@@ -20,17 +21,31 @@ async function bootstrapServer() {
     const server = new ApolloServer({ schema, context: {} });
 
     const app = express();
+    const pathToFavicon = path.join(__dirname, '..', 'build', 'favicon.ico');
+    const pathToStatic = path.join(__dirname, '..', 'build', 'static');
+    const pathToBuild = path.join(__dirname, '..', 'build');
+    const pathToAssets = path.join(__dirname, 'assets');
+
     if (NODE_ENV === 'production') {
-      app.use(favicon(path.join(__dirname, '..', 'build', 'favicon.ico')));
+      app.use(favicon(pathToFavicon));
     }
     app.use(
       '/static',
-      express.static(path.join(__dirname, '..', 'build', 'static'), {
-        maxAge: 31536000,
+      expressStaticGzip(pathToStatic, {
+        enableBrotli: true,
+        orderPreference: ['br'],
+        serveStatic: {
+          maxAge: 31536000,
+        },
       })
     );
-    app.use(express.static(path.join(__dirname, '..', 'build')));
-    app.use(express.static(path.join(__dirname, 'assets')));
+    app.use(
+      expressStaticGzip(pathToBuild, {
+        enableBrotli: true,
+        orderPreference: ['br'],
+      })
+    );
+    app.use(express.static(pathToAssets));
     server.applyMiddleware({
       app,
       cors: FRONTEND_URL
