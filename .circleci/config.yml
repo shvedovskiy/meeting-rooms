@@ -3,7 +3,9 @@ defaults: &defaults
       - image: circleci/node:12
   working_directory: ~/meeting-rooms
 
-version: 2
+version: 2.1
+orbs:
+  heroku: circleci/heroku@0.0.10
 jobs:
   prepare:
     <<: *defaults
@@ -54,14 +56,13 @@ jobs:
             name: Run tests
             command: npm run test:server # npm t
   deploy:
-    <<: *defaults
+    executor: heroku/default
     steps:
         - attach_workspace:
             at: .
-        - run:
-            name: Deploy to Heroku
-            command: |
-                git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+        - heroku/install
+        - heroku/deploy-via-git:
+            only-branch: master
 
 workflows:
   version: 2
@@ -82,6 +83,3 @@ workflows:
                 - lint
                 - test
                 - build
-            filters:
-                branches:
-                    only: master
