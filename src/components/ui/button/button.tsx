@@ -5,6 +5,8 @@ import React, {
   ReactChild,
   MouseEventHandler,
   ButtonHTMLAttributes,
+  forwardRef,
+  useImperativeHandle,
 } from 'react';
 import cn from 'classnames';
 
@@ -30,43 +32,46 @@ export type ButtonType = Override<
 
 type Props = ButtonType & { children?: ReactChild };
 
-export const Button = memo((props: Props) => {
-  const buttonNode = useRef<HTMLButtonElement>(null!);
-  const {
-    autoFocus,
-    children,
-    className,
-    disabled,
-    onClick,
-    size = 'default',
-    type = 'button',
-    use = 'default',
-    danger = false,
-    ...rest
-  } = props;
+export const Button = memo(
+  forwardRef<HTMLButtonElement | null, Props>((props, ref) => {
+    const {
+      autoFocus,
+      children,
+      className,
+      disabled,
+      onClick,
+      size = 'default',
+      type = 'button',
+      use = 'default',
+      danger = false,
+      ...rest
+    } = props;
+    const buttonElement = useRef<HTMLButtonElement>(null);
+    useImperativeHandle(ref, () => buttonElement.current);
 
-  function focus() {
-    buttonNode.current.focus();
-  }
-
-  useEffect(() => {
-    if (autoFocus === true) {
-      focus();
+    function focus() {
+      buttonElement.current?.focus();
     }
-  }, [autoFocus]);
 
-  const buttonProps = {
-    type,
-    className: cn(classes.btn, classes[use], className, {
-      [classes.lg]: size === 'large',
-      [classes.danger]: danger,
-    }),
-    ref: buttonNode,
-    disabled,
-    onClick,
-    title: typeof children === 'string' ? (children as string) : '',
-    ...rest,
-  };
+    useEffect(() => {
+      if (autoFocus === true) {
+        focus();
+      }
+    }, [autoFocus]);
 
-  return <button {...buttonProps}>{children}</button>;
-});
+    const buttonProps = {
+      type,
+      className: cn(classes.btn, classes[use], className, {
+        [classes.lg]: size === 'large',
+        [classes.danger]: danger,
+      }),
+      ref: buttonElement,
+      disabled,
+      onClick,
+      title: typeof children === 'string' ? (children as string) : '',
+      ...rest,
+    };
+
+    return <button {...buttonProps}>{children}</button>;
+  })
+);

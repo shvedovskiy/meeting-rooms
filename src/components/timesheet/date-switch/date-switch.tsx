@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import cn from 'classnames';
 import { isToday, addDays, subDays } from 'date-fns/esm';
 
@@ -18,6 +18,7 @@ type Props = {
 export const DateSwitch = (props: Props) => {
   const { date, size = 'default', onChange } = props;
   const [calendarVisible, setCalendarVisible] = useState(false);
+  const calendarBtn = useRef<HTMLButtonElement>(null);
 
   const handleDayChange = useCallback(
     (nextDirection: boolean) => {
@@ -29,16 +30,16 @@ export const DateSwitch = (props: Props) => {
     [date, onChange]
   );
 
-  const handleCalendarToggle = useCallback(() => {
+  const toggleCalendar = useCallback(() => {
     setCalendarVisible(v => !v);
   }, []);
 
   const handleDateSelect = useCallback(
     (date: Date) => {
-      handleCalendarToggle();
+      toggleCalendar();
       onChange?.(date);
     },
-    [handleCalendarToggle, onChange]
+    [toggleCalendar, onChange]
   );
 
   const dateString = isToday(date)
@@ -64,7 +65,8 @@ export const DateSwitch = (props: Props) => {
         <Button
           use="borderless"
           className={classes.dateBtn}
-          onClick={handleCalendarToggle}
+          ref={calendarBtn}
+          onClick={toggleCalendar}
           title={dateString}
         >
           {dateString}
@@ -85,6 +87,11 @@ export const DateSwitch = (props: Props) => {
             className={classes.calendar}
             initialDate={date}
             onBlur={() => setCalendarVisible(false)}
+            onClose={({ target }) => {
+              if (target !== calendarBtn.current) {
+                setCalendarVisible(false);
+              }
+            }}
             onChange={handleDateSelect}
           />
         )}

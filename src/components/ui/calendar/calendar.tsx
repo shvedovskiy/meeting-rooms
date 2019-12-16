@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, FocusEventHandler } from 'react';
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import { startOfDay } from 'date-fns/esm';
 
@@ -10,17 +10,18 @@ import classes from './calendar.module.scss';
 type Props = {
   className?: string;
   initialDate?: Date;
-  onBlur: () => void;
+  onBlur: FocusEventHandler;
+  onClose: (event: MouseEvent | TouchEvent) => void;
   onChange: (newDate: Date) => void;
 };
 
 export const Calendar = (props: Props) => {
   const now = new Date();
-  const { className, initialDate = now, onBlur, onChange } = props;
+  const { className, initialDate = now, onBlur, onClose, onChange } = props;
   const [selected, setSelected] = useState(initialDate);
   const pickerRef = useRef<DayPicker>(null);
 
-  useOnclickOutside<DayPicker>(pickerRef, onBlur, 'dayPicker');
+  useOnclickOutside<DayPicker>(pickerRef, onClose, 'dayPicker');
 
   function handleDayClick(date: Date, modifiers: DayModifiers) {
     if (!modifiers.disabled && !modifiers.selected) {
