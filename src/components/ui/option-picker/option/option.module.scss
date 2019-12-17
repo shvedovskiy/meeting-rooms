@@ -9,6 +9,7 @@
   height: 38px;
   padding-right: 12px;
   padding-left: 10px;
+  overflow: hidden;
   font-size: var(--default-text);
   white-space: nowrap;
   background-color: var(--secondary-1);
@@ -78,5 +79,6 @@
 
 .time,
 .title {
+  max-width: 50%;
   @include oneLineEllipsis;
 }
