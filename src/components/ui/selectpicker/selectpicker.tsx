@@ -58,7 +58,7 @@ export const Selectpicker = (props: Props) => {
         noOptionsMessage={() => 'Ничего не найдено'}
         onBlur={onBlur}
         onChange={onChange}
-        openMenuOnFocus
+        openMenuOnClick
         options={items}
         placeholder={placeholder}
         size={size}
