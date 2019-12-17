@@ -29,7 +29,7 @@ function findInput(
   return nextElement as HTMLInputElement;
 }
 
-const focus = (element: HTMLInputElement | null) => element && element.focus();
+const focus = (element: HTMLInputElement | null) => element?.focus();
 
 type Props = {
   size?: Size;
@@ -148,7 +148,7 @@ export class TimePicker extends PureComponent<Props, State> {
     });
 
     let changeValue: string | null = null;
-    if (formElements.every(el => el?.checkValidity() === true)) {
+    if (formElements.every(el => el?.checkValidity() === true && el?.value.length <= 2)) {
       if (formElements.every(el => el?.value === '')) {
         changeValue = '';
       } else {
