@@ -69,7 +69,7 @@ export const Input = (props: Props) => {
     const iconContent = sideIcon instanceof Function ? sideIcon() : sideIcon;
     if (onSideIconClick) {
       return (
-        <button className={classes.sideIcon} onClick={onSideIconClick}>
+        <button type="button" className={classes.sideIcon} onClick={onSideIconClick}>
           {iconContent}
         </button>
       );
@@ -91,6 +91,7 @@ export const Input = (props: Props) => {
   };
   const closeIconProps = {
     'aria-label': 'Очистить поле',
+    type: 'button' as const,
     title: 'Очистить поле',
     className: classes.closeIcon,
     onClick: handleCloseClick,

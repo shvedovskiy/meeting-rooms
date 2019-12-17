@@ -32,6 +32,7 @@ export const Option = (props: Props) => {
   return (
     <button
       className={className}
+      type="button"
       onClick={selected ? onDeselect : onSelect}
       title={
         selected

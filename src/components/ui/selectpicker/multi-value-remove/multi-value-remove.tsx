@@ -8,6 +8,7 @@ import { UserData } from 'components/timesheet/types';
 export const MultiValueRemove = ({ innerProps }: MultiValueRemoveProps<UserData>) => {
   const props = {
     ...innerProps,
+    type: 'button' as const,
     className: `${innerProps.className} ${classes.removeButton}`,
   };
   return (
