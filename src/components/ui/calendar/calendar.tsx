@@ -1,4 +1,4 @@
-import React, { useState, useRef, FocusEventHandler } from 'react';
+import React, { useState, useRef, FocusEventHandler, FocusEvent } from 'react';
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import { startOfDay } from 'date-fns/esm';
 
@@ -24,9 +24,16 @@ export const Calendar = (props: Props) => {
   useOnclickOutside<DayPicker>(pickerRef, onClose, 'dayPicker');
 
   function handleDayClick(date: Date, modifiers: DayModifiers) {
-    if (!modifiers.disabled && !modifiers.selected) {
+    if (!modifiers[classes.disabled] && !modifiers[classes.selected]) {
       setSelected(date);
       onChange(startOfDay(date));
+    }
+  }
+
+  function handleBlur(event: FocusEvent<HTMLDivElement>) {
+    const target = event.relatedTarget;
+    if (!target || !pickerRef.current?.dayPicker.contains(target as HTMLElement)) {
+      onBlur(event);
     }
   }
 
@@ -47,7 +54,7 @@ export const Calendar = (props: Props) => {
       month={selected}
       months={MONTHS}
       ref={pickerRef}
-      onBlur={onBlur}
+      onBlur={handleBlur}
       onDayClick={handleDayClick}
       showOutsideDays
       weekdayElement={Weekday}
