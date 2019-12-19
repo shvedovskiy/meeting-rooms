@@ -43,8 +43,8 @@ export const FormUI = ({
   users,
   initialValues = {},
   eventsToMove,
-  onClose,
-  onRemove,
+  onClose: closePage,
+  onRemove: removeEvent,
   onSubmit,
 }: Props) => {
   const size = useSizeCtx();
@@ -204,8 +204,8 @@ export const FormUI = ({
           initialValues={initialValues}
           values={values}
           validity={validity}
-          closePage={onClose}
-          removeEvent={onRemove}
+          onClose={closePage}
+          onRemove={removeEvent}
         />
       </div>
     </>

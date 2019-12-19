@@ -6,6 +6,7 @@ import cn from 'classnames';
 import { prepareRanges, formatCapacity, Slot, CommonSlot, offsetToTime } from './room-utils';
 import { Card } from '../card/card';
 import { RoomData, Event } from '../../types';
+import { useKeydown } from 'components/common/use-keydown';
 import { Size } from 'context/size-context';
 import { useScrollCtx } from 'context/scroll-context';
 import { usePageCtx } from 'context/page-context';
@@ -23,6 +24,12 @@ export const Room = ({ room, size = 'default', date }: Props) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const scrolled = useScrollCtx();
   const openPage = usePageCtx();
+
+  useKeydown('Escape', () => {
+    if (tooltipOpen) {
+      setTooltipOpen(false);
+    }
+  });
   let { data } = useQuery<RoomEventsQueryType>(ROOM_EVENTS_QUERY, {
     variables: { timestamp: date.getTime(), id: room.id },
   });

@@ -14,8 +14,8 @@ type Props = {
   initialValues: PageData;
   values: FormFields;
   validity: StateValidity<FormFields>;
-  closePage: () => void;
-  removeEvent?: () => void;
+  onClose: () => void;
+  onRemove?: () => void;
 };
 
 function isSubmitBlocked(
@@ -43,8 +43,8 @@ export const FormActions = ({
   initialValues,
   values,
   validity,
-  closePage,
-  removeEvent,
+  onClose: closePage,
+  onRemove: removeEvent,
 }: Props) => {
   const [modalOpen, setModalOpen] = useState(false);
 

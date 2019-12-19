@@ -6,8 +6,9 @@ import { Calendar } from 'components/ui/calendar/calendar';
 import { IconButton } from 'components/ui/icon-button/icon-button';
 import { Button } from 'components/ui/button/button';
 import { Size } from 'context/size-context';
-import classes from './date-switch.module.scss';
 import { format } from 'service/dates';
+import { useKeydown } from 'components/common/use-keydown';
+import classes from './date-switch.module.scss';
 
 type Props = {
   date: Date;
@@ -19,6 +20,12 @@ export const DateSwitch = (props: Props) => {
   const { date, size = 'default', onChange } = props;
   const [calendarVisible, setCalendarVisible] = useState(false);
   const calendarBtn = useRef<HTMLButtonElement>(null);
+
+  useKeydown('Escape', () => {
+    if (calendarVisible) {
+      setCalendarVisible(false);
+    }
+  });
 
   const handleDayChange = useCallback(
     (nextDirection: boolean) => {
