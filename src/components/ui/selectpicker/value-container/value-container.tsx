@@ -4,9 +4,9 @@ import { components } from 'react-select';
 import { ValueContainerProps } from 'react-select/src/components/containers';
 
 import { usePortal } from 'components/common/use-portal';
-import classes from './value-container.module.scss';
-import selectpickerClasses from '../selectpicker.module.scss';
 import { UserData } from 'components/timesheet/types';
+import cls from './value-container.module.scss';
+import selectpickerClasses from '../selectpicker.module.scss';
 
 export const ValueContainer = ({ children, selectProps }: ValueContainerProps<UserData>) => {
   const target = usePortal(
@@ -19,7 +19,7 @@ export const ValueContainer = ({ children, selectProps }: ValueContainerProps<Us
 
   return (
     <>
-      <div className={classes.valueContainer}>{containerChildren}</div>
+      <div className={cls.valueContainer}>{containerChildren}</div>
       {createPortal(portalChildren, target)}
     </>
   );

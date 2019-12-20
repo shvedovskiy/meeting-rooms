@@ -6,12 +6,12 @@ import cn from 'classnames';
 import { Spinner } from 'components/ui/spinner/spinner';
 import { IconButton } from 'components/ui/icon-button/icon-button';
 import { Error } from 'components/error/error';
-import { usePageCtx, PageMode, PageData } from 'context/page-context';
-import { useSizeCtx } from 'context/size-context';
-import classes from './page.module.scss';
+import { usePageCtx, PageMode, PageData, PageModes } from 'context/page-context';
+import { useSizeCtx, Size } from 'context/size-context';
+import cls from './page.module.scss';
 import spinnerTransitionClasses from 'components/ui/spinner/spinner-transition.module.scss';
 
-const ErrorFallback = () => <Error className={classes.errorMessage} />;
+const ErrorFallback = () => <Error className={cls.errorMessage} />;
 const AddForm = lazy(() => import('components/form/form-add'));
 const EditForm = lazy(() => import('components/form/form-edit'));
 
@@ -23,7 +23,7 @@ type Props = {
 export const Page = ({ mode, pageData: formData }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
   const setPage = usePageCtx();
-  const size = useSizeCtx();
+  const size = useSizeCtx() ?? Size.DEFAULT;
 
   const closePage = useCallback(() => setPage(null), [setPage]);
 
@@ -38,37 +38,33 @@ export const Page = ({ mode, pageData: formData }: Props) => {
     return (
       <ErrorBoundary FallbackComponent={ErrorFallback} onError={formProps.onMount}>
         <Suspense fallback={null}>
-          {mode === 'add' ? <AddForm {...formProps} /> : <EditForm {...formProps} />}
+          {mode === PageModes.ADD ? <AddForm {...formProps} /> : <EditForm {...formProps} />}
         </Suspense>
       </ErrorBoundary>
     );
   }
 
   return (
-    <div
-      className={cn(classes.page, {
-        [classes.lg]: size === 'large',
-      })}
-    >
+    <div className={cn(cls.page, { [cls.lg]: size === Size.LARGE })}>
       <CSSTransition
-        classNames={spinnerTransitionClasses}
         enter={false}
         in={isLoading}
-        timeout={200}
+        classNames={spinnerTransitionClasses}
         unmountOnExit
+        timeout={200}
       >
         <Spinner />
       </CSSTransition>
-      <div className={classes.header}>
-        {size === 'default' && (
+      <div className={cls.header}>
+        {size === Size.DEFAULT && (
           <IconButton
             ariaLabel="Отмена"
             icon="close"
-            className={classes.closePage}
+            className={cls.closePage}
             onClick={closePage}
           />
         )}
-        <h1>{mode === 'add' ? 'Новая встреча' : 'Редактирование встречи'}</h1>
+        <h1>{mode === PageModes.ADD ? 'Новая встреча' : 'Редактирование встречи'}</h1>
       </div>
       {renderPage()}
     </div>

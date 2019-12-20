@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import cn from 'classnames';
 
-import classes from './spinner.module.scss';
+import cls from './spinner.module.scss';
 import transitionClasses from './spinner-transition.module.scss';
 
 type Props = {
@@ -24,17 +24,17 @@ export const Spinner = ({
 
   return (
     <CSSTransition
-      classNames={transitionClasses}
+      in={enterAnimation ? showSpinner : true}
       enter={enterAnimation}
       exit={false}
-      in={enterAnimation ? showSpinner : true}
-      timeout={200}
+      classNames={transitionClasses}
       unmountOnExit
+      timeout={200}
     >
       <div
-        className={cn(classes.loader, {
-          [classes.transparent]: transparent,
-          [classes.fullscreen]: fullscreen,
+        className={cn(cls.loader, {
+          [cls.transparent]: transparent,
+          [cls.fullscreen]: fullscreen,
         })}
       >
         <div className="vertical-helper" />

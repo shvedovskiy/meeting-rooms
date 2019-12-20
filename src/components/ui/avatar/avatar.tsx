@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Size } from 'context/size-context';
-import classes from './avatar.module.scss';
+import cls from './avatar.module.scss';
 
 type Props = {
   avatarPath: string | null;
@@ -9,7 +9,7 @@ type Props = {
 };
 
 function avatarSizes(url: string, size: Size) {
-  const base = size === 'default' ? 24 : 32;
+  const base = size === Size.DEFAULT ? 24 : 32;
   return {
     single: `${url}_${base}`,
     double: `${url}_${base * 2}`,
@@ -17,9 +17,9 @@ function avatarSizes(url: string, size: Size) {
   };
 }
 
-export const Avatar = ({ avatarPath, size = 'default' }: Props) => {
+export const Avatar = ({ avatarPath, size = Size.DEFAULT }: Props) => {
   if (avatarPath === null) {
-    return <div className={classes.placeholder} aria-hidden="true" />;
+    return <div className={cls.placeholder} aria-hidden="true" />;
   }
 
   const avatar = avatarSizes(avatarPath, size);
@@ -30,7 +30,7 @@ export const Avatar = ({ avatarPath, size = 'default' }: Props) => {
         type="image/webp"
       />
       <img
-        className={classes.avatar}
+        className={cls.avatar}
         srcSet={`${avatar.triple}.png 3x, ${avatar.double}.png 2x, ${avatar.single}.png`}
         src={`${avatar.single}.png`}
         alt=""

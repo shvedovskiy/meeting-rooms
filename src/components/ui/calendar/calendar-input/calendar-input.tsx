@@ -32,7 +32,7 @@ function parseDate(str: string, format: string) {
 export const CalendarInput = (props: Props) => {
   const now = new Date();
   const input = useRef<DayPickerInput>(null);
-  const { size = 'default', id, value, error, onChange, onBlur } = props;
+  const { size = Size.DEFAULT, id, value, error, onChange, onBlur } = props;
   const [selected, setSelected] = useState<Date | null>(null);
 
   function handleDayChange(date: Date | null = null, modifiers: DayModifiers) {

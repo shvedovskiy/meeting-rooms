@@ -7,6 +7,7 @@ import { CreatedEvent, FormEvent } from 'components/timesheet/types';
 import { Spinner } from 'components/ui/spinner/spinner';
 import { FormPageProps as Props, EventToMove } from '../form-common/types';
 import { Props as ModalDef, Modal } from 'components/ui/modal/modal';
+import { PageModes } from 'context/page-context';
 import { USERS_QUERY, UsersQueryType as UsersQuery } from 'service/apollo/queries';
 import {
   UPDATE_EVENT_MUTATION as UPDATE,
@@ -32,7 +33,7 @@ import {
 } from '../form-common/modals';
 import { compareFormStates } from '../form-common/compare-form-states';
 import { FormFields } from '../form-common/validators';
-import classes from '../form.module.scss';
+import cls from '../form.module.scss';
 
 export const FormEdit: FC<Props> = ({
   formData: initialValues,
@@ -130,7 +131,7 @@ export const FormEdit: FC<Props> = ({
     return null;
   }
   if (usersError || !usersData) {
-    return <Error className={classes.loadingError} />;
+    return <Error className={cls.loadingError} />;
   }
 
   function handleFormSubmit(formValues: CreatedEvent) {
@@ -163,7 +164,7 @@ export const FormEdit: FC<Props> = ({
       {(updating || moving || removing) && <Spinner fullscreen transparent />}
       {modal && <Modal {...modal} enterAnimation={false} />}
       <FormUI
-        mode="edit"
+        mode={PageModes.EDIT}
         users={usersData.users}
         initialValues={initialValues}
         eventsToMove={eventsToMove}

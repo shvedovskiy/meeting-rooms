@@ -7,6 +7,7 @@ import { CreatedEvent } from 'components/timesheet/types';
 import { Spinner } from 'components/ui/spinner/spinner';
 import { FormPageProps as Props, EventToMove } from '../form-common/types';
 import { Props as ModalDef, Modal } from 'components/ui/modal/modal';
+import { PageModes } from 'context/page-context';
 import { USERS_QUERY, UsersQueryType as UsersQuery } from 'service/apollo/queries';
 import {
   CREATE_EVENT_MUTATION as CREATE,
@@ -23,7 +24,7 @@ import {
   refetchQueriesAfterMoving,
 } from 'service/apollo/cache';
 import { generateCreateModal, generateFailedSaveModal } from '../form-common/modals';
-import classes from '../form.module.scss';
+import cls from '../form.module.scss';
 
 export const FormAdd: FC<Props> = ({ formData, onMount, onClose: closePage }) => {
   const [modal, setModal] = useState<ModalDef | null>(null);
@@ -95,7 +96,7 @@ export const FormAdd: FC<Props> = ({ formData, onMount, onClose: closePage }) =>
     return null;
   }
   if (usersError || !usersData) {
-    return <Error className={classes.loadingError} />;
+    return <Error className={cls.loadingError} />;
   }
 
   function handleFormSubmit(formValues: CreatedEvent) {
@@ -122,7 +123,7 @@ export const FormAdd: FC<Props> = ({ formData, onMount, onClose: closePage }) =>
       {(creating || moving) && <Spinner fullscreen transparent />}
       {modal && <Modal {...modal} enterAnimation={false} />}
       <FormUI
-        mode="add"
+        mode={PageModes.ADD}
         users={usersData.users}
         initialValues={formData}
         eventsToMove={eventsToMove}

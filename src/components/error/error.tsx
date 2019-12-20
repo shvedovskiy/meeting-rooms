@@ -1,19 +1,19 @@
 import React from 'react';
 import cn from 'classnames';
 
-import classes from './error.module.scss';
+import cls from './error.module.scss';
 
-interface Props {
+type Props = {
   className?: string;
-}
+};
 
 export const Error = ({ className }: Props) => (
   <div className={cn(className)}>
-    <h1 className={classes.title}>Что-то пошло не так</h1>
-    <p className={classes.text}>Сайт не работает, но мы уже решаем эту проблему.</p>
-    <p className={classes.text}>
+    <h1 className={cls.title}>Что-то пошло не так</h1>
+    <p className={cls.text}>Сайт не работает, но мы уже решаем эту проблему.</p>
+    <p className={cls.text}>
       Попробуйте{' '}
-      <button className={classes.link} onClick={() => window.location.reload()}>
+      <button className={cls.link} onClick={() => window.location.reload()}>
         обновить страницу
       </button>
       .

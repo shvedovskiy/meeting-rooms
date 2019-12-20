@@ -9,7 +9,7 @@ import { Selectpicker } from 'components/ui/selectpicker/selectpicker';
 import { OptionPicker } from 'components/ui/option-picker/option-picker';
 import { UserData, CreatedEvent } from 'components/timesheet/types';
 import { useForm } from 'components/common/use-form';
-import { useSizeCtx } from 'context/size-context';
+import { useSizeCtx, Size } from 'context/size-context';
 import { PageMode, PageData } from 'context/page-context';
 import { useRecommendation } from './use-recommendation';
 import {
@@ -47,7 +47,7 @@ export const FormUI = ({
   onRemove: removeEvent,
   onSubmit,
 }: Props) => {
-  const size = useSizeCtx();
+  const size = useSizeCtx() ?? Size.DEFAULT;
   const [{ values, validity, errors }, { field, form }] = useForm<FormFields, FormErrors>(
     {
       ...defaultFormValues,
@@ -84,8 +84,8 @@ export const FormUI = ({
       </div>,
       <div key="datetime" className={classes.dateTime}>
         <div className={classes.date}>
-          <label htmlFor="date" title={size === 'default' ? 'Дата' : 'Дата и время'}>
-            {size === 'default' ? 'Дата' : 'Дата и время'}
+          <label htmlFor="date" title={size === Size.DEFAULT ? 'Дата' : 'Дата и время'}>
+            {size === Size.DEFAULT ? 'Дата' : 'Дата и время'}
           </label>
           <CalendarInput
             id="date"
@@ -102,7 +102,7 @@ export const FormUI = ({
         </div>
         <div className={classes.timeContainer}>
           <div className={classes.time}>
-            {size === 'default' && <label title="Начало">Начало</label>}
+            {size === Size.DEFAULT && <label title="Начало">Начало</label>}
             <TimePicker
               size={size}
               {...field({
@@ -117,7 +117,7 @@ export const FormUI = ({
           </div>
           <span>&mdash;</span>
           <div className={classes.time}>
-            {size === 'default' && <label title="Конец">Конец</label>}
+            {size === Size.DEFAULT && <label title="Конец">Конец</label>}
             <TimePicker
               size={size}
               {...field({
@@ -181,11 +181,7 @@ export const FormUI = ({
 
   return (
     <>
-      <div
-        className={cn(classes.formArea, {
-          [classes.lg]: size === 'large',
-        })}
-      >
+      <div className={cn(classes.formArea, { [classes.lg]: size === Size.LARGE })}>
         <form
           id="eventForm"
           className={classes.form}

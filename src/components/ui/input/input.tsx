@@ -12,7 +12,7 @@ import cn from 'classnames';
 import { Override } from 'service/typings';
 import { Icon } from 'components/ui/icon/icon';
 import { Size } from 'context/size-context';
-import classes from './input.module.scss';
+import cls from './input.module.scss';
 
 export type Props = Override<
   InputHTMLAttributes<HTMLInputElement>,
@@ -33,7 +33,7 @@ export const Input = (props: Props) => {
   const {
     value,
     error,
-    size = 'default',
+    size = Size.DEFAULT,
     sideIcon,
     onChange,
     onBlur,
@@ -69,20 +69,20 @@ export const Input = (props: Props) => {
     const iconContent = sideIcon instanceof Function ? sideIcon() : sideIcon;
     if (onSideIconClick) {
       return (
-        <button type="button" className={classes.sideIcon} onClick={onSideIconClick}>
+        <button type="button" className={cls.sideIcon} onClick={onSideIconClick}>
           {iconContent}
         </button>
       );
     }
-    return <span className={classes.sideIcon}>{iconContent}</span>;
+    return <span className={cls.sideIcon}>{iconContent}</span>;
   }
 
   const inputProps = {
     ...rest,
     type: 'text',
-    className: cn(classes.input, {
-      [classes.lg]: size === 'large',
-      [classes.error]: error,
+    className: cn(cls.input, {
+      [cls.lg]: size === Size.LARGE,
+      [cls.error]: error,
     }),
     ref: inputNode,
     value,
@@ -93,17 +93,17 @@ export const Input = (props: Props) => {
     'aria-label': 'Очистить поле',
     type: 'button' as const,
     title: 'Очистить поле',
-    className: classes.closeIcon,
+    className: cls.closeIcon,
     onClick: handleCloseClick,
     style: { display: showClose ? 'block' : 'none' },
   };
 
   return (
-    <span className={classes.wrapper}>
+    <span className={cls.wrapper}>
       <input {...inputProps} />
       {renderSideIcon() ?? (
         <button {...closeIconProps}>
-          <Icon name="close" size={size} className={classes.icon} />
+          <Icon name="close" size={size} className={cls.icon} />
         </button>
       )}
     </span>

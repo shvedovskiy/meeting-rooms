@@ -4,9 +4,9 @@ import cn from 'classnames';
 import { CardParticipants } from './participants';
 import { IconButton } from 'components/ui/icon-button/icon-button';
 import { Event } from '../../types';
-import { useSizeCtx } from 'context/size-context';
+import { useSizeCtx, Size } from 'context/size-context';
 import { format } from 'service/dates';
-import classes from './card.module.scss';
+import cls from './card.module.scss';
 
 type Props = {
   data: Event;
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const Card = ({ data, room, onAction }: Props) => {
-  const size = useSizeCtx() ?? 'default';
+  const size = useSizeCtx() ?? Size.DEFAULT;
 
   function renderInfo() {
     const { date, startTime, endTime } = data;
@@ -24,18 +24,14 @@ export const Card = ({ data, room, onAction }: Props) => {
   }
 
   return (
-    <div
-      className={cn(classes.card, {
-        [classes.lg]: size === 'large',
-      })}
-    >
-      <div className={classes.header}>
+    <div className={cn(cls.card, { [cls.lg]: size === Size.LARGE })}>
+      <div className={cls.header}>
         <IconButton
           icon="pen"
           ariaLabel="Редактировать встречу"
           onClick={() => onAction?.(data)}
         />
-        <h1 className={classes.title}>{data.title}</h1>
+        <h1 className={cls.title}>{data.title}</h1>
       </div>
       {renderInfo()}
       <CardParticipants items={data.users} size={size} />

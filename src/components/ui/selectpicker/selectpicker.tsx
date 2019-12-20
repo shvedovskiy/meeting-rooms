@@ -29,7 +29,7 @@ export const Selectpicker = (props: Props) => {
     value,
     placeholder,
     id = 'selectpicker',
-    size = 'default',
+    size = Size.DEFAULT,
     error,
     onBlur,
     onChange,

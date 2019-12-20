@@ -10,8 +10,8 @@ import React, {
 import cn from 'classnames';
 
 import { Size } from 'context/size-context';
-import classes from './input.module.scss';
 import { MouseEventHandler } from 'react-select';
+import cls from './input.module.scss';
 
 type Props = {
   value?: string;
@@ -30,7 +30,7 @@ type Props = {
 
 export const Input = forwardRef<HTMLInputElement, Props>((props, ref) => {
   const {
-    size = 'default',
+    size = Size.DEFAULT,
     sideIcon,
     error,
     onSideIconClick,
@@ -46,9 +46,9 @@ export const Input = forwardRef<HTMLInputElement, Props>((props, ref) => {
     ...rest,
     type: 'text',
     ref,
-    className: cn(classes.input, {
-      [classes.lg]: size === 'large',
-      [classes.error]: error,
+    className: cn(cls.input, {
+      [cls.lg]: size === Size.LARGE,
+      [cls.error]: error,
     }),
     onClick,
     onChange,
@@ -64,16 +64,16 @@ export const Input = forwardRef<HTMLInputElement, Props>((props, ref) => {
     const iconContent = sideIcon instanceof Function ? sideIcon() : sideIcon;
     if (onSideIconClick) {
       return (
-        <button type="button" className={classes.sideIcon} onClick={onSideIconClick}>
+        <button type="button" className={cls.sideIcon} onClick={onSideIconClick}>
           {iconContent}
         </button>
       );
     }
-    return <span className={classes.sideIcon}>{iconContent}</span>;
+    return <span className={cls.sideIcon}>{iconContent}</span>;
   }
 
   return (
-    <span className={classes.wrapper}>
+    <span className={cls.wrapper}>
       <input {...inputProps} />
       {renderSideIcon()}
     </span>

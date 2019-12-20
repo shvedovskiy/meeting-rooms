@@ -11,8 +11,8 @@ import React, {
 import cn from 'classnames';
 
 import { Size } from 'context/size-context';
-import classes from './button.module.scss';
 import { Override } from 'service/typings';
+import cls from './button.module.scss';
 
 export type ButtonKind = 'button' | 'submit' | 'reset';
 export type ButtonUse = 'default' | 'primary' | 'borderless';
@@ -40,7 +40,7 @@ export const Button = memo(
       className,
       disabled,
       onClick,
-      size = 'default',
+      size = Size.DEFAULT,
       type = 'button',
       use = 'default',
       danger = false,
@@ -61,9 +61,9 @@ export const Button = memo(
 
     const buttonProps = {
       type,
-      className: cn(classes.btn, classes[use], className, {
-        [classes.lg]: size === 'large',
-        [classes.danger]: danger,
+      className: cn(cls.btn, cls[use], className, {
+        [cls.lg]: size === Size.LARGE,
+        [cls.danger]: danger,
       }),
       ref: buttonElement,
       disabled,

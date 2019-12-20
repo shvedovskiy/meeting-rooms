@@ -23,10 +23,10 @@ function generateSuccessfulModal(title: string, eventData: Event, closeModal: ()
         id: '1',
         text: 'Хорошо',
         use: 'primary',
-        onClick: () => closeModal(),
+        onClick: closeModal,
       },
     ],
-    onBackdropClick: () => closeModal(),
+    onBackdropClick: closeModal,
   };
   return modalConfig;
 }
@@ -47,10 +47,10 @@ function generateFailedModal(
         id: '1',
         text: 'Повторить',
         use: 'primary',
-        onClick: () => retry(),
+        onClick: retry,
       },
     ],
-    onBackdropClick: () => closeModal(),
+    onBackdropClick: closeModal,
   } as ModalDef;
 }
 

@@ -9,8 +9,8 @@ import cn from 'classnames';
 
 import { TimeInput } from './time-input';
 import { splitTimeString } from 'service/dates';
-import classes from './time-picker.module.scss';
 import { Size } from 'context/size-context';
+import cls from './time-picker.module.scss';
 
 const hoursAreDifferent = (date1?: string, date2?: string) =>
   (date1 && !date2) || (!date1 && date2) || (date1 && date2 && date1 !== date2); // TODO: Compare 11:22:00 and 11:22 properly
@@ -201,19 +201,19 @@ export class TimePicker extends PureComponent<Props, State> {
   };
 
   render() {
-    const { size = 'default', error } = this.props;
+    const { size = Size.DEFAULT, error } = this.props;
     return (
       <div
-        className={cn(classes.timePicker, {
-          [classes.lg]: size !== 'default',
-          [classes.error]: error,
+        className={cn(cls.timePicker, {
+          [cls.lg]: size !== Size.DEFAULT,
+          [cls.error]: error,
         })}
         onClick={this.onClick}
         onFocus={this.props.onFocus}
         role="presentation"
       >
         {this.renderHour()}
-        <span className={classes.divider}>:</span>
+        <span className={cls.divider}>:</span>
         {this.renderMinute()}
       </div>
     );

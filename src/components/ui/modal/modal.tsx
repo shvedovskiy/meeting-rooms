@@ -4,10 +4,10 @@ import { CSSTransition } from 'react-transition-group';
 import Emoji from 'a11y-react-emoji';
 import cn from 'classnames';
 
-import classes from './modal.module.scss';
-import transitionClasses from './modal-transition.module.scss';
 import { Button, ButtonType } from '../button/button';
-import { useSizeCtx } from 'context/size-context';
+import { useSizeCtx, Size } from 'context/size-context';
+import cls from './modal.module.scss';
+import transitionClasses from './modal-transition.module.scss';
 
 export type ModalButtonType = ButtonType & { id: string; text: string };
 
@@ -31,7 +31,7 @@ export const Modal = ({
   enterAnimation = true,
 }: Props) => {
   const [showModal, setShowModal] = useState(false);
-  const size = useSizeCtx() ?? 'default';
+  const size = useSizeCtx() ?? Size.DEFAULT;
 
   useEffect(() => {
     setShowModal(true);
@@ -39,10 +39,10 @@ export const Modal = ({
 
   function renderText(text?: string | string[]) {
     if (typeof text === 'string') {
-      return <p className={classes.modalText}>{text}</p>;
+      return <p className={cls.modalText}>{text}</p>;
     } else if (Array.isArray(text)) {
       return text.map((t, idx) => (
-        <p key={idx} className={classes.modalText}>
+        <p key={idx} className={cls.modalText}>
           {t}
         </p>
       ));
@@ -61,9 +61,7 @@ export const Modal = ({
       <AriaModal
         alert
         aria-modal
-        dialogClass={cn(classes.modal, {
-          [classes.lg]: size === 'large',
-        })}
+        dialogClass={cn(cls.modal, { [cls.lg]: size === Size.LARGE })}
         dialogStyle={{ textAlign: 'center', verticalAlign: 'initial' }}
         focusDialog
         onExit={onBackdropClick}
@@ -73,18 +71,18 @@ export const Modal = ({
         verticallyCenter
       >
         {icon && (
-          <span className={classes.modalIcon}>
+          <span className={cls.modalIcon}>
             <Emoji symbol={icon} label={iconLabel} />
           </span>
         )}
         {title && (
-          <h1 className={classes.modalTitle} id="modal-title">
+          <h1 className={cls.modalTitle} id="modal-title">
             {title}
           </h1>
         )}
         {renderText(text)}
         {buttons && (
-          <div className={classes.modalButtons}>
+          <div className={cls.modalButtons}>
             {buttons.map(({ id, text, ...rest }: ModalButtonType) => (
               <Button key={id} {...rest} size={size}>
                 {text}

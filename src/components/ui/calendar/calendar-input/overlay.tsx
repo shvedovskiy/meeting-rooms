@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import cn from 'classnames';
-import { useSizeCtx } from 'context/size-context';
+import { useSizeCtx, Size } from 'context/size-context';
 
 import { CustomInputClassNames } from './calendar-input.module.scss';
 
@@ -20,14 +20,11 @@ export function OverlayComponent({
   classNames,
   ...props
 }: Props) {
-  const size = useSizeCtx();
+  const size = useSizeCtx() ?? Size.DEFAULT;
+
   return (
     <div className={classNames.overlayWrapper} {...props}>
-      <div
-        className={cn(classNames.overlay, {
-          [classNames.lg]: size === 'large',
-        })}
-      >
+      <div className={cn(classNames.overlay, { [classNames.lg]: size === Size.LARGE })}>
         {children}
       </div>
     </div>

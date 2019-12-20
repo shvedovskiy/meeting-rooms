@@ -1,8 +1,10 @@
 import { createContext, useContext } from 'react';
 
-export type Size = 'default' | 'large';
-
-const SizeContext = createContext<Size>('default');
+export const enum Size {
+  DEFAULT = 'default',
+  LARGE = 'large',
+}
+const SizeContext = createContext<Size>(Size.DEFAULT);
 
 export function useSizeCtx() {
   const context = useContext(SizeContext);

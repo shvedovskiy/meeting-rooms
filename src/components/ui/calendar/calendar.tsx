@@ -5,7 +5,7 @@ import { startOfDay } from 'date-fns/esm';
 import { Weekday } from './weekday';
 import { MONTHS, LABELS } from './utils';
 import { useOnclickOutside } from 'components/common/use-outside-click';
-import classes from './calendar.module.scss';
+import cls from './calendar.module.scss';
 
 type Props = {
   className?: string;
@@ -24,7 +24,7 @@ export const Calendar = (props: Props) => {
   useOnclickOutside<DayPicker>(pickerRef, onClose, 'dayPicker');
 
   function handleDayClick(date: Date, modifiers: DayModifiers) {
-    if (!modifiers[classes.disabled] && !modifiers[classes.selected]) {
+    if (!modifiers[cls.disabled] && !modifiers[cls.selected]) {
       setSelected(date);
       onChange(startOfDay(date));
     }
@@ -40,16 +40,16 @@ export const Calendar = (props: Props) => {
   return (
     <DayPicker
       className={className}
-      classNames={classes}
+      classNames={cls}
       firstDayOfWeek={1}
       fromMonth={now}
       labels={LABELS}
       locale="ru"
       modifiers={{
-        [classes.disabled]: {
+        [cls.disabled]: {
           before: now,
         },
-        [classes.selected]: selected,
+        [cls.selected]: selected,
       }}
       month={selected}
       months={MONTHS}

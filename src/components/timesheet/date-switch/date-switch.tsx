@@ -8,7 +8,7 @@ import { Button } from 'components/ui/button/button';
 import { Size } from 'context/size-context';
 import { format } from 'service/dates';
 import { useKeydown } from 'components/common/use-keydown';
-import classes from './date-switch.module.scss';
+import cls from './date-switch.module.scss';
 
 type Props = {
   date: Date;
@@ -17,7 +17,7 @@ type Props = {
 };
 
 export const DateSwitch = (props: Props) => {
-  const { date, size = 'default', onChange } = props;
+  const { date, size = Size.DEFAULT, onChange } = props;
   const [calendarVisible, setCalendarVisible] = useState(false);
   const calendarBtn = useRef<HTMLButtonElement>(null);
 
@@ -54,15 +54,11 @@ export const DateSwitch = (props: Props) => {
     : format(date);
   return (
     <>
-      <div
-        className={cn(classes.dateSwitch, {
-          [classes.lg]: size === 'large',
-        })}
-      >
+      <div className={cn(cls.dateSwitch, { [cls.lg]: size === Size.LARGE })}>
         <IconButton
           icon="chevron"
           size={size}
-          className={classes.switchBtn}
+          className={cls.switchBtn}
           disabled={isToday(date)}
           ariaLabel="Предыдущий день"
           title="Предыдущий день"
@@ -71,7 +67,7 @@ export const DateSwitch = (props: Props) => {
         />
         <Button
           use="borderless"
-          className={classes.dateBtn}
+          className={cls.dateBtn}
           ref={calendarBtn}
           onClick={toggleCalendar}
           title={dateString}
@@ -81,17 +77,17 @@ export const DateSwitch = (props: Props) => {
         <IconButton
           icon="chevron"
           size={size}
-          className={cn(classes.switchBtn, classes.next)}
+          className={cn(cls.switchBtn, cls.next)}
           ariaLabel="Следующий день"
           title="Следующий день"
           onClickArgs={[true]}
           onClick={handleDayChange}
         />
       </div>
-      <div className={classes.calendarContainer}>
+      <div className={cls.calendarContainer}>
         {calendarVisible && (
           <Calendar
-            className={classes.calendar}
+            className={cls.calendar}
             initialDate={date}
             onBlur={() => setCalendarVisible(false)}
             onClose={({ target }) => {

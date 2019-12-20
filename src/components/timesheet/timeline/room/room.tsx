@@ -9,7 +9,7 @@ import { RoomData, Event } from '../../types';
 import { useKeydown } from 'components/common/use-keydown';
 import { Size } from 'context/size-context';
 import { useScrollCtx } from 'context/scroll-context';
-import { usePageCtx } from 'context/page-context';
+import { usePageCtx, PageModes } from 'context/page-context';
 import { HOURS } from 'service/dates';
 import { ROOM_EVENTS_QUERY, RoomEventsQueryType } from 'service/apollo/queries';
 import classes from './room.module.scss';
@@ -20,7 +20,7 @@ type Props = {
   date: Date;
 };
 
-export const Room = ({ room, size = 'default', date }: Props) => {
+export const Room = ({ room, size = Size.DEFAULT, date }: Props) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const scrolled = useScrollCtx();
   const openPage = usePageCtx();
@@ -44,7 +44,7 @@ export const Room = ({ room, size = 'default', date }: Props) => {
   ]);
 
   function openAddPage([startTime, endTime]: string[]) {
-    openPage('add', {
+    openPage(PageModes.ADD, {
       date,
       startTime,
       endTime,
@@ -58,7 +58,7 @@ export const Room = ({ room, size = 'default', date }: Props) => {
 
   const openEditEventPage = useCallback(
     (eventData: Event) => {
-      openPage('edit', {
+      openPage(PageModes.EDIT, {
         ...eventData,
         room: {
           ...eventData.room,
@@ -132,7 +132,7 @@ export const Room = ({ room, size = 'default', date }: Props) => {
   return (
     <div
       className={cn(classes.room, {
-        [classes.lg]: size === 'large',
+        [classes.lg]: size === Size.LARGE,
         [classes.scrolled]: scrolled,
       })}
     >

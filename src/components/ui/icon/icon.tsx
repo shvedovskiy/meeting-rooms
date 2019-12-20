@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+
 import { Size } from 'context/size-context';
 
 export type IconType = 'calendar' | 'close' | 'chevron' | 'pen';
@@ -69,7 +70,7 @@ const getIcon = (size: number, { name, className }: Partial<Props>) => {
   }
 };
 
-export const Icon = memo(({ size = 'default', ...rest }: Props) => {
-  const svgSize = size === 'default' ? 10 : 12;
+export const Icon = memo(({ size = Size.DEFAULT, ...rest }: Props) => {
+  const svgSize = size === Size.DEFAULT ? 10 : 12;
   return getIcon(svgSize, { ...rest });
 });

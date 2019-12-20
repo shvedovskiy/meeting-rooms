@@ -1,8 +1,8 @@
 import React, { FormEventHandler, KeyboardEventHandler, FocusEventHandler } from 'react';
-import cn from 'classnames';
 import updateInputWidth from 'update-input-width';
+import cn from 'classnames';
 
-import classes from './time-picker.module.scss';
+import cls from './time-picker.module.scss';
 
 type Props = {
   itemRef: (ref: HTMLInputElement | null, name: string) => void;
@@ -51,8 +51,8 @@ export const TimeInput = (props: Props) => {
       {hasLeadingZero && <span>0</span>}
       <input
         autoComplete="off"
-        className={cn(classes.input, {
-          [classes['input-hasLeadingZero']]: hasLeadingZero,
+        className={cn(cls.input, {
+          [cls['input-hasLeadingZero']]: hasLeadingZero,
         })}
         inputMode="decimal"
         max={max}

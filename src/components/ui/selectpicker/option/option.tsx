@@ -2,15 +2,15 @@ import React from 'react';
 import cn from 'classnames';
 import { OptionProps } from 'react-select/src/components/Option';
 
-import { UserData } from 'components/timesheet/types';
-import classes from './option.module.scss';
 import { Avatar } from 'components/ui/avatar/avatar';
+import { UserData } from 'components/timesheet/types';
+import cls from './option.module.scss';
 
 export const Option = (props: OptionProps<UserData>) => {
   const { className, isSelected, isFocused, innerRef, innerProps } = props;
   const data = props.data as UserData;
-  const elementClasses = cn(classes.selectOption, className, {
-    [classes.focused]: isFocused,
+  const elementClasses = cn(cls.selectOption, className, {
+    [cls.focused]: isFocused,
   });
 
   return (
@@ -21,12 +21,12 @@ export const Option = (props: OptionProps<UserData>) => {
       aria-selected={isFocused || isSelected ? 'true' : 'false'}
       role="option"
     >
-      <div className={classes.iconContainer}>
+      <div className={cls.iconContainer}>
         <Avatar avatarPath={data.avatarUrl} size="default" />
       </div>
-      <div className={classes.optionText} title={`${data.login}·${data.homeFloor} этаж`}>
-        <span className={classes.login}>{data.login}&nbsp;·</span>&nbsp;
-        <span className={classes.homeFloor}>{data.homeFloor}&nbsp;этаж</span>
+      <div className={cls.optionText} title={`${data.login}·${data.homeFloor} этаж`}>
+        <span className={cls.login}>{data.login}&nbsp;·</span>&nbsp;
+        <span className={cls.homeFloor}>{data.homeFloor}&nbsp;этаж</span>
       </div>
     </div>
   );

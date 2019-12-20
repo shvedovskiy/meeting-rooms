@@ -2,7 +2,11 @@ import { createContext, useContext } from 'react';
 
 import { FormEvent } from 'components/timesheet/types';
 
-export type PageMode = 'add' | 'edit' | null;
+export const enum PageModes {
+  ADD = 'add',
+  EDIT = 'edit',
+}
+export type PageMode = PageModes | null;
 export type PageData = Partial<FormEvent>;
 
 export type PageFn = (mode: PageMode, data?: PageData) => void;

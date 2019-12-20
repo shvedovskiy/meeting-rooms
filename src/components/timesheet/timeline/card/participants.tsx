@@ -4,14 +4,14 @@ import pluralize from 'pluralize-ru';
 import { UserData } from 'components/timesheet/types';
 import { Avatar } from 'components/ui/avatar/avatar';
 import { Size } from 'context/size-context';
-import classes from './card.module.scss';
+import cls from './card.module.scss';
 
 type Props = {
   items?: UserData[];
   size?: Size;
 };
 
-export const CardParticipants = ({ items = [], size = 'default' }: Props) => {
+export const CardParticipants = ({ items = [], size = Size.DEFAULT }: Props) => {
   if (!items.length) {
     return null;
   }
@@ -24,11 +24,11 @@ export const CardParticipants = ({ items = [], size = 'default' }: Props) => {
   )}`;
 
   return (
-    <div className={classes.participants}>
-      <div className={classes.iconContainer}>
+    <div className={cls.participants}>
+      <div className={cls.iconContainer}>
         <Avatar avatarPath={items[0].avatarUrl} size={size} />
       </div>
-      <p className={classes.name}>
+      <p className={cls.name}>
         {items[0].login} {items.length > 1 && <span>{others}</span>}
       </p>
     </div>
