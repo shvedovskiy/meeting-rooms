@@ -7,6 +7,11 @@
   min-height: 46px;
   padding-right: 24px;
   padding-left: 24px;
+
+  &.lg {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
 }
 
 .dateBtn {

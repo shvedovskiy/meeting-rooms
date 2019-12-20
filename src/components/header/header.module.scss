@@ -7,4 +7,9 @@
   padding-left: 24px;
   background-color: var(--bg-primary);
   border-bottom: 1px solid var(--border);
+
+  &.lg {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
 }
