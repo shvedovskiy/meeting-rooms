@@ -4,6 +4,10 @@
   display: flex;
   align-items: center;
   @include oneLineEllipsis;
+
+  &.lg {
+    flex-grow: 1;
+  }
 }
 
 .iconContainer {
@@ -11,6 +15,11 @@
   width: 24px;
   height: 24px;
   margin-right: 8px;
+
+  .labelContainer.lg & {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 .value {

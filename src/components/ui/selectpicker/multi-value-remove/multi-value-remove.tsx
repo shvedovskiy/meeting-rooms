@@ -5,7 +5,10 @@ import { Icon } from 'components/ui/icon/icon';
 import { UserData } from 'components/timesheet/types';
 import cls from './multi-value-remove.module.scss';
 
-export const MultiValueRemove = ({ innerProps }: MultiValueRemoveProps<UserData>) => {
+export const MultiValueRemove = ({
+  innerProps,
+  selectProps,
+}: MultiValueRemoveProps<UserData>) => {
   const props = {
     ...innerProps,
     type: 'button' as const,
@@ -13,7 +16,7 @@ export const MultiValueRemove = ({ innerProps }: MultiValueRemoveProps<UserData>
   };
   return (
     <button {...props} title="Удалить участника">
-      <Icon name="close" />
+      <Icon name="close" size={selectProps.size} />
     </button>
   );
 };

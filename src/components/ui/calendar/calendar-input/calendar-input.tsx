@@ -84,7 +84,7 @@ export const CalendarInput = (props: Props) => {
         size,
         id,
         error,
-        sideIcon: <Icon name="calendar" size="large" />,
+        sideIcon: <Icon name="calendar" size={Size.LARGE} />,
         onBlur,
       }}
       format={FORMAT}

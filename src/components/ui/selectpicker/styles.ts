@@ -67,15 +67,18 @@ export const customStyles = {
       backgroundColor: 'var(--bg-secondary)',
     },
   }),
-  multiValue: () => ({
+  multiValue: (provided: CSSProperties, state: any) => ({
     display: 'flex',
     flexShrink: 0,
     alignItems: 'center',
     maxWidth: '100%',
+    width: state.selectProps.size === Size.LARGE ? '100%' : 'auto',
     margin: '4px 8px 0 0',
-    paddingRight: 8,
+    paddingRight: state.selectProps.size === Size.DEFAULT ? 8 : 14,
+    fontSize:
+      state.selectProps.size === Size.DEFAULT ? 'var(--default-text)' : 'var(--medium-text)',
     backgroundColor: 'var(--secondary-1)',
-    borderRadius: 12,
+    borderRadius: state.selectProps.size === Size.DEFAULT ? 12 : 16,
     ':first-of-type': {
       marginTop: 12,
     },

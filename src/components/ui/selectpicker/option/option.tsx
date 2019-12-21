@@ -4,6 +4,7 @@ import { OptionProps } from 'react-select/src/components/Option';
 
 import { Avatar } from 'components/ui/avatar/avatar';
 import { UserData } from 'components/timesheet/types';
+import { Size } from 'context/size-context';
 import cls from './option.module.scss';
 
 export const Option = (props: OptionProps<UserData>) => {
@@ -22,7 +23,7 @@ export const Option = (props: OptionProps<UserData>) => {
       role="option"
     >
       <div className={cls.iconContainer}>
-        <Avatar avatarPath={data.avatarUrl} size="default" />
+        <Avatar avatarPath={data.avatarUrl} size={Size.DEFAULT} />
       </div>
       <div className={cls.optionText} title={`${data.login}·${data.homeFloor} этаж`}>
         <span className={cls.login}>{data.login}&nbsp;·</span>&nbsp;
