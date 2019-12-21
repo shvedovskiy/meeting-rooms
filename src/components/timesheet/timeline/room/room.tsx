@@ -21,13 +21,14 @@ type Props = {
 };
 
 export const Room = ({ room, size = Size.DEFAULT, date }: Props) => {
-  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [openedTooltip, setOpenedTooltip] = useState<string | null>(null);
   const scrolled = useScrollCtx();
   const openPage = usePageCtx();
+  const closeTooltip = useCallback(() => setOpenedTooltip(null), []);
 
   useKeydown('Escape', () => {
-    if (tooltipOpen) {
-      setTooltipOpen(false);
+    if (openedTooltip != null) {
+      closeTooltip();
     }
   });
   let { data } = useQuery<RoomEventsQueryType>(ROOM_EVENTS_QUERY, {
@@ -90,7 +91,7 @@ export const Room = ({ room, size = Size.DEFAULT, date }: Props) => {
             room={room.title}
             data={eventInfo}
             onAction={(event: Event) => {
-              setTooltipOpen(false);
+              closeTooltip();
               openEditEventPage(event);
             }}
           />
@@ -99,20 +100,20 @@ export const Room = ({ room, size = Size.DEFAULT, date }: Props) => {
       const slot = (
         <button
           className={cn(classes.slot, classes[`slot--${width}`], classes.busy)}
-          onClick={() => setTooltipOpen(t => !t)}
+          onClick={() => setOpenedTooltip(t => (t === range.id ? null : range.id))}
         />
       );
       return (
         <Popover
           key={range.id}
-          isOpen={tooltipOpen}
+          isOpen={openedTooltip === range.id}
           position={['bottom', 'top', 'right', 'left']}
           padding={-8}
           windowBorderPadding={0}
           content={popoverContent}
           containerStyle={{ overflow: 'visible' }}
           transitionDuration={0.2}
-          onClickOutside={() => setTooltipOpen(false)}
+          onClickOutside={closeTooltip}
         >
           {slot}
         </Popover>
