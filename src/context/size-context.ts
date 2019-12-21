@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-export const enum Size {
+export enum Size {
   DEFAULT = 'default',
   LARGE = 'large',
 }

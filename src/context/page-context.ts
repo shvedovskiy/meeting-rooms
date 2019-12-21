@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 
 import { FormEvent } from 'components/timesheet/types';
 
-export const enum PageModes {
+export enum PageModes {
   ADD = 'add',
   EDIT = 'edit',
 }
